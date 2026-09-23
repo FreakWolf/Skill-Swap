@@ -18,6 +18,10 @@ export const metadata: Metadata = {
     "SkillSwap is a peer-to-peer skill exchange. Teach what you know to earn credits, spend them to learn something new.",
 };
 
+// Run server rendering close to the Supabase DB (Tokyo, ap-northeast-1) to cut
+// query latency. hnd1 = Vercel's Tokyo region. Applies to all routes.
+export const preferredRegion = ["hnd1"];
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
