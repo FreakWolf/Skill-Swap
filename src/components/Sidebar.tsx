@@ -10,6 +10,7 @@ import {
   CalendarCheck,
   MessageSquare,
   Bell,
+  BarChart3,
   User,
   Settings,
   PlusCircle,
@@ -43,6 +44,7 @@ export function Sidebar({
     { name: "Sessions", href: "/sessions", icon: CalendarCheck, badge: 0 },
     { name: "Messages", href: "/messages", icon: MessageSquare, badge: unreadMessages },
     { name: "Notifications", href: "/notifications", icon: Bell, badge: unreadNotifications },
+    { name: "Analytics", href: "/analytics", icon: BarChart3, badge: 0 },
   ];
 
   const pathname = usePathname();
