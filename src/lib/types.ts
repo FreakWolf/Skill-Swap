@@ -109,3 +109,30 @@ export interface OfferingWithDetails extends Offering {
   skill: Skill;
   teacher: Pick<Profile, "id" | "full_name" | "avatar_url" | "location">;
 }
+
+export interface Message {
+  id: string;
+  conversation_id: string;
+  sender_id: string;
+  body: string;
+  created_at: string;
+}
+
+// A conversation summarized for the inbox: the other participant, the last
+// message preview, and how many messages are unread by the current user.
+export interface ConversationSummary {
+  id: string;
+  other: { id: string; full_name: string; avatar_url: string | null };
+  lastMessage: string;
+  lastMessageAt: string | null;
+  unread: number;
+}
+
+export interface Notification {
+  id: string;
+  kind: string;
+  title: string;
+  body: string;
+  read: boolean;
+  created_at: string;
+}

@@ -7,6 +7,8 @@ import {
   Home,
   Search,
   Calendar,
+  MessageSquare,
+  Bell,
   User,
   Settings,
   PlusCircle,
@@ -18,23 +20,29 @@ import { Avatar } from "@/components/Avatar";
 import { logOut } from "@/app/(auth)/actions";
 import { cn } from "@/lib/cn";
 
-const nav = [
-  { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Marketplace", href: "/marketplace", icon: Search },
-  { name: "Sessions", href: "/sessions", icon: Calendar },
-];
-
 export function Sidebar({
   name,
   email,
   avatarUrl,
   balance,
+  unreadMessages = 0,
+  unreadNotifications = 0,
 }: {
   name: string;
   email: string;
   avatarUrl: string | null;
   balance: number;
+  unreadMessages?: number;
+  unreadNotifications?: number;
 }) {
+  const nav = [
+    { name: "Dashboard", href: "/dashboard", icon: Home, badge: 0 },
+    { name: "Marketplace", href: "/marketplace", icon: Search, badge: 0 },
+    { name: "Sessions", href: "/sessions", icon: Calendar, badge: 0 },
+    { name: "Messages", href: "/messages", icon: MessageSquare, badge: unreadMessages },
+    { name: "Notifications", href: "/notifications", icon: Bell, badge: unreadNotifications },
+  ];
+
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -87,6 +95,11 @@ export function Sidebar({
               >
                 <Icon className="h-5 w-5" />
                 <span className="flex-1 text-left">{item.name}</span>
+                {item.badge > 0 && (
+                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-semibold text-white">
+                    {item.badge}
+                  </span>
+                )}
               </Link>
             );
           })}

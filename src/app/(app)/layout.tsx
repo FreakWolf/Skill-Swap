@@ -1,6 +1,10 @@
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { requireUser, getBalance } from "@/lib/auth";
+import {
+  getUnreadMessageCount,
+  getUnreadNotificationCount,
+} from "@/lib/messaging";
 
 export default async function AppLayout({
   children,
@@ -14,7 +18,11 @@ export default async function AppLayout({
     redirect("/onboarding/profile");
   }
 
-  const balance = await getBalance(user.id);
+  const [balance, unreadMessages, unreadNotifications] = await Promise.all([
+    getBalance(user.id),
+    getUnreadMessageCount(user.id),
+    getUnreadNotificationCount(user.id),
+  ]);
 
   return (
     <div className="flex h-screen bg-gray-50 lg:flex-row flex-col">
@@ -23,6 +31,8 @@ export default async function AppLayout({
         email={user.email ?? ""}
         avatarUrl={profile?.avatar_url ?? null}
         balance={balance}
+        unreadMessages={unreadMessages}
+        unreadNotifications={unreadNotifications}
       />
       <main className="flex-1 overflow-y-auto">
         <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-8">

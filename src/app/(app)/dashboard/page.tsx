@@ -71,14 +71,10 @@ export default async function DashboardPage() {
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <Link href="/marketplace">
-            <Button className="bg-white text-blue-700 hover:bg-blue-50">
-              Find a teacher
-            </Button>
+            <Button variant="onBrandSolid">Find a teacher</Button>
           </Link>
           <Link href="/offer">
-            <Button className="border border-white/40 bg-white/10 text-white hover:bg-white/20">
-              Offer a skill
-            </Button>
+            <Button variant="onBrandGhost">Offer a skill</Button>
           </Link>
         </div>
       </div>

@@ -1,7 +1,15 @@
 import { cn } from "@/lib/cn";
 import type { ButtonHTMLAttributes } from "react";
 
-type Variant = "primary" | "brand" | "secondary" | "outline" | "ghost" | "danger";
+type Variant =
+  | "primary"
+  | "brand"
+  | "secondary"
+  | "outline"
+  | "ghost"
+  | "danger"
+  | "onBrandSolid"
+  | "onBrandGhost";
 type Size = "sm" | "md" | "lg" | "icon";
 
 const variants: Record<Variant, string> = {
@@ -14,6 +22,11 @@ const variants: Record<Variant, string> = {
     "border border-[var(--border)] bg-white text-slate-800 hover:bg-neutral-100 disabled:opacity-50",
   ghost: "text-slate-700 hover:bg-gray-100 disabled:opacity-50",
   danger: "bg-[var(--destructive)] text-white hover:bg-red-700 disabled:opacity-50",
+  // For placement on the colored gradient hero: a solid white button with blue
+  // text, and a translucent white-outline button.
+  onBrandSolid: "bg-white text-blue-700 hover:bg-blue-50 disabled:opacity-50",
+  onBrandGhost:
+    "border border-white/40 bg-white/10 text-white hover:bg-white/20 disabled:opacity-50",
 };
 
 const sizes: Record<Size, string> = {

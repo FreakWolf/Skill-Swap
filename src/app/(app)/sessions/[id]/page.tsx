@@ -4,6 +4,7 @@ import { Card, Badge } from "@/components/ui/Card";
 import { Avatar } from "@/components/Avatar";
 import { requireUser } from "@/lib/auth";
 import { getBookingDetail, hasReviewed } from "@/lib/data";
+import { MessageButton } from "@/components/MessageButton";
 import { SessionActions } from "./SessionActions";
 import { ReviewForm } from "./ReviewForm";
 
@@ -80,6 +81,11 @@ export default async function SessionDetailPage({
               {iAmLearner ? "Your teacher" : "Your learner"}
             </p>
           </div>
+          {other?.id && (
+            <div className="ml-auto">
+              <MessageButton otherId={other.id} />
+            </div>
+          )}
         </div>
 
         <dl className="mt-6 grid gap-3 text-sm sm:grid-cols-2">

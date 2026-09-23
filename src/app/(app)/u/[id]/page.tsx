@@ -3,6 +3,7 @@ import { Card, Badge } from "@/components/ui/Card";
 import { Avatar } from "@/components/Avatar";
 import { Stars } from "@/components/Stars";
 import { OfferingCard } from "@/components/OfferingCard";
+import { MessageButton } from "@/components/MessageButton";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -19,7 +20,8 @@ export default async function PublicProfilePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  await requireUser();
+  const { user } = await requireUser();
+  const isSelf = user.id === id;
 
   const supabase = await createClient();
   const { data: profile } = await supabase
@@ -58,6 +60,11 @@ export default async function PublicProfilePage({
               <p className="mt-0.5 text-sm text-slate-500">{profile.location}</p>
             )}
           </div>
+          {!isSelf && (
+            <div className="ml-auto">
+              <MessageButton otherId={id} variant="brand" />
+            </div>
+          )}
         </div>
         {profile.bio && <p className="mt-4 text-slate-700">{profile.bio}</p>}
         {profile.languages.length > 0 && (
