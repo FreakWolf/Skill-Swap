@@ -114,8 +114,20 @@ export function ChatThread({
       // Roll back the optimistic bubble and surface the error.
       setMessages((prev) => prev.filter((m) => m.id !== tempId));
       setError(result.error);
+      return;
     }
-    // On success, realtime will replace the optimistic bubble with the real row.
+    // Reconcile the optimistic bubble with the real saved row immediately,
+    // so it never gets stuck on "Sending…" even if realtime is slow/off.
+    if (result?.message) {
+      const saved = result.message;
+      setMessages((prev) => {
+        // If realtime already delivered it, drop the temp bubble.
+        if (prev.some((m) => m.id === saved.id)) {
+          return prev.filter((m) => m.id !== tempId);
+        }
+        return prev.map((m) => (m.id === tempId ? saved : m));
+      });
+    }
   }
 
   return (

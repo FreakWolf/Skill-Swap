@@ -5,7 +5,11 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 
-export type MessageState = { error?: string } | undefined;
+import type { Message } from "@/lib/types";
+
+export type MessageState =
+  | { error?: string; message?: Message }
+  | undefined;
 
 // Start (or open) a conversation with another user, then go to the chat.
 export async function startConversation(formData: FormData) {
@@ -42,17 +46,20 @@ export async function sendMessage(
   } = await supabase.auth.getUser();
   if (!user) return { error: "Not signed in" };
 
-  const { error } = await supabase.from("messages").insert({
-    conversation_id: conversationId,
-    sender_id: user.id,
-    body,
-  });
+  const { data, error } = await supabase
+    .from("messages")
+    .insert({
+      conversation_id: conversationId,
+      sender_id: user.id,
+      body,
+    })
+    .select("*")
+    .single<Message>();
   if (error) return { error: error.message };
 
-  // The chat UI updates optimistically + via realtime, so no revalidate needed
-  // here. Refresh the inbox list only.
+  // Refresh the inbox list. The chat itself reconciles from the returned row.
   revalidatePath("/messages");
-  return undefined;
+  return { message: data };
 }
 
 // Mark a conversation read up to now (clears unread for the current user).
