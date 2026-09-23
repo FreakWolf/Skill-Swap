@@ -136,3 +136,16 @@ export interface Notification {
   read: boolean;
   created_at: string;
 }
+
+// A teacher card for the People/discovery view: someone who lists at least one
+// "teach" skill, whether or not they've published a formal offering.
+export interface TeacherSummary {
+  id: string;
+  full_name: string;
+  avatar_url: string | null;
+  location: string;
+  bio: string;
+  teachSkills: string[];
+  rating: { avg: number; count: number };
+  offeringCount: number;
+}

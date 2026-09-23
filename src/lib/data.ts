@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
-import type { OfferingWithDetails } from "@/lib/types";
+import type { OfferingWithDetails, TeacherSummary } from "@/lib/types";
 
 // The select string that joins an offering to its skill + teacher profile.
 const OFFERING_SELECT = `
@@ -279,4 +279,104 @@ export async function getOfferingWithSlots(offeringId: string) {
     .order("starts_at");
 
   return { offering, slots: slots ?? [] };
+}
+
+// People/discovery: users who list at least one "teach" skill, with their
+// teach-skill names, rating summary, and active offering count. Optionally
+// filtered by name or skill name via `q`. Excludes the current user.
+export async function searchTeachers(opts: {
+  userId: string;
+  q?: string;
+  limit?: number;
+}): Promise<TeacherSummary[]> {
+  const supabase = await createClient();
+
+  // All "teach" links joined to the teacher profile + skill name.
+  const { data: rows } = await supabase
+    .from("user_skills")
+    .select(
+      `user_id, level,
+       skill:skills!user_skills_skill_id_fkey ( name ),
+       teacher:profiles!user_skills_user_id_fkey ( id, full_name, avatar_url, location, bio )`,
+    )
+    .eq("direction", "teach");
+
+  if (!rows || rows.length === 0) return [];
+
+  // Group by teacher.
+  const byTeacher = new Map<string, TeacherSummary>();
+  for (const r of rows) {
+    const teacher = Array.isArray(r.teacher) ? r.teacher[0] : r.teacher;
+    const skill = Array.isArray(r.skill) ? r.skill[0] : r.skill;
+    const tid = teacher?.id as string | undefined;
+    if (!tid || tid === opts.userId) continue; // skip self / orphans
+
+    if (!byTeacher.has(tid)) {
+      byTeacher.set(tid, {
+        id: tid,
+        full_name: (teacher.full_name as string) || "SkillSwap member",
+        avatar_url: (teacher.avatar_url as string) ?? null,
+        location: (teacher.location as string) ?? "",
+        bio: (teacher.bio as string) ?? "",
+        teachSkills: [],
+        rating: { avg: 0, count: 0 },
+        offeringCount: 0,
+      });
+    }
+    const name = skill?.name as string | undefined;
+    if (name && !byTeacher.get(tid)!.teachSkills.includes(name)) {
+      byTeacher.get(tid)!.teachSkills.push(name);
+    }
+  }
+
+  let teachers = Array.from(byTeacher.values());
+
+  // Text filter over name or any teach skill.
+  if (opts.q) {
+    const q = opts.q.toLowerCase();
+    teachers = teachers.filter(
+      (t) =>
+        t.full_name.toLowerCase().includes(q) ||
+        t.teachSkills.some((s) => s.toLowerCase().includes(q)),
+    );
+  }
+
+  teachers = teachers.slice(0, opts.limit ?? 40);
+  if (teachers.length === 0) return [];
+
+  const ids = teachers.map((t) => t.id);
+
+  // Ratings + active offering counts for the resulting teachers.
+  const [{ data: reviews }, { data: offerings }] = await Promise.all([
+    supabase.from("reviews").select("reviewee_id, rating").in("reviewee_id", ids),
+    supabase
+      .from("offerings")
+      .select("teacher_id")
+      .eq("is_active", true)
+      .in("teacher_id", ids),
+  ]);
+
+  const ratingAgg = new Map<string, { sum: number; count: number }>();
+  for (const rv of reviews ?? []) {
+    const k = rv.reviewee_id as string;
+    const cur = ratingAgg.get(k) ?? { sum: 0, count: 0 };
+    cur.sum += rv.rating as number;
+    cur.count += 1;
+    ratingAgg.set(k, cur);
+  }
+  const offeringAgg = new Map<string, number>();
+  for (const o of offerings ?? []) {
+    const k = o.teacher_id as string;
+    offeringAgg.set(k, (offeringAgg.get(k) ?? 0) + 1);
+  }
+
+  for (const t of teachers) {
+    const agg = ratingAgg.get(t.id);
+    t.rating = agg
+      ? { avg: agg.sum / agg.count, count: agg.count }
+      : { avg: 0, count: 0 };
+    t.offeringCount = offeringAgg.get(t.id) ?? 0;
+  }
+
+  return teachers;
 }
