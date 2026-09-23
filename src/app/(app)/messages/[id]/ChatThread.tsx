@@ -1,8 +1,8 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { sendMessage, markConversationRead, type MessageState } from "../actions";
+import { sendMessage, markConversationRead } from "../actions";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 import type { Message } from "@/lib/types";
@@ -14,6 +14,10 @@ function time(iso: string) {
   });
 }
 
+// A message plus an optional client-generated key so we can render an
+// optimistic bubble immediately and reconcile it when the real row arrives.
+type LocalMessage = Message & { pending?: boolean };
+
 export function ChatThread({
   conversationId,
   meId,
@@ -23,12 +27,10 @@ export function ChatThread({
   meId: string;
   initialMessages: Message[];
 }) {
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
-  const [state, action, pending] = useActionState<MessageState, FormData>(
-    sendMessage,
-    undefined,
-  );
-  const formRef = useRef<HTMLFormElement>(null);
+  const [messages, setMessages] = useState<LocalMessage[]>(initialMessages);
+  const [error, setError] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   // Subscribe to new messages in this conversation via Supabase Realtime.
@@ -46,9 +48,23 @@ export function ChatThread({
         },
         (payload) => {
           const incoming = payload.new as Message;
-          setMessages((prev) =>
-            prev.some((m) => m.id === incoming.id) ? prev : [...prev, incoming],
-          );
+          setMessages((prev) => {
+            // Already have the real row? ignore.
+            if (prev.some((m) => m.id === incoming.id)) return prev;
+            // Replace a matching optimistic bubble (same sender + body) if present.
+            const optimisticIdx = prev.findIndex(
+              (m) =>
+                m.pending &&
+                m.sender_id === incoming.sender_id &&
+                m.body === incoming.body,
+            );
+            if (optimisticIdx !== -1) {
+              const next = [...prev];
+              next[optimisticIdx] = incoming;
+              return next;
+            }
+            return [...prev, incoming];
+          });
         },
       )
       .subscribe();
@@ -58,7 +74,7 @@ export function ChatThread({
     };
   }, [conversationId]);
 
-  // Mark read on open and whenever new messages arrive.
+  // Mark read on open and whenever the message count changes.
   useEffect(() => {
     markConversationRead(conversationId);
   }, [conversationId, messages.length]);
@@ -68,10 +84,39 @@ export function ChatThread({
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length]);
 
-  // Clear the input after a successful send.
-  useEffect(() => {
-    if (!pending) formRef.current?.reset();
-  }, [pending]);
+  async function handleSend() {
+    const body = inputRef.current?.value.trim();
+    if (!body || sending) return;
+
+    setError(null);
+    setSending(true);
+
+    // Optimistically show the sender's own message right away.
+    const tempId = `temp-${Date.now()}`;
+    const optimistic: LocalMessage = {
+      id: tempId,
+      conversation_id: conversationId,
+      sender_id: meId,
+      body,
+      created_at: new Date().toISOString(),
+      pending: true,
+    };
+    setMessages((prev) => [...prev, optimistic]);
+    if (inputRef.current) inputRef.current.value = "";
+
+    const form = new FormData();
+    form.set("conversationId", conversationId);
+    form.set("body", body);
+    const result = await sendMessage(undefined, form);
+
+    setSending(false);
+    if (result?.error) {
+      // Roll back the optimistic bubble and surface the error.
+      setMessages((prev) => prev.filter((m) => m.id !== tempId));
+      setError(result.error);
+    }
+    // On success, realtime will replace the optimistic bubble with the real row.
+  }
 
   return (
     <div className="flex flex-1 flex-col">
@@ -95,6 +140,7 @@ export function ChatThread({
                     mine
                       ? "rounded-br-sm bg-blue-600 text-white"
                       : "rounded-bl-sm bg-gray-100 text-gray-900",
+                    m.pending && "opacity-70",
                   )}
                 >
                   <p className="whitespace-pre-wrap break-words">{m.body}</p>
@@ -104,7 +150,7 @@ export function ChatThread({
                       mine ? "text-blue-100" : "text-gray-400",
                     )}
                   >
-                    {time(m.created_at)}
+                    {m.pending ? "Sending…" : time(m.created_at)}
                   </p>
                 </div>
               </div>
@@ -115,32 +161,29 @@ export function ChatThread({
       </div>
 
       {/* Composer */}
-      <form
-        ref={formRef}
-        action={action}
-        className="flex items-end gap-2 border-t border-[var(--border)] bg-white py-3"
-      >
-        <input type="hidden" name="conversationId" value={conversationId} />
+      <div className="flex items-end gap-2 border-t border-[var(--border)] bg-white py-3">
         <textarea
-          name="body"
+          ref={inputRef}
           rows={1}
-          required
           placeholder="Type a message…"
           className="max-h-32 flex-1 resize-none rounded-2xl border border-transparent bg-neutral-200 px-4 py-2.5 text-sm focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
-              formRef.current?.requestSubmit();
+              handleSend();
             }
           }}
         />
-        <Button type="submit" disabled={pending} className="rounded-full">
+        <Button
+          type="button"
+          onClick={handleSend}
+          disabled={sending}
+          className="rounded-full"
+        >
           Send
         </Button>
-      </form>
-      {state?.error && (
-        <p className="pb-2 text-sm text-red-600">{state.error}</p>
-      )}
+      </div>
+      {error && <p className="pb-2 text-sm text-red-600">{error}</p>}
     </div>
   );
 }

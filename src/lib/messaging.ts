@@ -84,10 +84,47 @@ export async function getConversations(
   });
 }
 
-// Total unread messages across all the user's conversations (for the badge).
+// Total unread conversations for the badge. Lightweight: one query for the
+// user's conversations + read markers, then a single messages query. Avoids
+// the heavier getConversations() work on every page load.
 export async function getUnreadMessageCount(userId: string): Promise<number> {
-  const convs = await getConversations(userId);
-  return convs.reduce((sum, c) => sum + c.unread, 0);
+  const supabase = await createClient();
+
+  const { data: convs } = await supabase
+    .from("conversations")
+    .select("id")
+    .or(`user_a.eq.${userId},user_b.eq.${userId}`);
+  if (!convs || convs.length === 0) return 0;
+
+  const ids = convs.map((c) => c.id as string);
+
+  const [{ data: reads }, { data: msgs }] = await Promise.all([
+    supabase
+      .from("conversation_reads")
+      .select("conversation_id, last_read_at")
+      .eq("user_id", userId)
+      .in("conversation_id", ids),
+    supabase
+      .from("messages")
+      .select("conversation_id, sender_id, created_at")
+      .in("conversation_id", ids)
+      .neq("sender_id", userId),
+  ]);
+
+  const readMap = new Map(
+    (reads ?? []).map((r) => [r.conversation_id as string, r.last_read_at as string]),
+  );
+
+  // Count conversations that have at least one unread incoming message.
+  const unreadConvs = new Set<string>();
+  for (const m of msgs ?? []) {
+    const cid = m.conversation_id as string;
+    const lastRead = readMap.get(cid);
+    if (!lastRead || (m.created_at as string) > lastRead) {
+      unreadConvs.add(cid);
+    }
+  }
+  return unreadConvs.size;
 }
 
 // One conversation's messages (oldest first) + the other participant.

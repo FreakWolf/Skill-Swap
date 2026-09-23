@@ -49,7 +49,8 @@ export async function sendMessage(
   });
   if (error) return { error: error.message };
 
-  revalidatePath(`/messages/${conversationId}`);
+  // The chat UI updates optimistically + via realtime, so no revalidate needed
+  // here. Refresh the inbox list only.
   revalidatePath("/messages");
   return undefined;
 }
