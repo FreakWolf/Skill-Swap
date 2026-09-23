@@ -7,6 +7,7 @@ import {
   Home,
   Search,
   Calendar,
+  CalendarCheck,
   MessageSquare,
   Bell,
   User,
@@ -38,7 +39,8 @@ export function Sidebar({
   const nav = [
     { name: "Dashboard", href: "/dashboard", icon: Home, badge: 0 },
     { name: "Marketplace", href: "/marketplace", icon: Search, badge: 0 },
-    { name: "Sessions", href: "/sessions", icon: Calendar, badge: 0 },
+    { name: "Calendar", href: "/calendar", icon: Calendar, badge: 0 },
+    { name: "Sessions", href: "/sessions", icon: CalendarCheck, badge: 0 },
     { name: "Messages", href: "/messages", icon: MessageSquare, badge: unreadMessages },
     { name: "Notifications", href: "/notifications", icon: Bell, badge: unreadNotifications },
   ];

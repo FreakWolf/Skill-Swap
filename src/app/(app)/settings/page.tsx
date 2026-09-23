@@ -32,6 +32,16 @@ export default async function SettingsPage() {
         </Link>
       </Card>
 
+      <Card className="p-6">
+        <h2 className="mb-1 font-semibold text-slate-900">Availability</h2>
+        <p className="mb-3 text-sm text-slate-500">
+          Open bookable time slots for the skills you teach.
+        </p>
+        <Link href="/availability">
+          <Button variant="outline">Manage availability</Button>
+        </Link>
+      </Card>
+
       <Card className="flex items-center justify-between p-6">
         <div>
           <h2 className="font-semibold text-slate-900">Sign out</h2>

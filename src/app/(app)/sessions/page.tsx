@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Card, Badge } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import { Avatar } from "@/components/Avatar";
 import { CreditPill } from "@/components/CreditPill";
 import { requireUser, getBalance } from "@/lib/auth";
@@ -76,7 +77,12 @@ export default async function SessionsPage() {
             Manage bookings and track your credits.
           </p>
         </div>
-        <CreditPill balance={balance} />
+        <div className="flex items-center gap-3">
+          <Link href="/calendar">
+            <Button variant="outline" size="sm">Calendar</Button>
+          </Link>
+          <CreditPill balance={balance} />
+        </div>
       </div>
 
       <section>

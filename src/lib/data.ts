@@ -380,3 +380,131 @@ export async function searchTeachers(opts: {
 
   return teachers;
 }
+
+// A teacher's offerings, each with its future time slots. For managing
+// availability. Slots include their booked flag so we can show status.
+export interface OfferingSlots {
+  id: string;
+  title: string;
+  skillName: string;
+  duration_min: number;
+  credit_cost: number;
+  slots: {
+    id: string;
+    starts_at: string;
+    ends_at: string;
+    is_booked: boolean;
+  }[];
+}
+
+export async function getMyOfferingsWithSlots(
+  userId: string,
+): Promise<OfferingSlots[]> {
+  const supabase = await createClient();
+
+  const { data: offerings } = await supabase
+    .from("offerings")
+    .select(
+      `id, title, duration_min, credit_cost,
+       skill:skills!offerings_skill_id_fkey ( name )`,
+    )
+    .eq("teacher_id", userId)
+    .eq("is_active", true)
+    .order("created_at", { ascending: false });
+
+  if (!offerings || offerings.length === 0) return [];
+
+  const offeringIds = offerings.map((o) => o.id as string);
+  const { data: slots } = await supabase
+    .from("availability")
+    .select("id, offering_id, starts_at, ends_at, is_booked")
+    .in("offering_id", offeringIds)
+    .gte("starts_at", new Date().toISOString())
+    .order("starts_at");
+
+  const slotsByOffering = new Map<string, OfferingSlots["slots"]>();
+  for (const s of slots ?? []) {
+    const oid = s.offering_id as string;
+    if (!slotsByOffering.has(oid)) slotsByOffering.set(oid, []);
+    slotsByOffering.get(oid)!.push({
+      id: s.id as string,
+      starts_at: s.starts_at as string,
+      ends_at: s.ends_at as string,
+      is_booked: s.is_booked as boolean,
+    });
+  }
+
+  return offerings.map((o) => {
+    const skill = Array.isArray(o.skill) ? o.skill[0] : o.skill;
+    return {
+      id: o.id as string,
+      title: o.title as string,
+      skillName: (skill?.name as string) ?? "",
+      duration_min: o.duration_min as number,
+      credit_cost: o.credit_cost as number,
+      slots: slotsByOffering.get(o.id as string) ?? [],
+    };
+  });
+}
+
+// Calendar items in a date range: the user's bookings (as learner or teacher)
+// plus their own still-open slots. Used to paint the monthly grid.
+export interface CalendarItem {
+  id: string;
+  kind: "learning" | "teaching" | "open";
+  title: string;
+  starts_at: string;
+  href: string | null;
+}
+
+export async function getCalendarItems(
+  userId: string,
+  startISO: string,
+  endISO: string,
+): Promise<CalendarItem[]> {
+  const supabase = await createClient();
+
+  const [{ data: bookings }, { data: openSlots }] = await Promise.all([
+    supabase
+      .from("bookings")
+      .select(
+        `id, learner_id, teacher_id, starts_at, status,
+         offering:offerings!bookings_offering_id_fkey ( title )`,
+      )
+      .or(`learner_id.eq.${userId},teacher_id.eq.${userId}`)
+      .neq("status", "cancelled")
+      .gte("starts_at", startISO)
+      .lte("starts_at", endISO),
+    supabase
+      .from("availability")
+      .select("id, starts_at")
+      .eq("teacher_id", userId)
+      .eq("is_booked", false)
+      .gte("starts_at", startISO)
+      .lte("starts_at", endISO),
+  ]);
+
+  const items: CalendarItem[] = [];
+
+  for (const b of bookings ?? []) {
+    const offering = Array.isArray(b.offering) ? b.offering[0] : b.offering;
+    items.push({
+      id: b.id as string,
+      kind: b.learner_id === userId ? "learning" : "teaching",
+      title: (offering?.title as string) ?? "Session",
+      starts_at: b.starts_at as string,
+      href: `/sessions/${b.id}`,
+    });
+  }
+  for (const s of openSlots ?? []) {
+    items.push({
+      id: s.id as string,
+      kind: "open",
+      title: "Open slot",
+      starts_at: s.starts_at as string,
+      href: "/availability",
+    });
+  }
+
+  return items.sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+}
