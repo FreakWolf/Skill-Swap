@@ -34,16 +34,17 @@ export function SignupForm() {
       </div>
       <div>
         <Label htmlFor="birthdate">Birthdate</Label>
-        <Input id="birthdate" name="birthdate" type="date" />
+        <Input id="birthdate" name="birthdate" type="date" required />
+        <p className="mt-1 text-xs text-slate-500">You must be 18 or older to join.</p>
       </div>
 
       <label className="flex items-start gap-2 text-sm text-slate-600">
         <input type="checkbox" name="terms" className="mt-0.5 h-4 w-4 rounded border-slate-300" />
         <span>
           I agree to the{" "}
-          <a href="#" className="text-blue-600 hover:underline">Terms of Service</a>{" "}
+          <a href="/terms" target="_blank" rel="noopener" className="text-blue-600 hover:underline">Terms of Service</a>{" "}
           and{" "}
-          <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a>.
+          <a href="/privacy" target="_blank" rel="noopener" className="text-blue-600 hover:underline">Privacy Policy</a>.
         </span>
       </label>
 

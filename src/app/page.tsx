@@ -60,6 +60,16 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <footer className="border-t border-[var(--border)]">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-6 text-sm text-gray-500">
+          <span>© {new Date().getFullYear()} SkillSwap</span>
+          <nav className="flex gap-4">
+            <Link href="/terms" className="hover:text-gray-900">Terms</Link>
+            <Link href="/privacy" className="hover:text-gray-900">Privacy</Link>
+          </nav>
+        </div>
+      </footer>
     </main>
   );
 }

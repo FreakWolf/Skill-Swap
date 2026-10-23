@@ -5,13 +5,33 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 
+// Must match minimumAge in app/(legal)/legal-config.ts.
+const MIN_AGE = 18;
+
+// True if someone born on `isoDate` (YYYY-MM-DD) is at least `years` old today.
+function isAtLeast(isoDate: string, years: number) {
+  const [y, m, d] = isoDate.split("-").map(Number);
+  const now = new Date();
+  let age = now.getUTCFullYear() - y;
+  const hadBirthday =
+    now.getUTCMonth() + 1 > m ||
+    (now.getUTCMonth() + 1 === m && now.getUTCDate() >= d);
+  if (!hadBirthday) age -= 1;
+  return age >= years && age < 120;
+}
+
 const signupSchema = z
   .object({
     fullName: z.string().min(1, "Please enter your name").max(80),
     email: z.string().email("Enter a valid email"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirm: z.string(),
-    birthdate: z.string().optional(),
+    birthdate: z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, "Please enter your birthdate")
+      .refine((d) => isAtLeast(d, MIN_AGE), {
+        message: `You must be at least ${MIN_AGE} to join SkillSwap`,
+      }),
     terms: z.string().optional(),
   })
   .refine((d) => d.password === d.confirm, {
@@ -61,7 +81,7 @@ export async function signUp(
       emailRedirectTo: `${await getOrigin()}/auth/callback?next=/onboarding/profile`,
       data: {
         full_name: fullName,
-        birthdate: birthdate || null,
+        birthdate,
       },
     },
   });

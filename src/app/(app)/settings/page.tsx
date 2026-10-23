@@ -3,10 +3,11 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { requireUser } from "@/lib/auth";
 import { logOut } from "@/app/(auth)/actions";
+import { AvatarUpload } from "@/components/AvatarUpload";
 import { SettingsForm } from "./SettingsForm";
 
 export default async function SettingsPage() {
-  const { profile } = await requireUser();
+  const { user, profile } = await requireUser();
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
@@ -14,6 +15,13 @@ export default async function SettingsPage() {
 
       <Card className="p-6">
         <h2 className="mb-4 font-semibold text-slate-900">Profile</h2>
+        <div className="mb-6 border-b border-[var(--border)] pb-6">
+          <AvatarUpload
+            userId={user.id}
+            name={profile?.full_name ?? ""}
+            initialUrl={profile?.avatar_url ?? null}
+          />
+        </div>
         <SettingsForm
           defaultName={profile?.full_name ?? ""}
           defaultBio={profile?.bio ?? ""}

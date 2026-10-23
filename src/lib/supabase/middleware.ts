@@ -11,6 +11,8 @@ const PUBLIC_PATHS = [
   "/forgot-password",
   // Handles its own "link expired" state when there's no session.
   "/reset-password",
+  "/terms",
+  "/privacy",
 ];
 
 export async function updateSession(request: NextRequest) {
