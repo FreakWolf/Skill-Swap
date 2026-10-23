@@ -7,6 +7,6 @@ export const SITE = {
   tagline: "Trade skills, not cash",
   description:
     "SkillSwap is a peer-to-peer skill exchange. Teach what you know to earn credits, then spend them to learn something new from someone else.",
-  // Brand colors (match the dashboard hero gradient).
-  colors: { blue: "#2563eb", purple: "#9333ea" },
+  // Brand colours sampled from public/brand/logo.png.
+  colors: { orange: "#ff8033", purple: "#7c33ff", ink: "#1f1147" },
 };

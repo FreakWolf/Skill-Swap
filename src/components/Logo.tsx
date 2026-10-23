@@ -1,10 +1,42 @@
+import Image from "next/image";
 import { cn } from "@/lib/cn";
 
-// The reference uses a simple blue wordmark. Keep it clean and recognizable.
-export function Logo({ className }: { className?: string }) {
+// Brand artwork lives in public/brand/ (cut from the original logo.png).
+const ASSETS = {
+  // "SKILLSWAP" lettering only, for compact spots (sidebar, headers).
+  wordmark: { src: "/brand/wordmark.png", width: 426, height: 51 },
+  // Illustration + lettering, for hero spots (auth pages).
+  full: { src: "/brand/logo.png", width: 480, height: 328 },
+  // Illustration only (two people in speech bubbles).
+  illustration: { src: "/brand/illustration.png", width: 353, height: 223 },
+} as const;
+
+export function Logo({
+  variant = "wordmark",
+  height = 24,
+  className,
+  priority = false,
+  decorative = false,
+}: {
+  variant?: keyof typeof ASSETS;
+  /** Rendered height in px; width follows the artwork's aspect ratio. */
+  height?: number;
+  className?: string;
+  priority?: boolean;
+  /** Set when the brand name is already announced nearby (empty alt). */
+  decorative?: boolean;
+}) {
+  const a = ASSETS[variant];
+  const width = Math.round((a.width * height) / a.height);
   return (
-    <span className={cn("font-bold tracking-tight text-blue-600", className)}>
-      SkillSwap
-    </span>
+    <Image
+      src={a.src}
+      alt={decorative ? "" : "SkillSwap"}
+      width={width}
+      height={height}
+      priority={priority}
+      className={cn("select-none", className)}
+      style={{ height, width: "auto" }}
+    />
   );
 }

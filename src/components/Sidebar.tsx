@@ -19,6 +19,7 @@ import {
   Coins,
 } from "lucide-react";
 import { Avatar } from "@/components/Avatar";
+import { Logo } from "@/components/Logo";
 import { logOut } from "@/app/(auth)/actions";
 import { cn } from "@/lib/cn";
 
@@ -64,7 +65,9 @@ export function Sidebar({
         >
           <Menu className="h-6 w-6" />
         </button>
-        <span className="text-xl font-bold text-blue-600">SkillSwap</span>
+        <Link href="/dashboard" aria-label="SkillSwap home">
+          <Logo height={20} decorative priority />
+        </Link>
       </header>
 
       {/* Sidebar */}
@@ -76,8 +79,8 @@ export function Sidebar({
       >
         {/* Brand */}
         <div className="flex h-16 items-center border-b border-gray-200 px-6">
-          <Link href="/dashboard" className="text-xl font-bold text-blue-600">
-            SkillSwap
+          <Link href="/dashboard" aria-label="SkillSwap home">
+            <Logo height={22} decorative priority />
           </Link>
         </div>
 

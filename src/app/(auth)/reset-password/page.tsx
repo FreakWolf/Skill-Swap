@@ -14,7 +14,7 @@ export default async function ResetPasswordPage() {
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <Link href="/" className="inline-block">
-            <Logo className="text-3xl" />
+            <Logo variant="full" height={150} priority />
           </Link>
         </div>
         <Card className="p-6 shadow-lg sm:p-8">

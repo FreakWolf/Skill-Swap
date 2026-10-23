@@ -18,7 +18,6 @@ const PUBLIC_PATHS = [
   "/sitemap.xml",
   "/manifest.webmanifest",
   "/opengraph-image",
-  "/apple-icon",
 ];
 
 export async function updateSession(request: NextRequest) {

@@ -9,7 +9,7 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <Link href="/" className="inline-block">
-            <Logo className="text-3xl" />
+            <Logo variant="full" height={150} priority />
           </Link>
           <p className="mt-3 text-slate-600">
             Enter your email and we&apos;ll send you a link to reset your password.

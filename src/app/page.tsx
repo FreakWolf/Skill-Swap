@@ -11,9 +11,9 @@ const steps = [
 export default function Home() {
   return (
     <main className="flex-1 bg-white">
-      <header className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
-        <Logo className="text-2xl" />
-        <nav className="flex items-center gap-2">
+      <header className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-5 sm:px-6">
+        <Logo height={22} priority className="max-w-[45vw] object-contain" />
+        <nav className="flex shrink-0 items-center gap-1 sm:gap-2">
           <Link href="/login">
             <Button variant="ghost">Log in</Button>
           </Link>
@@ -24,7 +24,10 @@ export default function Home() {
       </header>
 
       <section className="bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="mx-auto max-w-6xl px-6 pt-16 pb-24 text-center sm:pt-24">
+        <div className="mx-auto max-w-6xl px-6 pt-12 pb-24 text-center sm:pt-16">
+          <div className="mb-8 flex justify-center">
+            <Logo variant="illustration" height={200} decorative priority className="max-w-full" />
+          </div>
           <span className="inline-flex items-center rounded-full bg-white/70 px-3 py-1 text-sm font-medium text-blue-600">
             Trade skills, not cash
           </span>
@@ -36,12 +39,12 @@ export default function Home() {
             skills, then spend them to learn from others. Everyone teaches.
             Everyone learns.
           </p>
-          <div className="mt-10 flex justify-center gap-4">
+          <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
             <Link href="/signup">
-              <Button variant="brand" size="lg">Get started free</Button>
+              <Button variant="brand" size="lg" className="w-full sm:w-auto">Get started free</Button>
             </Link>
             <Link href="/login">
-              <Button size="lg" variant="outline">I have an account</Button>
+              <Button size="lg" variant="outline" className="w-full sm:w-auto">I have an account</Button>
             </Link>
           </div>
         </div>

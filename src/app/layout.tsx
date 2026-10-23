@@ -53,7 +53,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: SITE.colors.blue,
+  themeColor: SITE.colors.purple,
 };
 
 // Run server rendering close to the Supabase DB (Tokyo, ap-northeast-1) to cut

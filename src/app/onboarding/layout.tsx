@@ -11,7 +11,7 @@ export default async function OnboardingLayout({
     <div className="flex min-h-screen flex-col">
       <header className="border-b border-[var(--border)] bg-white">
         <div className="mx-auto flex max-w-3xl items-center px-6 py-4">
-          <Logo />
+          <Logo height={24} priority />
         </div>
       </header>
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">

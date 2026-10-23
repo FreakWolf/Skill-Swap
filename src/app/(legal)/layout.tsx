@@ -9,7 +9,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
       <header className="border-b border-[var(--border)]">
         <div className="mx-auto flex max-w-3xl items-center justify-between px-6 py-4">
           <Link href="/">
-            <Logo className="text-xl" />
+            <Logo height={22} priority />
           </Link>
           <nav className="flex gap-4 text-sm text-gray-600">
             <Link href="/terms" className="hover:text-gray-900">Terms</Link>
