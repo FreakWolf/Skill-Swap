@@ -20,3 +20,6 @@ export default async function OnboardingLayout({
     </div>
   );
 }
+
+// Private onboarding steps: keep them out of search results.
+export const metadata = { robots: { index: false, follow: false } };

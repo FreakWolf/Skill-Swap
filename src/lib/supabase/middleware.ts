@@ -13,6 +13,12 @@ const PUBLIC_PATHS = [
   "/reset-password",
   "/terms",
   "/privacy",
+  // Crawler / link-preview / install files must be reachable signed-out.
+  "/robots.txt",
+  "/sitemap.xml",
+  "/manifest.webmanifest",
+  "/opengraph-image",
+  "/apple-icon",
 ];
 
 export async function updateSession(request: NextRequest) {

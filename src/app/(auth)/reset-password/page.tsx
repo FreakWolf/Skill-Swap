@@ -41,3 +41,5 @@ export default async function ResetPasswordPage() {
     </div>
   );
 }
+
+export const metadata = { title: "Choose a new password", robots: { index: false } };

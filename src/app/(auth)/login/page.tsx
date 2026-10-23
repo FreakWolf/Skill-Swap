@@ -44,3 +44,9 @@ export default async function LoginPage({
     </div>
   );
 }
+
+export const metadata = {
+  title: "Log in",
+  description: "Log in to SkillSwap to book sessions, message teachers, and manage your credits.",
+  alternates: { canonical: "/login" },
+};

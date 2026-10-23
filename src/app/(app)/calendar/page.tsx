@@ -197,3 +197,5 @@ export default async function CalendarPage({
     </div>
   );
 }
+
+export const metadata = { title: "Calendar" };

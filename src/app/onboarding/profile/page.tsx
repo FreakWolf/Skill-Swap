@@ -35,3 +35,5 @@ export default async function ProfileSetupPage() {
     </div>
   );
 }
+
+export const metadata = { title: "Set up your profile" };

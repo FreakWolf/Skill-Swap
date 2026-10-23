@@ -90,3 +90,5 @@ export default async function SettingsPage() {
     </div>
   );
 }
+
+export const metadata = { title: "Settings" };

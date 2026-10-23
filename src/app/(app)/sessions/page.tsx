@@ -125,3 +125,5 @@ export default async function SessionsPage() {
     </div>
   );
 }
+
+export const metadata = { title: "Sessions" };

@@ -192,3 +192,19 @@ export default async function PublicProfilePage({
     </div>
   );
 }
+
+// Tab title = the member's name.
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("profiles")
+    .select("full_name")
+    .eq("id", id)
+    .maybeSingle<{ full_name: string }>();
+  return { title: data?.full_name || "Profile" };
+}

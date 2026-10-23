@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { TimeZoneSync } from "@/components/TimeZoneSync";
+import { SITE } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,9 +15,45 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SkillSwap — Trade skills, not cash",
-  description:
-    "SkillSwap is a peer-to-peer skill exchange. Teach what you know to earn credits, spend them to learn something new.",
+  // Absolute base for share-image and canonical URLs.
+  metadataBase: new URL(SITE.url),
+  title: {
+    default: SITE.title,
+    // Pages set just their own name, e.g. "Explore" -> "Explore · SkillSwap".
+    template: `%s · ${SITE.name}`,
+  },
+  description: SITE.description,
+  applicationName: SITE.name,
+  keywords: [
+    "skill exchange",
+    "skill swap",
+    "learn skills",
+    "teach skills",
+    "peer to peer learning",
+    "time bank",
+  ],
+  openGraph: {
+    type: "website",
+    siteName: SITE.name,
+    title: SITE.title,
+    description: SITE.description,
+    url: "/",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE.title,
+    description: SITE.description,
+  },
+  appleWebApp: {
+    title: SITE.name,
+    capable: true,
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: SITE.colors.blue,
 };
 
 // Run server rendering close to the Supabase DB (Tokyo, ap-northeast-1) to cut

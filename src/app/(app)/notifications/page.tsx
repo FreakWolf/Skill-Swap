@@ -140,3 +140,5 @@ export default async function NotificationsPage() {
     </div>
   );
 }
+
+export const metadata = { title: "Notifications" };

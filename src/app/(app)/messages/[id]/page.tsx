@@ -82,3 +82,5 @@ export default async function ChatPage({
     </div>
   );
 }
+
+export const metadata = { title: "Chat" };

@@ -11,6 +11,7 @@ import {
 } from "@/lib/data";
 import { getTimeZone } from "@/lib/time";
 import { getHiddenUserIds } from "@/lib/safety";
+import { createClient } from "@/lib/supabase/server";
 import { BookingPanel } from "./BookingPanel";
 
 export default async function OfferingDetailPage({
@@ -147,4 +148,20 @@ export default async function OfferingDetailPage({
       </div>
     </div>
   );
+}
+
+// Tab title = the offering's own title.
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("offerings")
+    .select("title")
+    .eq("id", id)
+    .maybeSingle<{ title: string }>();
+  return { title: data?.title ?? "Offering" };
 }

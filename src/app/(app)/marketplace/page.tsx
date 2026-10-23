@@ -98,3 +98,5 @@ export default async function MarketplacePage({
     </div>
   );
 }
+
+export const metadata = { title: "Explore" };

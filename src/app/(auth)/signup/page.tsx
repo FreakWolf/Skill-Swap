@@ -30,3 +30,9 @@ export default function SignupPage() {
     </div>
   );
 }
+
+export const metadata = {
+  title: "Sign up",
+  description: "Join SkillSwap free and get 3 starter credits. Teach what you know, learn what you don't.",
+  alternates: { canonical: "/signup" },
+};

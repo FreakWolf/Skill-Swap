@@ -26,3 +26,5 @@ export default async function OfferPage() {
     </div>
   );
 }
+
+export const metadata = { title: "Offer a skill" };

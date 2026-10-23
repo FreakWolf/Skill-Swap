@@ -23,3 +23,5 @@ export default function ForgotPasswordPage() {
     </div>
   );
 }
+
+export const metadata = { title: "Forgot password", robots: { index: false } };

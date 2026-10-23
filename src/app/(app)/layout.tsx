@@ -81,3 +81,6 @@ export default async function AppLayout({
     </div>
   );
 }
+
+// Signed-in pages are private: keep them out of search results.
+export const metadata = { robots: { index: false, follow: false } };

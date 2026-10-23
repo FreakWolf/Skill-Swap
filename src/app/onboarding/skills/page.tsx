@@ -29,3 +29,5 @@ export default async function SkillsSetupPage() {
     </div>
   );
 }
+
+export const metadata = { title: "Your skills" };

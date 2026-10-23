@@ -88,3 +88,5 @@ export default async function MessagesPage() {
     </div>
   );
 }
+
+export const metadata = { title: "Messages" };

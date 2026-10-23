@@ -107,3 +107,5 @@ export default async function AvailabilityPage() {
     </div>
   );
 }
+
+export const metadata = { title: "Availability" };
