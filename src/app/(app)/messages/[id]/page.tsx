@@ -5,6 +5,9 @@ import { Avatar } from "@/components/Avatar";
 import { requireUser } from "@/lib/auth";
 import { getConversationThread } from "@/lib/messaging";
 import { getTimeZone } from "@/lib/time";
+import { getBlockStatus } from "@/lib/safety";
+import { ReportDialog } from "@/components/safety/ReportDialog";
+import { BlockButton } from "@/components/safety/BlockButton";
 import { ChatThread } from "./ChatThread";
 
 export default async function ChatPage({
@@ -20,6 +23,8 @@ export default async function ChatPage({
     getTimeZone(),
   ]);
   if (!thread) notFound();
+
+  const block = await getBlockStatus(user.id, thread.other.id);
 
   return (
     // Fill the app main area; the thread scrolls internally.
@@ -43,6 +48,22 @@ export default async function ChatPage({
             {thread.other.full_name}
           </span>
         </Link>
+        <div className="ml-auto flex items-center gap-1">
+          <ReportDialog
+            userId={thread.other.id}
+            userName={thread.other.full_name}
+            contextType="message"
+            contextId={id}
+            showBlockOption={!block.iBlocked && !block.blockedMe}
+          />
+          {!block.blockedMe && (
+            <BlockButton
+              userId={thread.other.id}
+              userName={thread.other.full_name}
+              blocked={block.iBlocked}
+            />
+          )}
+        </div>
       </div>
 
       <ChatThread
@@ -50,6 +71,13 @@ export default async function ChatPage({
         meId={user.id}
         initialMessages={thread.messages}
         tz={tz}
+        blockedNotice={
+          block.iBlocked
+            ? `You blocked ${thread.other.full_name}. Unblock them to send messages.`
+            : block.blockedMe
+              ? "You can't reply to this conversation."
+              : null
+        }
       />
     </div>
   );

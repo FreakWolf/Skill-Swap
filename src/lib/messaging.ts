@@ -1,6 +1,7 @@
 import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
+import { getHiddenUserIds } from "@/lib/safety";
 import type {
   ConversationSummary,
   Message,
@@ -14,7 +15,7 @@ export async function getConversations(
 ): Promise<ConversationSummary[]> {
   const supabase = await createClient();
 
-  const { data: convs } = await supabase
+  const { data: allConvs } = await supabase
     .from("conversations")
     .select(
       `id, user_a, user_b, updated_at,
@@ -24,7 +25,12 @@ export async function getConversations(
     .or(`user_a.eq.${userId},user_b.eq.${userId}`)
     .order("updated_at", { ascending: false });
 
-  if (!convs || convs.length === 0) return [];
+  // Drop conversations with people the user blocked or was blocked by.
+  const hidden = await getHiddenUserIds();
+  const convs = (allConvs ?? []).filter(
+    (c) => !hidden.has((c.user_a === userId ? c.user_b : c.user_a) as string),
+  );
+  if (convs.length === 0) return [];
 
   const ids = convs.map((c) => c.id as string);
 
@@ -90,11 +96,17 @@ export async function getConversations(
 export async function getUnreadMessageCount(userId: string): Promise<number> {
   const supabase = await createClient();
 
-  const { data: convs } = await supabase
-    .from("conversations")
-    .select("id")
-    .or(`user_a.eq.${userId},user_b.eq.${userId}`);
-  if (!convs || convs.length === 0) return 0;
+  const [{ data: allConvs }, hidden] = await Promise.all([
+    supabase
+      .from("conversations")
+      .select("id, user_a, user_b")
+      .or(`user_a.eq.${userId},user_b.eq.${userId}`),
+    getHiddenUserIds(),
+  ]);
+  const convs = (allConvs ?? []).filter(
+    (c) => !hidden.has((c.user_a === userId ? c.user_b : c.user_a) as string),
+  );
+  if (convs.length === 0) return 0;
 
   const ids = convs.map((c) => c.id as string);
 

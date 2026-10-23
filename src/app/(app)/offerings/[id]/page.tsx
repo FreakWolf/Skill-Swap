@@ -10,6 +10,7 @@ import {
   getRatingSummary,
 } from "@/lib/data";
 import { getTimeZone } from "@/lib/time";
+import { getHiddenUserIds } from "@/lib/safety";
 import { BookingPanel } from "./BookingPanel";
 
 export default async function OfferingDetailPage({
@@ -23,6 +24,9 @@ export default async function OfferingDetailPage({
   const result = await getOfferingWithSlots(id);
   if (!result) notFound();
   const { offering, slots } = result;
+
+  // Offerings from someone the viewer blocked (or was blocked by) aren't viewable.
+  if ((await getHiddenUserIds()).has(offering.teacher_id)) notFound();
 
   const [balance, reviews, rating, tz] = await Promise.all([
     getBalance(user.id),

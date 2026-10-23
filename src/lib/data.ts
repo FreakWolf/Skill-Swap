@@ -2,6 +2,7 @@ import "server-only";
 
 import { createClient } from "@/lib/supabase/server";
 import type { OfferingWithDetails, TeacherSummary } from "@/lib/types";
+import { getHiddenUserIds } from "@/lib/safety";
 
 // The select string that joins an offering to its skill + teacher profile.
 const OFFERING_SELECT = `
@@ -92,8 +93,8 @@ export async function getRecommendedOfferings(
     query = query.in("skill_id", learnIds);
   }
 
-  const { data } = await query;
-  return (data ?? []).map(normalize);
+  const [{ data }, hidden] = await Promise.all([query, getHiddenUserIds()]);
+  return (data ?? []).map(normalize).filter((o) => !hidden.has(o.teacher_id));
 }
 
 // Browse/search offerings for the marketplace.
@@ -110,7 +111,9 @@ export async function searchOfferings(opts: {
     .eq("is_active", true)
     .order("created_at", { ascending: false })
     .limit(opts.limit ?? 40);
-  let rows = (data ?? []).map(normalize);
+  // Never show offerings from people the viewer blocked or was blocked by.
+  const hidden = await getHiddenUserIds();
+  let rows = (data ?? []).map(normalize).filter((o) => !hidden.has(o.teacher_id));
 
   // Filter client-side over the joined fields (simple + fine at MVP scale).
   if (opts.q) {
@@ -341,7 +344,8 @@ export async function searchTeachers(opts: {
     );
   }
 
-  teachers = teachers.slice(0, opts.limit ?? 40);
+  const hidden = await getHiddenUserIds();
+  teachers = teachers.filter((t) => !hidden.has(t.id)).slice(0, opts.limit ?? 40);
   if (teachers.length === 0) return [];
 
   const ids = teachers.map((t) => t.id);

@@ -5,6 +5,7 @@ import { Avatar } from "@/components/Avatar";
 import { requireUser } from "@/lib/auth";
 import { getBookingDetail, hasReviewed } from "@/lib/data";
 import { MessageButton } from "@/components/MessageButton";
+import { ReportDialog } from "@/components/safety/ReportDialog";
 import { getTimeZone, formatInTz } from "@/lib/time";
 import { SessionActions } from "./SessionActions";
 import { ReviewForm } from "./ReviewForm";
@@ -66,7 +67,7 @@ export default async function SessionDetailPage({
       ? "You can confirm the session once it starts. Cancelling before then refunds your credits."
       : "Your learner confirms completion after the session. You can cancel before it starts, which refunds them.";
   } else if (iAmLearner) {
-    hint = `Confirming releases ${booking.credit_cost} credit(s) to your teacher. Only confirm if the session took place.`;
+    hint = `Confirming releases ${booking.credit_cost} credit(s) to your teacher. Only confirm if the session took place. If it didn't, use "Report a problem" above.`;
   } else if (canComplete) {
     hint = "Your learner hasn't confirmed within 48 hours of the session ending, so you can claim the credits now.";
   } else {
@@ -114,8 +115,15 @@ export default async function SessionDetailPage({
             </p>
           </div>
           {other?.id && (
-            <div className="ml-auto">
+            <div className="ml-auto flex flex-wrap items-center gap-1">
               <MessageButton otherId={other.id} />
+              <ReportDialog
+                userId={other.id}
+                userName={other.full_name || "this member"}
+                contextType="session"
+                contextId={booking.id}
+                label="Report a problem"
+              />
             </div>
           )}
         </div>

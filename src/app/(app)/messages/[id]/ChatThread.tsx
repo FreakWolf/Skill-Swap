@@ -24,11 +24,14 @@ export function ChatThread({
   meId,
   initialMessages,
   tz,
+  blockedNotice = null,
 }: {
   conversationId: string;
   meId: string;
   initialMessages: Message[];
   tz: string;
+  /** When set, sending is disabled and this text is shown instead. */
+  blockedNotice?: string | null;
 }) {
   const [messages, setMessages] = useState<LocalMessage[]>(initialMessages);
   const [error, setError] = useState<string | null>(null);
@@ -175,7 +178,13 @@ export function ChatThread({
         <div ref={bottomRef} />
       </div>
 
-      {/* Composer */}
+      {/* Composer (replaced by a notice when either side has blocked the other) */}
+      {blockedNotice ? (
+        <p className="border-t border-[var(--border)] bg-white py-4 text-center text-sm text-gray-500">
+          {blockedNotice}
+        </p>
+      ) : (
+      <>
       <div className="flex items-end gap-2 border-t border-[var(--border)] bg-white py-3">
         <textarea
           ref={inputRef}
@@ -199,6 +208,8 @@ export function ChatThread({
         </Button>
       </div>
       {error && <p className="pb-2 text-sm text-red-600">{error}</p>}
+      </>
+      )}
     </div>
   );
 }

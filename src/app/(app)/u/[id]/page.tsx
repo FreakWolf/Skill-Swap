@@ -4,7 +4,10 @@ import { Avatar } from "@/components/Avatar";
 import { Stars } from "@/components/Stars";
 import { OfferingCard } from "@/components/OfferingCard";
 import { MessageButton } from "@/components/MessageButton";
+import { ReportDialog } from "@/components/safety/ReportDialog";
+import { BlockButton } from "@/components/safety/BlockButton";
 import { requireUser } from "@/lib/auth";
+import { getBlockStatus } from "@/lib/safety";
 import { createClient } from "@/lib/supabase/server";
 import {
   getUserSkills,
@@ -30,6 +33,42 @@ export default async function PublicProfilePage({
     .eq("id", id)
     .maybeSingle<Profile>();
   if (!profile) notFound();
+
+  const block = isSelf
+    ? { iBlocked: false, blockedMe: false }
+    : await getBlockStatus(user.id, id);
+  const name = profile.full_name || "SkillSwap member";
+
+  // They blocked me: don't reveal the profile or that a block exists.
+  if (block.blockedMe) {
+    return (
+      <Card className="mx-auto max-w-lg p-10 text-center">
+        <p className="font-medium text-gray-900">This profile isn&apos;t available</p>
+        <p className="mt-1 text-sm text-gray-500">
+          It may have been removed, or you can&apos;t interact with this member.
+        </p>
+      </Card>
+    );
+  }
+
+  // I blocked them: show only who it is and a way to undo it.
+  if (block.iBlocked) {
+    return (
+      <Card className="mx-auto max-w-lg p-8 text-center">
+        <div className="flex justify-center">
+          <Avatar name={name} url={profile.avatar_url} size={64} />
+        </div>
+        <p className="mt-4 font-medium text-gray-900">You blocked {name}</p>
+        <p className="mt-1 text-sm text-gray-500">
+          You can&apos;t message or book each other, and you&apos;re hidden from
+          each other in Explore.
+        </p>
+        <div className="mt-4 flex justify-center">
+          <BlockButton userId={id} userName={name} blocked />
+        </div>
+      </Card>
+    );
+  }
 
   const [skills, offerings, reviews, rating] = await Promise.all([
     getUserSkills(id),
@@ -61,8 +100,10 @@ export default async function PublicProfilePage({
             )}
           </div>
           {!isSelf && (
-            <div className="ml-auto">
+            <div className="ml-auto flex flex-wrap items-center gap-1">
               <MessageButton otherId={id} variant="brand" />
+              <ReportDialog userId={id} userName={name} contextType="profile" />
+              <BlockButton userId={id} userName={name} blocked={false} />
             </div>
           )}
         </div>
