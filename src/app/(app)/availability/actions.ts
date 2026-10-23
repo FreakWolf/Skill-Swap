@@ -23,6 +23,11 @@ export async function addSlot(
   }
   const { offeringId, startISO } = parsed.data;
 
+  // Require a time zone (Z or ±hh:mm) so the server never misreads local time.
+  if (!/(Z|[+-]\d{2}:\d{2})$/.test(startISO)) {
+    return { error: "Invalid date/time" };
+  }
+
   const start = new Date(startISO);
   if (Number.isNaN(start.getTime())) return { error: "Invalid date/time" };
   if (start.getTime() < Date.now()) {

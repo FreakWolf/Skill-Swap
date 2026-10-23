@@ -5,9 +5,10 @@ import { Avatar } from "@/components/Avatar";
 import { CreditPill } from "@/components/CreditPill";
 import { requireUser, getBalance } from "@/lib/auth";
 import { getMyBookings, type BookingWithDetails } from "@/lib/data";
+import { getTimeZone, formatInTz } from "@/lib/time";
 
-function when(iso: string) {
-  return new Date(iso).toLocaleString(undefined, {
+function when(iso: string, tz: string) {
+  return formatInTz(iso, tz, {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -26,9 +27,11 @@ const statusStyle: Record<string, string> = {
 function SessionRow({
   b,
   userId,
+  tz,
 }: {
   b: BookingWithDetails;
   userId: string;
+  tz: string;
 }) {
   const iAmLearner = b.learner_id === userId;
   const other = iAmLearner ? b.teacher : b.learner;
@@ -40,7 +43,7 @@ function SessionRow({
           <p className="truncate font-medium text-slate-900">{b.title}</p>
           <p className="truncate text-sm text-slate-500">
             {iAmLearner ? "Learning from" : "Teaching"}{" "}
-            {other?.full_name || "member"} · {when(b.starts_at)}
+            {other?.full_name || "member"} · {when(b.starts_at, tz)}
           </p>
         </div>
         <div className="ml-auto flex flex-col items-end gap-1">
@@ -57,9 +60,10 @@ function SessionRow({
 
 export default async function SessionsPage() {
   const { user } = await requireUser();
-  const [bookings, balance] = await Promise.all([
+  const [bookings, balance, tz] = await Promise.all([
     getMyBookings(user.id),
     getBalance(user.id),
+    getTimeZone(),
   ]);
 
   const isUpcoming = (b: BookingWithDetails) =>
@@ -90,7 +94,7 @@ export default async function SessionsPage() {
         {upcoming.length > 0 ? (
           <div className="space-y-3">
             {upcoming.map((b) => (
-              <SessionRow key={b.id} b={b} userId={user.id} />
+              <SessionRow key={b.id} b={b} userId={user.id} tz={tz} />
             ))}
           </div>
         ) : (
@@ -109,7 +113,7 @@ export default async function SessionsPage() {
         {past.length > 0 ? (
           <div className="space-y-3">
             {past.map((b) => (
-              <SessionRow key={b.id} b={b} userId={user.id} />
+              <SessionRow key={b.id} b={b} userId={user.id} tz={tz} />
             ))}
           </div>
         ) : (

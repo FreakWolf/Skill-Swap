@@ -5,6 +5,7 @@ import { OfferingCard } from "@/components/OfferingCard";
 import { CreditPill } from "@/components/CreditPill";
 import { requireUser, getBalance } from "@/lib/auth";
 import { getRecommendedOfferings, getMyBookings } from "@/lib/data";
+import { getTimeZone, formatInTz } from "@/lib/time";
 import {
   Sparkles,
   GraduationCap,
@@ -13,8 +14,8 @@ import {
   Calendar as CalendarIcon,
 } from "lucide-react";
 
-function formatWhen(iso: string) {
-  return new Date(iso).toLocaleString(undefined, {
+function formatWhen(iso: string, tz: string) {
+  return formatInTz(iso, tz, {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -25,10 +26,11 @@ function formatWhen(iso: string) {
 
 export default async function DashboardPage() {
   const { user, profile } = await requireUser();
-  const [balance, recommended, bookings] = await Promise.all([
+  const [balance, recommended, bookings, tz] = await Promise.all([
     getBalance(user.id),
     getRecommendedOfferings(user.id),
     getMyBookings(user.id),
+    getTimeZone(),
   ]);
 
   const now = new Date().getTime();
@@ -134,7 +136,7 @@ export default async function DashboardPage() {
                   <p className="mt-0.5 flex items-center gap-1.5 text-sm text-gray-500">
                     <Star className="h-3.5 w-3.5" />
                     {b.learner_id === user.id ? "Learning" : "Teaching"} ·{" "}
-                    {formatWhen(b.starts_at)}
+                    {formatWhen(b.starts_at, tz)}
                   </p>
                   <Link href={`/sessions/${b.id}`}>
                     <Button size="sm" className="mt-3 w-full">

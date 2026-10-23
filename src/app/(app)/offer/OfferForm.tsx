@@ -23,7 +23,14 @@ export function OfferForm({ skillNames }: { skillNames: string[] }) {
 
   return (
     <form action={action} className="space-y-5">
-      <input type="hidden" name="slots" value={JSON.stringify(slots)} />
+      {/* datetime-local values have no time zone. Convert them to UTC ISO in
+          the browser (which knows the user's zone) so the server, which runs
+          in UTC, stores the time the user actually meant. */}
+      <input
+        type="hidden"
+        name="slots"
+        value={JSON.stringify(slots.map((s) => new Date(s).toISOString()))}
+      />
 
       <div>
         <Label htmlFor="skillName">Skill</Label>

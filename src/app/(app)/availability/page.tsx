@@ -4,11 +4,12 @@ import { Card, Badge } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { requireUser } from "@/lib/auth";
 import { getMyOfferingsWithSlots } from "@/lib/data";
+import { getTimeZone, formatInTz } from "@/lib/time";
 import { AddSlotForm } from "./AddSlotForm";
 import { removeSlot } from "./actions";
 
-function slotLabel(iso: string) {
-  return new Date(iso).toLocaleString(undefined, {
+function slotLabel(iso: string, tz: string) {
+  return formatInTz(iso, tz, {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -19,7 +20,10 @@ function slotLabel(iso: string) {
 
 export default async function AvailabilityPage() {
   const { user } = await requireUser();
-  const offerings = await getMyOfferingsWithSlots(user.id);
+  const [offerings, tz] = await Promise.all([
+    getMyOfferingsWithSlots(user.id),
+    getTimeZone(),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -75,7 +79,7 @@ export default async function AvailabilityPage() {
                         className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-sm"
                       >
                         <span className="text-gray-700">
-                          {slotLabel(s.starts_at)}
+                          {slotLabel(s.starts_at, tz)}
                         </span>
                         {s.is_booked ? (
                           <Badge className="bg-teal-50 text-teal-700">Booked</Badge>

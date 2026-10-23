@@ -7,8 +7,9 @@ import { Textarea } from "@/components/ui/Input";
 import { cn } from "@/lib/cn";
 import type { Availability } from "@/lib/types";
 
-function formatSlot(iso: string) {
+function formatSlot(iso: string, tz: string) {
   return new Date(iso).toLocaleString(undefined, {
+    timeZone: tz,
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -22,11 +23,13 @@ export function BookingPanel({
   cost,
   balance,
   isOwnOffering,
+  tz,
 }: {
   slots: Availability[];
   cost: number;
   balance: number;
   isOwnOffering: boolean;
+  tz: string;
 }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [state, action, pending] = useActionState<BookState, FormData>(
@@ -71,7 +74,7 @@ export function BookingPanel({
                   : "border-[var(--border)] bg-white text-slate-700 hover:bg-slate-50",
               )}
             >
-              {formatSlot(s.starts_at)}
+              {formatSlot(s.starts_at, tz)}
             </button>
           ))}
         </div>

@@ -4,18 +4,24 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { requireUser } from "@/lib/auth";
 import { getCalendarItems, type CalendarItem } from "@/lib/data";
+import { getTimeZone, formatInTz, partsInTz } from "@/lib/time";
 import { cn } from "@/lib/cn";
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-function parseMonth(param?: string): { year: number; month: number } {
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function parseMonth(
+  param: string | undefined,
+  tz: string,
+): { year: number; month: number } {
   // month is 0-indexed internally.
   if (param && /^\d{4}-\d{2}$/.test(param)) {
     const [y, m] = param.split("-").map(Number);
-    return { year: y, month: m - 1 };
+    if (m >= 1 && m <= 12) return { year: y, month: m - 1 };
   }
-  const now = new Date();
-  return { year: now.getFullYear(), month: now.getMonth() };
+  const { year, month } = partsInTz(new Date(), tz);
+  return { year, month };
 }
 
 function ym(year: number, month: number) {
@@ -34,32 +40,35 @@ export default async function CalendarPage({
   searchParams: Promise<{ month?: string }>;
 }) {
   const { user } = await requireUser();
-  const { month: monthParam } = await searchParams;
-  const { year, month } = parseMonth(monthParam);
+  const [{ month: monthParam }, tz] = await Promise.all([
+    searchParams,
+    getTimeZone(),
+  ]);
+  const { year, month } = parseMonth(monthParam, tz);
 
-  // Range covering the visible grid (start of month .. end of month).
-  const firstOfMonth = new Date(year, month, 1);
-  const lastOfMonth = new Date(year, month + 1, 0);
-  const rangeStart = new Date(year, month, 1, 0, 0, 0);
-  const rangeEnd = new Date(year, month + 1, 0, 23, 59, 59);
+  // Pure calendar math (independent of any time zone): which weekday the
+  // month starts on and how many days it has.
+  const leadingBlanks = new Date(Date.UTC(year, month, 1)).getUTCDay();
+  const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
 
+  // Fetch a slightly wider window (±1 day), then bucket by the user's local
+  // date so items near midnight land on the right day.
+  const rangeStart = new Date(Date.UTC(year, month, 1) - DAY_MS);
+  const rangeEnd = new Date(Date.UTC(year, month + 1, 1) + DAY_MS);
   const items = await getCalendarItems(
     user.id,
     rangeStart.toISOString(),
     rangeEnd.toISOString(),
   );
 
-  // Bucket items by day-of-month.
   const byDay = new Map<number, CalendarItem[]>();
   for (const it of items) {
-    const d = new Date(it.starts_at).getDate();
-    if (!byDay.has(d)) byDay.set(d, []);
-    byDay.get(d)!.push(it);
+    const p = partsInTz(new Date(it.starts_at), tz);
+    if (p.year !== year || p.month !== month) continue;
+    if (!byDay.has(p.day)) byDay.set(p.day, []);
+    byDay.get(p.day)!.push(it);
   }
 
-  // Build the grid: leading blanks + days of the month.
-  const leadingBlanks = firstOfMonth.getDay();
-  const daysInMonth = lastOfMonth.getDate();
   const cells: (number | null)[] = [
     ...Array(leadingBlanks).fill(null),
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
@@ -67,14 +76,13 @@ export default async function CalendarPage({
 
   const prev = month === 0 ? ym(year - 1, 11) : ym(year, month - 1);
   const next = month === 11 ? ym(year + 1, 0) : ym(year, month + 1);
-  const monthLabel = firstOfMonth.toLocaleString(undefined, {
-    month: "long",
-    year: "numeric",
-  });
+  const monthLabel = new Date(Date.UTC(year, month, 1)).toLocaleString(
+    undefined,
+    { month: "long", year: "numeric", timeZone: "UTC" },
+  );
 
-  const today = new Date();
-  const isThisMonth =
-    today.getFullYear() === year && today.getMonth() === month;
+  const today = partsInTz(new Date(), tz);
+  const isThisMonth = today.year === year && today.month === month;
 
   return (
     <div className="space-y-6">
@@ -124,7 +132,7 @@ export default async function CalendarPage({
           {cells.map((day, i) => {
             if (day === null) return <div key={`b-${i}`} />;
             const dayItems = byDay.get(day) ?? [];
-            const isToday = isThisMonth && today.getDate() === day;
+            const isToday = isThisMonth && today.day === day;
             return (
               <div
                 key={day}
@@ -153,7 +161,7 @@ export default async function CalendarPage({
                       >
                         <span className={cn("h-2 w-2 shrink-0 rounded-full", dotColor[it.kind])} />
                         <span className="truncate">
-                          {new Date(it.starts_at).toLocaleTimeString(undefined, {
+                          {formatInTz(it.starts_at, tz, {
                             hour: "numeric",
                             minute: "2-digit",
                           })}{" "}

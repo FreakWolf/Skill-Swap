@@ -7,8 +7,9 @@ import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 import type { Message } from "@/lib/types";
 
-function time(iso: string) {
+function time(iso: string, tz: string) {
   return new Date(iso).toLocaleTimeString(undefined, {
+    timeZone: tz,
     hour: "numeric",
     minute: "2-digit",
   });
@@ -22,10 +23,12 @@ export function ChatThread({
   conversationId,
   meId,
   initialMessages,
+  tz,
 }: {
   conversationId: string;
   meId: string;
   initialMessages: Message[];
+  tz: string;
 }) {
   const [messages, setMessages] = useState<LocalMessage[]>(initialMessages);
   const [error, setError] = useState<string | null>(null);
@@ -162,7 +165,7 @@ export function ChatThread({
                       mine ? "text-blue-100" : "text-gray-400",
                     )}
                   >
-                    {m.pending ? "Sending…" : time(m.created_at)}
+                    {m.pending ? "Sending…" : time(m.created_at, tz)}
                   </p>
                 </div>
               </div>

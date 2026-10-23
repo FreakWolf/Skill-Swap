@@ -47,6 +47,12 @@ export function SignupForm() {
         </span>
       </label>
 
+      {state?.message && (
+        <p className="rounded-lg bg-teal-50 px-3 py-2 text-sm text-teal-700">
+          {state.message}
+        </p>
+      )}
+
       {state?.error && (
         <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
           {state.error}

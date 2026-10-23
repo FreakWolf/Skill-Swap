@@ -3,7 +3,12 @@ import { Logo } from "@/components/Logo";
 import { Card } from "@/components/ui/Card";
 import { LoginForm } from "./LoginForm";
 
-export default function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const { error } = await searchParams;
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="w-full max-w-md">
@@ -24,6 +29,15 @@ export default function LoginPage() {
               Sign up
             </Link>
           </div>
+          {error === "link_expired" && (
+            <p className="mb-4 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
+              That link is invalid or has expired. Log in, or{" "}
+              <Link href="/forgot-password" className="font-medium underline">
+                request a new reset link
+              </Link>
+              .
+            </p>
+          )}
           <LoginForm />
         </Card>
       </div>

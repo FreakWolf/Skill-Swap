@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { Avatar } from "@/components/Avatar";
 import { requireUser } from "@/lib/auth";
 import { getConversationThread } from "@/lib/messaging";
+import { getTimeZone } from "@/lib/time";
 import { ChatThread } from "./ChatThread";
 
 export default async function ChatPage({
@@ -14,7 +15,10 @@ export default async function ChatPage({
   const { id } = await params;
   const { user } = await requireUser();
 
-  const thread = await getConversationThread(id, user.id);
+  const [thread, tz] = await Promise.all([
+    getConversationThread(id, user.id),
+    getTimeZone(),
+  ]);
   if (!thread) notFound();
 
   return (
@@ -45,6 +49,7 @@ export default async function ChatPage({
         conversationId={id}
         meId={user.id}
         initialMessages={thread.messages}
+        tz={tz}
       />
     </div>
   );

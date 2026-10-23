@@ -19,7 +19,15 @@ export function LoginForm() {
         <Input id="email" name="email" type="email" autoComplete="email" required placeholder="you@example.com" />
       </div>
       <div>
-        <Label htmlFor="password">Password</Label>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="password">Password</Label>
+          <Link
+            href="/forgot-password"
+            className="mb-1.5 text-sm font-medium text-blue-600 hover:underline"
+          >
+            Forgot password?
+          </Link>
+        </div>
         <Input id="password" name="password" type="password" autoComplete="current-password" required placeholder="••••••••" />
       </div>
 

@@ -9,6 +9,7 @@ import {
   getReviewsFor,
   getRatingSummary,
 } from "@/lib/data";
+import { getTimeZone } from "@/lib/time";
 import { BookingPanel } from "./BookingPanel";
 
 export default async function OfferingDetailPage({
@@ -23,10 +24,11 @@ export default async function OfferingDetailPage({
   if (!result) notFound();
   const { offering, slots } = result;
 
-  const [balance, reviews, rating] = await Promise.all([
+  const [balance, reviews, rating, tz] = await Promise.all([
     getBalance(user.id),
     getReviewsFor(offering.teacher_id),
     getRatingSummary(offering.teacher_id),
+    getTimeZone(),
   ]);
 
   const isOwn = offering.teacher_id === user.id;
@@ -135,6 +137,7 @@ export default async function OfferingDetailPage({
             cost={offering.credit_cost}
             balance={balance}
             isOwnOffering={isOwn}
+            tz={tz}
           />
         </Card>
       </div>

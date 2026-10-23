@@ -18,6 +18,8 @@ const offerSchema = z.object({
 
 export type OfferState = { error?: string } | undefined;
 
+const HAS_TZ = /(Z|[+-]\d{2}:\d{2})$/;
+
 export async function createOffering(
   _prev: OfferState,
   formData: FormData,
@@ -85,6 +87,9 @@ export async function createOffering(
   } catch {
     slotList = [];
   }
+  // Only accept timestamps that carry a time zone (Z or ±hh:mm). A bare
+  // "2026-09-25T17:00" would be misread as UTC on the server.
+  slotList = slotList.filter((s) => HAS_TZ.test(s));
 
   if (slotList.length > 0) {
     const rows = slotList
