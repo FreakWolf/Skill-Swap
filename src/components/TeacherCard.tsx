@@ -35,7 +35,7 @@ export function TeacherCard({ teacher }: { teacher: TeacherSummary }) {
       )}
 
       <div className="mt-3">
-        <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-gray-400">
+        <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-gray-500">
           Teaches
         </p>
         <div className="flex flex-wrap gap-1.5">
@@ -60,7 +60,7 @@ export function TeacherCard({ teacher }: { teacher: TeacherSummary }) {
       </div>
 
       {teacher.offeringCount > 0 && (
-        <p className="mt-2 text-center text-xs text-gray-400">
+        <p className="mt-2 text-center text-xs text-gray-500">
           {teacher.offeringCount} active{" "}
           {teacher.offeringCount === 1 ? "offering" : "offerings"}
         </p>

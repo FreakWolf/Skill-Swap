@@ -17,7 +17,7 @@ export default async function AnalyticsPage() {
   const a = await getAnalytics(user.id);
 
   const stats = [
-    { label: "Balance", value: a.balance, icon: Coins, tile: "bg-amber-100 text-amber-600", num: "text-amber-600" },
+    { label: "Balance", value: a.balance, icon: Coins, tile: "bg-amber-100 text-amber-700", num: "text-amber-700" },
     { label: "Credits earned", value: a.totalEarned, icon: TrendingUp, tile: "bg-green-100 text-green-600", num: "text-green-600" },
     { label: "Credits spent", value: a.totalSpent, icon: TrendingDown, tile: "bg-red-100 text-red-600", num: "text-red-600" },
     { label: "Sessions taught", value: a.sessionsTaught, icon: GraduationCap, tile: "bg-brand-100 text-brand-600", num: "text-brand-600" },
@@ -45,7 +45,7 @@ export default async function AnalyticsPage() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
         {stats.map((s) => {
           const Icon = s.icon;
           return (
@@ -56,7 +56,7 @@ export default async function AnalyticsPage() {
               <p className={`mt-4 text-3xl font-bold ${s.num}`}>{s.value}</p>
               <p className="text-sm text-gray-500">{s.label}</p>
               {"sub" in s && s.sub && (
-                <p className="text-xs text-gray-400">{s.sub}</p>
+                <p className="text-xs text-gray-500">{s.sub}</p>
               )}
             </Card>
           );

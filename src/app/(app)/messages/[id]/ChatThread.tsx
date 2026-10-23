@@ -141,7 +141,7 @@ export function ChatThread({
       {/* Messages */}
       <div className="flex-1 space-y-2 overflow-y-auto py-4">
         {messages.length === 0 ? (
-          <p className="mt-8 text-center text-sm text-gray-400">
+          <p className="mt-8 text-center text-sm text-gray-500">
             No messages yet. Say hello 👋
           </p>
         ) : (
@@ -165,7 +165,8 @@ export function ChatThread({
                   <p
                     className={cn(
                       "mt-1 text-right text-[10px]",
-                      mine ? "text-brand-100" : "text-gray-400",
+                      // Readable on each bubble colour (WCAG AA).
+                      mine ? "text-brand-50" : "text-gray-600",
                     )}
                   >
                     {m.pending ? "Sending…" : time(m.created_at, tz)}

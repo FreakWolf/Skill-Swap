@@ -16,7 +16,7 @@ function iconFor(kind: string) {
     case "message":
       return { Icon: MessageSquare, tile: "bg-brand-orange-100 text-brand-orange-700" };
     case "credit":
-      return { Icon: Coins, tile: "bg-amber-100 text-amber-600" };
+      return { Icon: Coins, tile: "bg-amber-100 text-amber-700" };
     default:
       return { Icon: Info, tile: "bg-gray-100 text-gray-500" };
   }
@@ -47,7 +47,7 @@ function NotificationBody({
       <div className="flex items-center gap-2">
         <p className="font-medium text-gray-900">{n.title}</p>
         {!n.read && <span className="h-2 w-2 shrink-0 rounded-full bg-brand-600" />}
-        <span className="ml-auto shrink-0 text-xs text-gray-400">
+        <span className="ml-auto shrink-0 text-xs text-gray-500">
           {relativeTime(n.created_at)}
         </span>
       </div>
@@ -116,7 +116,7 @@ export default async function NotificationsPage() {
                     <input type="hidden" name="id" value={n.id} />
                     <button
                       type="submit"
-                      className="shrink-0 text-xs font-medium text-brand-600 hover:underline"
+                      className="-my-1.5 shrink-0 rounded px-2 py-1.5 text-xs font-medium text-brand-600 hover:bg-brand-50 hover:underline"
                     >
                       Mark read
                     </button>
@@ -128,7 +128,7 @@ export default async function NotificationsPage() {
         </div>
       ) : (
         <Card className="flex flex-col items-center p-12 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-400">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-500">
             <Bell className="h-7 w-7" />
           </div>
           <p className="mt-4 font-medium text-gray-900">You&apos;re all caught up</p>

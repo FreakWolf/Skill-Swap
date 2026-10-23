@@ -25,6 +25,7 @@ export function ReportDialog({
   contextId,
   label = "Report",
   showBlockOption = true,
+  compact = false,
 }: {
   userId: string;
   userName: string;
@@ -32,6 +33,8 @@ export function ReportDialog({
   contextId?: string;
   label?: string;
   showBlockOption?: boolean;
+  /** Icon-only on small screens (label kept for screen readers). */
+  compact?: boolean;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   // Once sent, reopening shows the confirmation instead of a fresh form,
@@ -50,9 +53,9 @@ export function ReportDialog({
 
   return (
     <>
-      <Button type="button" variant="ghost" size="sm" onClick={open}>
-        <Flag className="h-4 w-4" />
-        {label}
+      <Button type="button" variant="ghost" size="sm" onClick={open} className={compact ? "h-10 px-2.5 sm:h-8 sm:px-3" : undefined}>
+        <Flag className="h-4 w-4" aria-hidden />
+        <span className={compact ? "sr-only sm:not-sr-only" : undefined}>{label}</span>
       </Button>
 
       <dialog
@@ -110,7 +113,7 @@ export function ReportDialog({
                     <input type="radio" name="reason" value={r.value} required className="mt-1" />
                     <span>
                       <span className="text-gray-800">{r.label}</span>
-                      {r.hint && <span className="block text-xs text-gray-400">{r.hint}</span>}
+                      {r.hint && <span className="block text-xs text-gray-500">{r.hint}</span>}
                     </span>
                   </label>
                 ))}
@@ -119,7 +122,7 @@ export function ReportDialog({
 
             <div>
               <label htmlFor={`report-details-${userId}`} className="mb-1.5 block text-sm font-medium text-gray-700">
-                Details <span className="font-normal text-gray-400">(optional)</span>
+                Details <span className="font-normal text-gray-500">(optional)</span>
               </label>
               <Textarea
                 id={`report-details-${userId}`}

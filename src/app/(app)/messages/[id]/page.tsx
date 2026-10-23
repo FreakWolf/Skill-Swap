@@ -28,7 +28,9 @@ export default async function ChatPage({
 
   return (
     // Fill the app main area; the thread scrolls internally.
-    <div className="flex h-[calc(100vh-8rem)] flex-col lg:h-[calc(100vh-6rem)]">
+    // Fits the visible screen exactly: 100dvh minus the mobile header (4rem)
+    // and the page padding (4rem); desktop has no header.
+    <div className="flex h-[calc(100dvh-8rem)] flex-col lg:h-[calc(100dvh-4rem)]">
       {/* Header */}
       <div className="flex items-center gap-3 border-b border-[var(--border)] pb-3">
         <Link
@@ -38,29 +40,31 @@ export default async function ChatPage({
         >
           <ArrowLeft className="h-5 w-5" />
         </Link>
-        <Link href={`/u/${thread.other.id}`} className="flex items-center gap-3">
+        <Link href={`/u/${thread.other.id}`} className="flex min-w-0 items-center gap-3">
           <Avatar
             name={thread.other.full_name}
             url={thread.other.avatar_url}
             size={40}
           />
-          <span className="font-semibold text-gray-900">
+          <span className="truncate font-semibold text-gray-900">
             {thread.other.full_name}
           </span>
         </Link>
-        <div className="ml-auto flex items-center gap-1">
+        <div className="ml-auto flex shrink-0 items-center gap-1">
           <ReportDialog
             userId={thread.other.id}
             userName={thread.other.full_name}
             contextType="message"
             contextId={id}
             showBlockOption={!block.iBlocked && !block.blockedMe}
+            compact
           />
           {!block.blockedMe && (
             <BlockButton
               userId={thread.other.id}
               userName={thread.other.full_name}
               blocked={block.iBlocked}
+              compact
             />
           )}
         </div>

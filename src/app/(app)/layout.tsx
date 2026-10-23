@@ -54,7 +54,14 @@ export default async function AppLayout({
   const avatarUrl = profile?.avatar_url ?? null;
 
   return (
-    <div className="flex h-screen flex-col bg-gray-50 lg:flex-row">
+    <div className="flex min-h-screen flex-col bg-gray-50 lg:flex-row">
+      {/* Keyboard users can jump past the navigation. */}
+      <a
+        href="#main"
+        className="sr-only z-[60] rounded-md bg-white px-4 py-2 text-sm font-medium text-brand-700 shadow focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+      >
+        Skip to content
+      </a>
       {/* Sidebar shell renders instantly; counts stream in via Suspense. */}
       <Suspense
         fallback={
@@ -73,7 +80,9 @@ export default async function AppLayout({
           userId={user.id}
         />
       </Suspense>
-      <main className="flex-1 overflow-y-auto">
+      {/* The page itself scrolls (not an inner box): smoother on phones,
+          and works with keyboard scrolling. */}
+      <main id="main" tabIndex={-1} className="min-w-0 flex-1 focus:outline-none">
         <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-8">
           {children}
         </div>

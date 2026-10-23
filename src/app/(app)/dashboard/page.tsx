@@ -47,7 +47,7 @@ export default async function DashboardPage() {
   const firstName = (profile?.full_name ?? "").split(" ")[0] || "there";
 
   const stats = [
-    { label: "Credits", value: balance, icon: Coins, tile: "bg-amber-100 text-amber-600", num: "text-amber-600" },
+    { label: "Credits", value: balance, icon: Coins, tile: "bg-amber-100 text-amber-700", num: "text-amber-700" },
     { label: "Sessions taught", value: taught, icon: GraduationCap, tile: "bg-brand-100 text-brand-600", num: "text-brand-600" },
     { label: "Sessions learned", value: learned, icon: Sparkles, tile: "bg-brand-orange-100 text-brand-orange-700", num: "text-brand-orange-700" },
     { label: "Upcoming", value: upcoming.length, icon: CalendarIcon, tile: "bg-green-100 text-green-600", num: "text-green-600" },
@@ -82,15 +82,15 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {stats.map((s) => {
           const Icon = s.icon;
           return (
-            <Card key={s.label} className="p-5 transition-shadow hover:shadow-md">
-              <div className={`flex h-11 w-11 items-center justify-center rounded-lg ${s.tile}`}>
-                <Icon className="h-5 w-5" />
+            <Card key={s.label} className="p-4 transition-shadow hover:shadow-md sm:p-5">
+              <div className={`flex h-10 w-10 items-center justify-center rounded-lg sm:h-11 sm:w-11 ${s.tile}`}>
+                <Icon className="h-5 w-5" aria-hidden />
               </div>
-              <p className={`mt-4 text-3xl font-bold ${s.num}`}>{s.value}</p>
+              <p className={`mt-3 text-2xl font-bold sm:mt-4 sm:text-3xl ${s.num}`}>{s.value}</p>
               <p className="text-sm text-gray-500">{s.label}</p>
             </Card>
           );
@@ -102,7 +102,7 @@ export default async function DashboardPage() {
         <section className="lg:col-span-2">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">Recommended for you</h2>
-            <Link href="/marketplace" className="text-sm font-medium text-brand-600 hover:underline">
+            <Link href="/marketplace" className="-my-1 inline-block py-1 text-sm font-medium text-brand-600 hover:underline">
               Explore all
             </Link>
           </div>
@@ -124,7 +124,7 @@ export default async function DashboardPage() {
         <section>
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">Upcoming</h2>
-            <Link href="/sessions" className="text-sm font-medium text-brand-600 hover:underline">
+            <Link href="/sessions" className="-my-1 inline-block py-1 text-sm font-medium text-brand-600 hover:underline">
               View all
             </Link>
           </div>

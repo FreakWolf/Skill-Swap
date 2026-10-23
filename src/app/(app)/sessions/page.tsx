@@ -48,7 +48,7 @@ function SessionRow({
         </div>
         <div className="ml-auto flex flex-col items-end gap-1">
           <Badge className={statusStyle[b.status] ?? ""}>{b.status}</Badge>
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-slate-500">
             {iAmLearner ? "-" : "+"}
             {b.credit_cost} cr
           </span>

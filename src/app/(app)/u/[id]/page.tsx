@@ -130,7 +130,7 @@ export default async function PublicProfilePage({
               ))}
             </div>
           ) : (
-            <p className="text-sm text-slate-400">Nothing listed yet.</p>
+            <p className="text-sm text-slate-500">Nothing listed yet.</p>
           )}
         </Card>
         <Card className="p-6">
@@ -144,7 +144,7 @@ export default async function PublicProfilePage({
               ))}
             </div>
           ) : (
-            <p className="text-sm text-slate-400">Nothing listed yet.</p>
+            <p className="text-sm text-slate-500">Nothing listed yet.</p>
           )}
         </Card>
       </div>

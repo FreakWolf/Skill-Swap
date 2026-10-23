@@ -77,7 +77,7 @@ export default async function SessionDetailPage({
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <Link href="/sessions" className="text-sm text-slate-500 hover:underline">
+      <Link href="/sessions" className="inline-block py-1 text-sm text-slate-500 hover:underline">
         ← All sessions
       </Link>
 
@@ -99,24 +99,25 @@ export default async function SessionDetailPage({
               <p className="text-slate-500">{booking.skillName}</p>
             )}
           </div>
-          <span className="shrink-0 text-sm font-semibold text-amber-600">
+          <span className="shrink-0 text-sm font-semibold text-amber-700">
             {iAmLearner ? "-" : "+"}
             {booking.credit_cost} cr
           </span>
         </div>
 
-        <div className="mt-6 flex items-center gap-3 border-t border-[var(--border)] pt-4">
+        <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-[var(--border)] pt-4">
           <Avatar name={other?.full_name ?? ""} url={other?.avatar_url} size={44} />
-          <div>
-            <p className="font-medium text-slate-900">
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-medium text-slate-900">
               {other?.full_name || "SkillSwap member"}
             </p>
             <p className="text-sm text-slate-500">
               {iAmLearner ? "Your teacher" : "Your learner"}
             </p>
           </div>
+          {/* Own row on phones, beside the name on wider screens. */}
           {other?.id && (
-            <div className="ml-auto flex flex-wrap items-center gap-1">
+            <div className="flex w-full flex-wrap items-center gap-1 sm:ml-auto sm:w-auto">
               <MessageButton otherId={other.id} />
               <ReportDialog
                 userId={other.id}
@@ -131,11 +132,11 @@ export default async function SessionDetailPage({
 
         <dl className="mt-6 grid gap-3 text-sm sm:grid-cols-2">
           <div>
-            <dt className="text-slate-400">When</dt>
+            <dt className="text-slate-500">When</dt>
             <dd className="font-medium text-slate-800">{when(booking.starts_at, tz)}</dd>
           </div>
           <div>
-            <dt className="text-slate-400">Role</dt>
+            <dt className="text-slate-500">Role</dt>
             <dd className="font-medium text-slate-800">
               {iAmLearner ? "Learning" : "Teaching"}
             </dd>

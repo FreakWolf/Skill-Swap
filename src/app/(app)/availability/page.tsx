@@ -41,7 +41,7 @@ export default async function AvailabilityPage() {
 
       {offerings.length === 0 ? (
         <Card className="flex flex-col items-center p-12 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-400">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-500">
             <CalendarPlus className="h-7 w-7" />
           </div>
           <p className="mt-4 font-medium text-gray-900">No offerings yet</p>
@@ -68,7 +68,7 @@ export default async function AvailabilityPage() {
 
               <div className="mt-4 border-t border-[var(--border)] pt-4">
                 {o.slots.length === 0 ? (
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-gray-500">
                     No open slots. Add times above so people can book.
                   </p>
                 ) : (
@@ -88,7 +88,7 @@ export default async function AvailabilityPage() {
                             <input type="hidden" name="slotId" value={s.id} />
                             <button
                               type="submit"
-                              className="text-gray-400 hover:text-red-600"
+                              className="-my-1 -mr-1.5 flex h-7 w-7 items-center justify-center rounded text-gray-500 hover:bg-red-50 hover:text-red-600"
                               aria-label="Remove slot"
                             >
                               ✕

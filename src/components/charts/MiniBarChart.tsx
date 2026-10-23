@@ -15,16 +15,18 @@ export function MiniBarChart({ data }: { data: MonthlyFlow[] }) {
                 className="w-1/3 rounded-t bg-brand-500 transition-all"
                 style={{ height: `${(d.earned / max) * 100}%` }}
                 title={`Earned ${d.earned}`}
+                role="img"
                 aria-label={`${d.label}: earned ${d.earned}`}
               />
               <div
                 className="w-1/3 rounded-t bg-brand-orange-500 transition-all"
                 style={{ height: `${(d.spent / max) * 100}%` }}
                 title={`Spent ${d.spent}`}
+                role="img"
                 aria-label={`${d.label}: spent ${d.spent}`}
               />
             </div>
-            <span className="text-xs text-gray-400">{d.label}</span>
+            <span className="text-xs text-gray-500">{d.label}</span>
           </div>
         ))}
       </div>

@@ -4,16 +4,20 @@ import { useState, useTransition } from "react";
 import { Ban } from "lucide-react";
 import { blockUser, unblockUser } from "@/app/(app)/safety/actions";
 import { Button } from "@/components/ui/Button";
+import { cn } from "@/lib/cn";
 
 // Block / unblock toggle. Blocking asks for confirmation first.
 export function BlockButton({
   userId,
   userName,
   blocked,
+  compact = false,
 }: {
   userId: string;
   userName: string;
   blocked: boolean;
+  /** Icon-only on small screens (label kept for screen readers). */
+  compact?: boolean;
 }) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -42,10 +46,15 @@ export function BlockButton({
         size="sm"
         onClick={onClick}
         disabled={pending}
-        className={blocked ? "" : "text-red-600 hover:bg-red-50"}
+        className={cn(
+          blocked ? "" : "text-red-600 hover:bg-red-50",
+          compact && "h-10 px-2.5 sm:h-8 sm:px-3",
+        )}
       >
-        <Ban className="h-4 w-4" />
-        {pending ? (blocked ? "Unblocking…" : "Blocking…") : blocked ? "Unblock" : "Block"}
+        <Ban className="h-4 w-4" aria-hidden />
+        <span className={compact ? "sr-only sm:not-sr-only" : undefined}>
+          {pending ? (blocked ? "Unblocking…" : "Blocking…") : blocked ? "Unblock" : "Block"}
+        </span>
       </Button>
       {error && <span className="mt-1 text-xs text-red-600">{error}</span>}
     </span>

@@ -84,6 +84,11 @@ export default async function CalendarPage({
   const today = partsInTz(new Date(), tz);
   const isThisMonth = today.year === year && today.month === month;
 
+  // Items in this month (in the user's zone), already sorted by start time.
+  const monthItems = [...byDay.keys()]
+    .sort((a, b) => a - b)
+    .flatMap((d) => byDay.get(d) ?? []);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -119,7 +124,7 @@ export default async function CalendarPage({
         </div>
 
         {/* Weekday header */}
-        <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-400">
+        <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-500">
           {WEEKDAYS.map((d) => (
             <div key={d} className="py-1">
               {d}
@@ -137,7 +142,7 @@ export default async function CalendarPage({
               <div
                 key={day}
                 className={cn(
-                  "min-h-20 rounded-lg border p-1.5 text-left",
+                  "min-h-12 rounded-lg border p-1 text-left sm:min-h-20 sm:p-1.5",
                   isToday
                     ? "border-brand-400 bg-brand-50/40"
                     : "border-[var(--border)]",
@@ -151,7 +156,15 @@ export default async function CalendarPage({
                 >
                   {day}
                 </span>
-                <div className="mt-1 space-y-1">
+                {/* Phones: titles don't fit, so just show dots; the list below has the details. */}
+                {dayItems.length > 0 && (
+                  <div className="mt-1 flex flex-wrap gap-0.5 sm:hidden" aria-hidden>
+                    {dayItems.slice(0, 4).map((it) => (
+                      <span key={it.id} className={cn("h-1.5 w-1.5 rounded-full", dotColor[it.kind])} />
+                    ))}
+                  </div>
+                )}
+                <div className="mt-1 hidden space-y-1 sm:block">
                   {dayItems.slice(0, 3).map((it) =>
                     it.href ? (
                       <Link
@@ -171,7 +184,7 @@ export default async function CalendarPage({
                     ) : null,
                   )}
                   {dayItems.length > 3 && (
-                    <span className="px-1 text-[10px] text-gray-400">
+                    <span className="px-1 text-[10px] text-gray-500">
                       +{dayItems.length - 3} more
                     </span>
                   )}
@@ -194,8 +207,45 @@ export default async function CalendarPage({
           </span>
         </div>
       </Card>
+
+      {/* Readable list of the month's items (essential on phones, handy everywhere). */}
+      <Card className="p-4 sm:p-6">
+        <h2 className="mb-3 font-semibold text-gray-900">This month</h2>
+        {monthItems.length === 0 ? (
+          <p className="text-sm text-gray-500">Nothing scheduled in {monthLabel}.</p>
+        ) : (
+          <ul className="divide-y divide-[var(--border)]">
+            {monthItems.map((it) => (
+              <li key={it.id}>
+                <Link
+                  href={it.href ?? "/calendar"}
+                  className="flex min-h-12 items-center gap-3 py-2.5 hover:bg-gray-50"
+                >
+                  <span className={cn("h-2.5 w-2.5 shrink-0 rounded-full", dotColor[it.kind])} aria-hidden />
+                  <span className="w-24 shrink-0 text-sm leading-tight">
+                    <span className="block text-gray-900">
+                      {formatInTz(it.starts_at, tz, { weekday: "short", month: "short", day: "numeric" })}
+                    </span>
+                    <span className="block text-xs text-gray-500">
+                      {formatInTz(it.starts_at, tz, { hour: "numeric", minute: "2-digit" })}
+                    </span>
+                  </span>
+                  <span className="line-clamp-2 min-w-0 flex-1 text-sm font-medium text-gray-900">{it.title}</span>
+                  <span className="shrink-0 text-xs text-gray-500">{KIND_LABEL[it.kind]}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
     </div>
   );
 }
+
+const KIND_LABEL: Record<CalendarItem["kind"], string> = {
+  teaching: "Teaching",
+  learning: "Learning",
+  open: "Open slot",
+};
 
 export const metadata = { title: "Calendar" };

@@ -109,13 +109,17 @@ export function OfferForm({ skillNames }: { skillNames: string[] }) {
       {/* Availability slots */}
       <div>
         <Label>Available time slots</Label>
-        <div className="flex gap-2">
+        {/* Stacks on narrow phones; side by side from sm up. */}
+        <div className="flex flex-col gap-2 sm:flex-row">
           <Input
             type="datetime-local"
+            aria-label="Slot date and time"
             value={slotInput}
             onChange={(e) => setSlotInput(e.target.value)}
+            className="min-w-0"
           />
-          <Button type="button" variant="outline" onClick={addSlot}>
+          <Button type="button" variant="outline" onClick={addSlot} className="h-11 shrink-0">
+
             Add slot
           </Button>
         </div>
@@ -135,7 +139,7 @@ export function OfferForm({ skillNames }: { skillNames: string[] }) {
                 <button
                   type="button"
                   onClick={() => setSlots((p) => p.filter((x) => x !== s))}
-                  className="text-slate-400 hover:text-red-600"
+                  className="-my-1 -mr-1.5 flex h-7 w-7 items-center justify-center rounded text-slate-500 hover:bg-red-50 hover:text-red-600"
                   aria-label="Remove slot"
                 >
                   ✕
@@ -144,7 +148,7 @@ export function OfferForm({ skillNames }: { skillNames: string[] }) {
             ))}
           </ul>
         )}
-        <p className="mt-2 text-xs text-slate-400">
+        <p className="mt-2 text-xs text-slate-500">
           Add one or more times learners can book. You can add more later.
         </p>
       </div>

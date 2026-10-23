@@ -17,7 +17,7 @@ export default async function ProfileSetupPage() {
       <Card className="mt-6 p-6">
         <div className="mb-6 border-b border-[var(--border)] pb-6">
           <p className="mb-3 text-sm font-medium text-slate-700">
-            Profile photo <span className="font-normal text-slate-400">(optional)</span>
+            Profile photo <span className="font-normal text-slate-500">(optional)</span>
           </p>
           <AvatarUpload
             userId={user.id}

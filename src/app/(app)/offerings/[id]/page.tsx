@@ -39,27 +39,30 @@ export default async function OfferingDetailPage({
   const isOwn = offering.teacher_id === user.id;
 
   return (
+    <div className="space-y-6">
+      {/* Title block spans the full width so, on phones, booking comes right after it. */}
+      <div>
+        <Link href="/marketplace" className="inline-block py-1 text-sm text-slate-500 hover:underline">
+          ← Back to explore
+        </Link>
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <Badge className="bg-brand-50 text-brand-600">
+            {offering.skill?.name}
+          </Badge>
+          <Badge className="capitalize">{offering.level}</Badge>
+          <Badge className="capitalize">
+            {offering.mode === "virtual" ? "Virtual" : "In person"}
+          </Badge>
+          <Badge>{offering.duration_min} min</Badge>
+        </div>
+        <h1 className="mt-3 text-2xl font-bold text-slate-900">
+          {offering.title}
+        </h1>
+      </div>
+
     <div className="grid gap-6 lg:grid-cols-3">
       {/* Main column */}
       <div className="space-y-6 lg:col-span-2">
-        <div>
-          <Link href="/marketplace" className="text-sm text-slate-500 hover:underline">
-            ← Back to explore
-          </Link>
-          <div className="mt-3 flex flex-wrap items-center gap-2">
-            <Badge className="bg-brand-50 text-brand-600">
-              {offering.skill?.name}
-            </Badge>
-            <Badge className="capitalize">{offering.level}</Badge>
-            <Badge className="capitalize">
-              {offering.mode === "virtual" ? "Virtual" : "In person"}
-            </Badge>
-            <Badge>{offering.duration_min} min</Badge>
-          </div>
-          <h1 className="mt-3 text-2xl font-bold text-slate-900">
-            {offering.title}
-          </h1>
-        </div>
 
         {offering.description && (
           <Card className="p-6">
@@ -128,14 +131,16 @@ export default async function OfferingDetailPage({
         </Card>
       </div>
 
-      {/* Booking sidebar */}
-      <div className="lg:col-span-1">
-        <Card className="sticky top-20 p-6">
+      {/* Booking sidebar: first on phones (right under the title), right column on desktop */}
+      <div className="order-first lg:order-none lg:col-span-1">
+        <Card className="p-5 sm:p-6 lg:sticky lg:top-6">
           <div className="mb-4 flex items-baseline justify-between">
             <span className="text-2xl font-bold text-slate-900">
               {offering.credit_cost}
             </span>
-            <span className="text-sm text-slate-500">credits / session</span>
+            <span className="text-sm text-slate-500">
+              {offering.credit_cost === 1 ? "credit" : "credits"} / session
+            </span>
           </div>
           <BookingPanel
             slots={slots}
@@ -146,6 +151,7 @@ export default async function OfferingDetailPage({
           />
         </Card>
       </div>
+    </div>
     </div>
   );
 }

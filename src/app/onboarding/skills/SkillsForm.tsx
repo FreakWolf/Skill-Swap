@@ -72,7 +72,7 @@ export function SkillsForm({
                     className={cn(
                       "rounded-full border px-3 py-1.5 text-sm transition-colors",
                       has(c.name)
-                        ? "cursor-default border-transparent bg-slate-100 text-slate-400"
+                        ? "cursor-default border-transparent bg-slate-100 text-slate-500"
                         : "border-[var(--border)] bg-white text-slate-700 hover:border-brand-600 hover:text-brand-600",
                     )}
                   >
@@ -121,7 +121,7 @@ export function SkillsForm({
           Your skills ({selections.length})
         </h3>
         {selections.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-[var(--border)] p-4 text-sm text-slate-400">
+          <p className="rounded-lg border border-dashed border-[var(--border)] p-4 text-sm text-slate-500">
             Tap skills above to add them. For each one, choose whether you can
             teach it or want to learn it, and set your level.
           </p>
@@ -172,7 +172,7 @@ export function SkillsForm({
                   <button
                     type="button"
                     onClick={() => remove(s.name)}
-                    className="text-slate-400 hover:text-red-600"
+                    className="text-slate-500 hover:text-red-600"
                     aria-label={`Remove ${s.name}`}
                   >
                     ✕

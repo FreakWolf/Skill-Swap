@@ -12,7 +12,7 @@ export function OfferingCard({ offering }: { offering: OfferingWithDetails }) {
           <span className="inline-flex items-center rounded-md bg-black px-2 py-0.5 text-xs font-medium text-white">
             {offering.skill?.name ?? "Skill"}
           </span>
-          <span className="shrink-0 text-xs capitalize text-gray-400">
+          <span className="shrink-0 text-xs capitalize text-gray-500">
             {offering.level}
           </span>
         </div>
@@ -35,7 +35,7 @@ export function OfferingCard({ offering }: { offering: OfferingWithDetails }) {
           <span className="truncate text-sm text-gray-700">
             {offering.teacher?.full_name || "SkillSwap member"}
           </span>
-          <span className="ml-auto flex items-center gap-1 text-xs text-gray-400">
+          <span className="ml-auto flex items-center gap-1 text-xs text-gray-500">
             <Star className="h-3 w-3" /> {offering.duration_min}m
           </span>
         </div>

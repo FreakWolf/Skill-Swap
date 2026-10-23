@@ -51,7 +51,7 @@ export default async function MarketplacePage({
           ) : (
             <Card className="p-10 text-center">
               <p className="text-gray-600">No people match your search yet.</p>
-              <p className="mt-1 text-sm text-gray-400">
+              <p className="mt-1 text-sm text-gray-500">
                 Try a different name or skill.
               </p>
             </Card>
@@ -73,7 +73,7 @@ export default async function MarketplacePage({
           ) : (
             <Card className="p-10 text-center">
               <p className="text-gray-600">No offerings match your search yet.</p>
-              <p className="mt-1 text-sm text-gray-400">
+              <p className="mt-1 text-sm text-gray-500">
                 Nobody has published this skill yet — but you can still find
                 people who teach it.
               </p>

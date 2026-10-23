@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Home,
   Search,
@@ -17,6 +17,7 @@ import {
   LogOut,
   Menu,
   Coins,
+  X,
 } from "lucide-react";
 import { Avatar } from "@/components/Avatar";
 import { Logo } from "@/components/Logo";
@@ -51,38 +52,74 @@ export function Sidebar({
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const openButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Mobile drawer: lock page scroll, move focus in, close on Escape, and
+  // return focus to the menu button when it closes.
+  useEffect(() => {
+    if (!open) return;
+    const root = document.documentElement;
+    const opener = openButtonRef.current;
+    root.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      root.style.overflow = "";
+      window.removeEventListener("keydown", onKey);
+      opener?.focus();
+    };
+  }, [open]);
 
   const isActive = (href: string) => pathname.startsWith(href);
 
   return (
     <>
-      {/* Mobile header */}
-      <header className="flex h-16 items-center border-b border-gray-200 bg-white px-4 lg:hidden">
+      {/* Mobile header (stays at the top while the page scrolls) */}
+      <header className="sticky top-0 z-30 flex h-16 items-center border-b border-gray-200 bg-white px-4 lg:hidden">
         <button
+          ref={openButtonRef}
           onClick={() => setOpen(true)}
-          className="mr-2 flex h-9 w-9 items-center justify-center rounded-md hover:bg-gray-100"
+          className="mr-2 flex h-10 w-10 items-center justify-center rounded-md hover:bg-gray-100"
           aria-label="Open menu"
+          aria-expanded={open}
+          aria-controls="app-sidebar"
         >
           <Menu className="h-6 w-6" />
         </button>
-        <Link href="/dashboard" aria-label="SkillSwap home">
+        <Link href="/dashboard" aria-label="SkillSwap home" className="py-2">
           <Logo height={20} decorative priority />
         </Link>
       </header>
 
-      {/* Sidebar */}
+      {/* Sidebar: slide-in drawer on mobile, sticky column on desktop.
+          `invisible` when closed on mobile so its links aren't reachable by
+          keyboard while off-screen. */}
       <aside
+        id="app-sidebar"
+        aria-label="Main navigation"
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-64 transform flex-col border-r border-gray-200 bg-white transition-transform duration-200 ease-in-out lg:static lg:translate-x-0",
-          open ? "translate-x-0" : "-translate-x-full",
+          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-gray-200 bg-white transition-[transform,visibility] duration-200 ease-in-out lg:visible lg:sticky lg:top-0 lg:h-screen lg:translate-x-0",
+          open ? "visible translate-x-0" : "invisible -translate-x-full",
         )}
       >
         {/* Brand */}
-        <div className="flex h-16 items-center border-b border-gray-200 px-5">
-          <Link href="/dashboard" aria-label="SkillSwap home">
+        <div className="flex h-16 items-center justify-between border-b border-gray-200 px-5">
+          <Link href="/dashboard" aria-label="SkillSwap home" className="py-2">
             {/* 25px tall ≈ 209px wide: fills the 216px-wide brand area. */}
             <Logo height={25} decorative priority />
           </Link>
+          <button
+            ref={closeButtonRef}
+            onClick={() => setOpen(false)}
+            className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 lg:hidden"
+            aria-label="Close menu"
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
 
         {/* Nav */}

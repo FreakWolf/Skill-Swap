@@ -60,7 +60,7 @@ export default async function SettingsPage() {
           People you&apos;ve blocked can&apos;t message or book with you.
         </p>
         {blocked.length === 0 ? (
-          <p className="text-sm text-slate-400">You haven&apos;t blocked anyone.</p>
+          <p className="text-sm text-slate-500">You haven&apos;t blocked anyone.</p>
         ) : (
           <ul className="divide-y divide-[var(--border)]">
             {blocked.map((b) => (

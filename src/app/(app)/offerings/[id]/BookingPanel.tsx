@@ -89,12 +89,12 @@ export function BookingPanel({
 
       <div className="flex items-center justify-between rounded-lg bg-slate-50 px-4 py-3">
         <span className="text-sm text-slate-600">Cost</span>
-        <span className="font-semibold text-amber-600">{cost} credits</span>
+        <span className="font-semibold text-amber-700">{cost} {cost === 1 ? "credit" : "credits"}</span>
       </div>
 
       {!canAfford && (
         <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-700">
-          You have {balance} credits but this costs {cost}. Teach a skill to
+          You have {balance} {balance === 1 ? "credit" : "credits"} but this costs {cost}. Teach a skill to
           earn more.
         </p>
       )}

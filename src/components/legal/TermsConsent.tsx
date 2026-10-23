@@ -70,7 +70,7 @@ export function TermsConsent() {
             }
             setChecked(e.target.checked);
           }}
-          className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-slate-300"
+          className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer rounded border-slate-300"
           aria-describedby="terms-help"
         />
         <span>
@@ -86,7 +86,7 @@ export function TermsConsent() {
           </button>
           .
           {!hasRead && (
-            <span id="terms-help" className="mt-0.5 block text-xs text-slate-400">
+            <span id="terms-help" className="mt-0.5 block text-xs text-slate-500">
               You&apos;ll need to read them to the end before agreeing.
             </span>
           )}

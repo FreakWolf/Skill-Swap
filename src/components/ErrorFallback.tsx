@@ -25,7 +25,7 @@ export function ErrorFallback({
           Sorry about that. Please try again. If it keeps happening, let us know.
         </p>
         {error.digest && (
-          <p className="mt-2 text-xs text-gray-400">Error reference: {error.digest}</p>
+          <p className="mt-2 text-xs text-gray-500">Error reference: {error.digest}</p>
         )}
         <div className="mt-6 flex justify-center gap-3">
           <button

@@ -45,7 +45,7 @@ export default async function MessagesPage() {
                     <p className="truncate font-medium text-gray-900">
                       {c.other.full_name}
                     </p>
-                    <span className="ml-auto shrink-0 text-xs text-gray-400">
+                    <span className="ml-auto shrink-0 text-xs text-gray-500">
                       {relativeTime(c.lastMessageAt)}
                     </span>
                   </div>
@@ -70,7 +70,7 @@ export default async function MessagesPage() {
         </div>
       ) : (
         <Card className="flex flex-col items-center p-12 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-400">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-500">
             <MessageSquare className="h-7 w-7" />
           </div>
           <p className="mt-4 font-medium text-gray-900">No conversations yet</p>
