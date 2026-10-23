@@ -35,6 +35,9 @@ export function Logo({
       width={width}
       height={height}
       priority={priority}
+      // Serve the original file: Next's resize/re-encode (quality 75) blurs
+      // the pixel-style lettering. The files are small, so this costs little.
+      unoptimized
       className={cn("select-none", className)}
       style={{ height, width: "auto" }}
     />

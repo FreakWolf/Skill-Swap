@@ -78,9 +78,10 @@ export function Sidebar({
         )}
       >
         {/* Brand */}
-        <div className="flex h-16 items-center border-b border-gray-200 px-6">
+        <div className="flex h-16 items-center border-b border-gray-200 px-5">
           <Link href="/dashboard" aria-label="SkillSwap home">
-            <Logo height={22} decorative priority />
+            {/* 25px tall ≈ 209px wide: fills the 216px-wide brand area. */}
+            <Logo height={25} decorative priority />
           </Link>
         </div>
 
