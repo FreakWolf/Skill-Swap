@@ -43,8 +43,10 @@ export function PrivacyContent() {
       <h2>4. Service providers</h2>
       <p>
         We use trusted providers to run {companyName}: Supabase (database,
-        authentication, and file storage) and Vercel (hosting). They process data
-        on our behalf. Your data may be stored on servers outside your country.
+        authentication, and file storage), Vercel (hosting), and Sentry (error
+        monitoring, which receives technical details when something crashes,
+        such as the page and browser involved). They process data on our
+        behalf. Your data may be stored on servers outside your country.
       </p>
 
       <h2>5. How long we keep data</h2>

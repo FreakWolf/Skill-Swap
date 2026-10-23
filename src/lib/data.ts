@@ -182,6 +182,7 @@ const BOOKING_SELECT = `
   notes, starts_at, ends_at, created_at, updated_at,
   offering:offerings!bookings_offering_id_fkey (
     title,
+    mode,
     skill:skills!offerings_skill_id_fkey ( name )
   ),
   learner:profiles!bookings_learner_id_fkey ( id, full_name, avatar_url ),
@@ -198,6 +199,7 @@ export interface BookingWithDetails {
   starts_at: string;
   ends_at: string;
   title: string;
+  mode: "virtual" | "in_person";
   skillName: string;
   learner: { id: string; full_name: string; avatar_url: string | null };
   teacher: { id: string; full_name: string; avatar_url: string | null };
@@ -222,6 +224,7 @@ function normalizeBooking(row: Record<string, unknown>): BookingWithDetails {
     starts_at: row.starts_at as string,
     ends_at: row.ends_at as string,
     title: (offering?.title as string) ?? "Session",
+    mode: ((offering?.mode as string) ?? "virtual") as "virtual" | "in_person",
     skillName: (skill?.name as string) ?? "",
     learner,
     teacher,
