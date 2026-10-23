@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { LEGAL_PROSE } from "@/components/legal/prose";
 
 // Shared shell for public legal pages (Terms, Privacy).
 export default function LegalLayout({ children }: { children: React.ReactNode }) {
@@ -17,7 +18,7 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
         </div>
       </header>
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
-        <article className="space-y-4 text-[15px] leading-7 text-gray-700 [&_h1]:text-3xl [&_h1]:font-bold [&_h1]:text-gray-900 [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-gray-900 [&_li]:ml-5 [&_li]:list-disc [&_a]:text-blue-600 [&_a]:underline">
+        <article className={LEGAL_PROSE}>
           {children}
         </article>
       </main>

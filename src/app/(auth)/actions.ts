@@ -4,9 +4,10 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { LEGAL } from "@/lib/legal-config";
 
-// Must match minimumAge in app/(legal)/legal-config.ts.
-const MIN_AGE = 18;
+// Single source of truth for the minimum age, shared with the legal pages.
+const MIN_AGE = LEGAL.minimumAge;
 
 // True if someone born on `isoDate` (YYYY-MM-DD) is at least `years` old today.
 function isAtLeast(isoDate: string, years: number) {

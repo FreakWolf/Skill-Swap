@@ -5,6 +5,7 @@ import Link from "next/link";
 import { signUp, type AuthState } from "../actions";
 import { Button } from "@/components/ui/Button";
 import { Input, Label } from "@/components/ui/Input";
+import { TermsConsent } from "@/components/legal/TermsConsent";
 
 export function SignupForm() {
   const [state, action, pending] = useActionState<AuthState, FormData>(
@@ -38,15 +39,7 @@ export function SignupForm() {
         <p className="mt-1 text-xs text-slate-500">You must be 18 or older to join.</p>
       </div>
 
-      <label className="flex items-start gap-2 text-sm text-slate-600">
-        <input type="checkbox" name="terms" className="mt-0.5 h-4 w-4 rounded border-slate-300" />
-        <span>
-          I agree to the{" "}
-          <a href="/terms" target="_blank" rel="noopener" className="text-blue-600 hover:underline">Terms of Service</a>{" "}
-          and{" "}
-          <a href="/privacy" target="_blank" rel="noopener" className="text-blue-600 hover:underline">Privacy Policy</a>.
-        </span>
-      </label>
+      <TermsConsent />
 
       {state?.message && (
         <p className="rounded-lg bg-teal-50 px-3 py-2 text-sm text-teal-700">
