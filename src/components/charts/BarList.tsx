@@ -13,7 +13,7 @@ export function BarList({ items }: { items: SkillCount[] }) {
           </div>
           <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
             <div
-              className="h-full rounded-full bg-blue-500"
+              className="h-full rounded-full bg-brand-500"
               style={{ width: `${(it.count / max) * 100}%` }}
             />
           </div>

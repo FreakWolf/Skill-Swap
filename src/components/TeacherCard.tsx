@@ -14,7 +14,7 @@ export function TeacherCard({ teacher }: { teacher: TeacherSummary }) {
         <div className="min-w-0">
           <Link
             href={`/u/${teacher.id}`}
-            className="truncate font-semibold text-gray-900 hover:text-blue-600"
+            className="truncate font-semibold text-gray-900 hover:text-brand-600"
           >
             {teacher.full_name}
           </Link>
@@ -40,7 +40,7 @@ export function TeacherCard({ teacher }: { teacher: TeacherSummary }) {
         </p>
         <div className="flex flex-wrap gap-1.5">
           {teacher.teachSkills.slice(0, 5).map((s) => (
-            <Badge key={s} className="bg-blue-50 text-blue-600">
+            <Badge key={s} className="bg-brand-50 text-brand-600">
               {s}
             </Badge>
           ))}

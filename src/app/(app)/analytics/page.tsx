@@ -20,8 +20,8 @@ export default async function AnalyticsPage() {
     { label: "Balance", value: a.balance, icon: Coins, tile: "bg-amber-100 text-amber-600", num: "text-amber-600" },
     { label: "Credits earned", value: a.totalEarned, icon: TrendingUp, tile: "bg-green-100 text-green-600", num: "text-green-600" },
     { label: "Credits spent", value: a.totalSpent, icon: TrendingDown, tile: "bg-red-100 text-red-600", num: "text-red-600" },
-    { label: "Sessions taught", value: a.sessionsTaught, icon: GraduationCap, tile: "bg-blue-100 text-blue-600", num: "text-blue-600" },
-    { label: "Sessions learned", value: a.sessionsLearned, icon: Sparkles, tile: "bg-purple-100 text-purple-600", num: "text-purple-600" },
+    { label: "Sessions taught", value: a.sessionsTaught, icon: GraduationCap, tile: "bg-brand-100 text-brand-600", num: "text-brand-600" },
+    { label: "Sessions learned", value: a.sessionsLearned, icon: Sparkles, tile: "bg-brand-orange-100 text-brand-orange-700", num: "text-brand-orange-700" },
     {
       label: "Avg rating",
       value: a.reviewCount > 0 ? a.avgRating.toFixed(1) : "—",

@@ -10,7 +10,7 @@ export default async function ResetPasswordPage() {
   const session = await getSessionUser();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-50 to-brand-orange-50 p-4">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <Link href="/" className="inline-block">
@@ -30,7 +30,7 @@ export default async function ResetPasswordPage() {
               </p>
               <Link
                 href="/forgot-password"
-                className="text-sm font-medium text-blue-600 hover:underline"
+                className="text-sm font-medium text-brand-600 hover:underline"
               >
                 Request a new link
               </Link>

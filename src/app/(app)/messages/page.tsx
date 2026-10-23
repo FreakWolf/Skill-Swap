@@ -60,7 +60,7 @@ export default async function MessagesPage() {
                   </p>
                 </div>
                 {c.unread > 0 && (
-                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 text-xs font-semibold text-white">
+                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-600 px-1.5 text-xs font-semibold text-white">
                     {c.unread}
                   </span>
                 )}
@@ -79,7 +79,7 @@ export default async function MessagesPage() {
           </p>
           <Link
             href="/marketplace"
-            className="mt-4 text-sm font-medium text-blue-600 hover:underline"
+            className="mt-4 text-sm font-medium text-brand-600 hover:underline"
           >
             Explore skills
           </Link>

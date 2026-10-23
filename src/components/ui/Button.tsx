@@ -16,7 +16,7 @@ const variants: Record<Variant, string> = {
   // Near-black primary — the de-facto action button in the reference UI.
   primary: "bg-[var(--primary)] text-white hover:bg-black/90 disabled:opacity-50",
   // Blue brand button (e.g. "Offer a Skill").
-  brand: "bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50",
+  brand: "bg-brand-600 text-white hover:bg-brand-700 disabled:opacity-50",
   secondary: "bg-neutral-200 text-slate-800 hover:bg-neutral-300 disabled:opacity-50",
   outline:
     "border border-[var(--border)] bg-white text-slate-800 hover:bg-neutral-100 disabled:opacity-50",
@@ -24,7 +24,7 @@ const variants: Record<Variant, string> = {
   danger: "bg-[var(--destructive)] text-white hover:bg-red-700 disabled:opacity-50",
   // For placement on the colored gradient hero: a solid white button with blue
   // text, and a translucent white-outline button.
-  onBrandSolid: "bg-white text-blue-700 hover:bg-blue-50 disabled:opacity-50",
+  onBrandSolid: "bg-white text-brand-700 hover:bg-brand-50 disabled:opacity-50",
   onBrandGhost:
     "border border-white/40 bg-white/10 text-white hover:bg-white/20 disabled:opacity-50",
 };

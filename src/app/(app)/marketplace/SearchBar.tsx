@@ -43,7 +43,7 @@ export function SearchBar({ categories }: { categories: string[] }) {
             className={cn(
               "rounded-md px-4 py-1.5 text-sm font-medium capitalize transition-colors",
               view === v
-                ? "bg-blue-600 text-white"
+                ? "bg-brand-600 text-white"
                 : "text-slate-600 hover:bg-slate-50",
             )}
           >
@@ -84,7 +84,7 @@ export function SearchBar({ categories }: { categories: string[] }) {
               className={cn(
                 "rounded-full border px-3 py-1.5 text-sm transition-colors",
                 activeCategory === c
-                  ? "border-blue-600 bg-blue-50 text-blue-600"
+                  ? "border-brand-600 bg-brand-50 text-brand-600"
                   : "border-[var(--border)] bg-white text-slate-600 hover:bg-slate-50",
               )}
             >

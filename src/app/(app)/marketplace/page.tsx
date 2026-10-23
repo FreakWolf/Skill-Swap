@@ -80,13 +80,13 @@ export default async function MarketplacePage({
               <div className="mt-4 flex justify-center gap-3">
                 <Link
                   href={`/marketplace?view=people${q ? `&q=${encodeURIComponent(q)}` : ""}`}
-                  className="text-sm font-medium text-blue-600 hover:underline"
+                  className="text-sm font-medium text-brand-600 hover:underline"
                 >
                   Browse People →
                 </Link>
                 <Link
                   href="/offer"
-                  className="text-sm font-medium text-blue-600 hover:underline"
+                  className="text-sm font-medium text-brand-600 hover:underline"
                 >
                   Offer this skill yourself
                 </Link>

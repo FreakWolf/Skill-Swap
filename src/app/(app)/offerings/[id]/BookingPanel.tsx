@@ -70,7 +70,7 @@ export function BookingPanel({
               className={cn(
                 "rounded-lg border px-3 py-2 text-left text-sm transition-colors",
                 selected === s.id
-                  ? "border-blue-600 bg-blue-50 text-blue-600"
+                  ? "border-brand-600 bg-brand-50 text-brand-600"
                   : "border-[var(--border)] bg-white text-slate-700 hover:bg-slate-50",
               )}
             >

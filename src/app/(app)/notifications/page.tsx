@@ -12,9 +12,9 @@ import {
 function iconFor(kind: string) {
   switch (kind) {
     case "booking":
-      return { Icon: Calendar, tile: "bg-blue-100 text-blue-600" };
+      return { Icon: Calendar, tile: "bg-brand-100 text-brand-600" };
     case "message":
-      return { Icon: MessageSquare, tile: "bg-purple-100 text-purple-600" };
+      return { Icon: MessageSquare, tile: "bg-brand-orange-100 text-brand-orange-700" };
     case "credit":
       return { Icon: Coins, tile: "bg-amber-100 text-amber-600" };
     default:
@@ -46,7 +46,7 @@ function NotificationBody({
     <>
       <div className="flex items-center gap-2">
         <p className="font-medium text-gray-900">{n.title}</p>
-        {!n.read && <span className="h-2 w-2 shrink-0 rounded-full bg-blue-600" />}
+        {!n.read && <span className="h-2 w-2 shrink-0 rounded-full bg-brand-600" />}
         <span className="ml-auto shrink-0 text-xs text-gray-400">
           {relativeTime(n.created_at)}
         </span>
@@ -94,7 +94,7 @@ export default async function NotificationsPage() {
                 key={n.id}
                 className={
                   "flex items-start gap-3 p-4 transition-shadow hover:shadow-md " +
-                  (n.read ? "" : "border-blue-200 bg-blue-50/40")
+                  (n.read ? "" : "border-brand-200 bg-brand-50/40")
                 }
               >
                 <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${tile}`}>
@@ -116,7 +116,7 @@ export default async function NotificationsPage() {
                     <input type="hidden" name="id" value={n.id} />
                     <button
                       type="submit"
-                      className="shrink-0 text-xs font-medium text-blue-600 hover:underline"
+                      className="shrink-0 text-xs font-medium text-brand-600 hover:underline"
                     >
                       Mark read
                     </button>

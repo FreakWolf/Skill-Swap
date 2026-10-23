@@ -23,12 +23,12 @@ export default function Home() {
         </nav>
       </header>
 
-      <section className="bg-gradient-to-br from-blue-50 to-indigo-100">
+      <section className="bg-gradient-to-br from-brand-50 to-brand-orange-50">
         <div className="mx-auto max-w-6xl px-6 pt-12 pb-24 text-center sm:pt-16">
           <div className="mb-8 flex justify-center">
             <Logo variant="illustration" height={200} decorative priority className="max-w-full" />
           </div>
-          <span className="inline-flex items-center rounded-full bg-white/70 px-3 py-1 text-sm font-medium text-blue-600">
+          <span className="inline-flex items-center rounded-full bg-white/70 px-3 py-1 text-sm font-medium text-brand-600">
             Trade skills, not cash
           </span>
           <h1 className="mx-auto mt-6 max-w-3xl text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
@@ -54,7 +54,7 @@ export default function Home() {
         <div className="grid gap-6 text-left sm:grid-cols-3">
           {steps.map((s, i) => (
             <div key={s.title} className="rounded-xl border border-[var(--border)] bg-white p-6 transition-shadow hover:shadow-md">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50 font-semibold text-blue-600">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 font-semibold text-brand-600">
                 {i + 1}
               </div>
               <h3 className="mt-4 font-semibold text-gray-900">{s.title}</h3>

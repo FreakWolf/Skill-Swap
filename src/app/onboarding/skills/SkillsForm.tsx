@@ -73,7 +73,7 @@ export function SkillsForm({
                       "rounded-full border px-3 py-1.5 text-sm transition-colors",
                       has(c.name)
                         ? "cursor-default border-transparent bg-slate-100 text-slate-400"
-                        : "border-[var(--border)] bg-white text-slate-700 hover:border-blue-600 hover:text-blue-600",
+                        : "border-[var(--border)] bg-white text-slate-700 hover:border-brand-600 hover:text-brand-600",
                     )}
                   >
                     {c.name}

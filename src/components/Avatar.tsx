@@ -34,7 +34,7 @@ export function Avatar({
     <span
       className={cn(
         // Gradient initials fallback, matching the reference aesthetic.
-        "inline-flex items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 font-semibold text-white",
+        "inline-flex items-center justify-center rounded-full bg-gradient-to-br from-brand-700 to-brand-500 font-semibold text-white",
         className,
       )}
       style={{ width: size, height: size, fontSize: size * 0.4 }}

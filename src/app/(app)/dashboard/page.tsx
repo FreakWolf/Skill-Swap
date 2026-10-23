@@ -48,8 +48,8 @@ export default async function DashboardPage() {
 
   const stats = [
     { label: "Credits", value: balance, icon: Coins, tile: "bg-amber-100 text-amber-600", num: "text-amber-600" },
-    { label: "Sessions taught", value: taught, icon: GraduationCap, tile: "bg-blue-100 text-blue-600", num: "text-blue-600" },
-    { label: "Sessions learned", value: learned, icon: Sparkles, tile: "bg-purple-100 text-purple-600", num: "text-purple-600" },
+    { label: "Sessions taught", value: taught, icon: GraduationCap, tile: "bg-brand-100 text-brand-600", num: "text-brand-600" },
+    { label: "Sessions learned", value: learned, icon: Sparkles, tile: "bg-brand-orange-100 text-brand-orange-700", num: "text-brand-orange-700" },
     { label: "Upcoming", value: upcoming.length, icon: CalendarIcon, tile: "bg-green-100 text-green-600", num: "text-green-600" },
   ];
 
@@ -65,9 +65,9 @@ export default async function DashboardPage() {
       </div>
 
       {/* Hero banner */}
-      <div className="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 p-8 text-white shadow-lg">
+      <div className="rounded-xl bg-gradient-to-r from-brand-700 via-brand-600 to-brand-500 p-8 text-white shadow-lg">
         <h2 className="text-2xl font-bold">Trade skills, not cash</h2>
-        <p className="mt-2 max-w-xl text-blue-50">
+        <p className="mt-2 max-w-xl text-brand-50">
           Teach what you know to earn credits, then spend them to learn
           something new. What will you do today?
         </p>
@@ -102,7 +102,7 @@ export default async function DashboardPage() {
         <section className="lg:col-span-2">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">Recommended for you</h2>
-            <Link href="/marketplace" className="text-sm font-medium text-blue-600 hover:underline">
+            <Link href="/marketplace" className="text-sm font-medium text-brand-600 hover:underline">
               Explore all
             </Link>
           </div>
@@ -124,14 +124,14 @@ export default async function DashboardPage() {
         <section>
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">Upcoming</h2>
-            <Link href="/sessions" className="text-sm font-medium text-blue-600 hover:underline">
+            <Link href="/sessions" className="text-sm font-medium text-brand-600 hover:underline">
               View all
             </Link>
           </div>
           {upcoming.length > 0 ? (
             <div className="space-y-3">
               {upcoming.slice(0, 4).map((b) => (
-                <Card key={b.id} className="rounded-r border-l-4 border-blue-500 bg-blue-50/50 p-4">
+                <Card key={b.id} className="rounded-r border-l-4 border-brand-500 bg-brand-50/50 p-4">
                   <p className="font-medium text-gray-900">{b.title}</p>
                   <p className="mt-0.5 flex items-center gap-1.5 text-sm text-gray-500">
                     <Star className="h-3.5 w-3.5" />
@@ -149,7 +149,7 @@ export default async function DashboardPage() {
           ) : (
             <Card className="p-6 text-center text-sm text-gray-500">
               No upcoming sessions.{" "}
-              <Link href="/marketplace" className="font-medium text-blue-600 hover:underline">
+              <Link href="/marketplace" className="font-medium text-brand-600 hover:underline">
                 Find a teacher
               </Link>
               .

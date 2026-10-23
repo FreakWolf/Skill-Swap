@@ -29,9 +29,9 @@ function ym(year: number, month: number) {
 }
 
 const dotColor: Record<CalendarItem["kind"], string> = {
-  learning: "bg-purple-500",
-  teaching: "bg-blue-500",
-  open: "bg-amber-400",
+  learning: "bg-brand-orange-500",
+  teaching: "bg-brand-500",
+  open: "bg-teal-500",
 };
 
 export default async function CalendarPage({
@@ -139,14 +139,14 @@ export default async function CalendarPage({
                 className={cn(
                   "min-h-20 rounded-lg border p-1.5 text-left",
                   isToday
-                    ? "border-blue-400 bg-blue-50/40"
+                    ? "border-brand-400 bg-brand-50/40"
                     : "border-[var(--border)]",
                 )}
               >
                 <span
                   className={cn(
                     "text-xs font-medium",
-                    isToday ? "text-blue-600" : "text-gray-500",
+                    isToday ? "text-brand-600" : "text-gray-500",
                   )}
                 >
                   {day}
@@ -184,13 +184,13 @@ export default async function CalendarPage({
         {/* Legend */}
         <div className="mt-4 flex flex-wrap gap-4 border-t border-[var(--border)] pt-4 text-xs text-gray-500">
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-blue-500" /> Teaching
+            <span className="h-2.5 w-2.5 rounded-full bg-brand-500" /> Teaching
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-purple-500" /> Learning
+            <span className="h-2.5 w-2.5 rounded-full bg-brand-orange-500" /> Learning
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-amber-400" /> Open slot
+            <span className="h-2.5 w-2.5 rounded-full bg-teal-500" /> Open slot
           </span>
         </div>
       </Card>

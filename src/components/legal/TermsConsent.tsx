@@ -77,11 +77,11 @@ export function TermsConsent() {
           <label htmlFor="terms" className="cursor-pointer">
             I have read and agree to the
           </label>{" "}
-          <button type="button" onClick={openDialog} className="text-blue-600 hover:underline">
+          <button type="button" onClick={openDialog} className="text-brand-600 hover:underline">
             Terms of Service
           </button>{" "}
           and{" "}
-          <button type="button" onClick={openDialog} className="text-blue-600 hover:underline">
+          <button type="button" onClick={openDialog} className="text-brand-600 hover:underline">
             Privacy Policy
           </button>
           .
@@ -139,7 +139,7 @@ export function TermsConsent() {
           {/* Read progress */}
           <div className="h-1 w-full bg-gray-100" aria-hidden>
             <div
-              className="h-full bg-blue-600 transition-[width] duration-150"
+              className="h-full bg-brand-600 transition-[width] duration-150"
               style={{ width: `${Math.round(progress * 100)}%` }}
             />
           </div>

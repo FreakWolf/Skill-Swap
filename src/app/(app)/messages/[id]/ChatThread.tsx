@@ -156,7 +156,7 @@ export function ChatThread({
                   className={cn(
                     "max-w-[75%] rounded-2xl px-4 py-2 text-sm",
                     mine
-                      ? "rounded-br-sm bg-blue-600 text-white"
+                      ? "rounded-br-sm bg-brand-600 text-white"
                       : "rounded-bl-sm bg-gray-100 text-gray-900",
                     m.pending && "opacity-70",
                   )}
@@ -165,7 +165,7 @@ export function ChatThread({
                   <p
                     className={cn(
                       "mt-1 text-right text-[10px]",
-                      mine ? "text-blue-100" : "text-gray-400",
+                      mine ? "text-brand-100" : "text-gray-400",
                     )}
                   >
                     {m.pending ? "Sending…" : time(m.created_at, tz)}
@@ -190,7 +190,7 @@ export function ChatThread({
           ref={inputRef}
           rows={1}
           placeholder="Type a message…"
-          className="max-h-32 flex-1 resize-none rounded-2xl border border-transparent bg-neutral-200 px-4 py-2.5 text-sm focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+          className="max-h-32 flex-1 resize-none rounded-2xl border border-transparent bg-neutral-200 px-4 py-2.5 text-sm focus:bg-white focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30"
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();

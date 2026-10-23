@@ -17,7 +17,7 @@ export function OfferingCard({ offering }: { offering: OfferingWithDetails }) {
           </span>
         </div>
 
-        <h3 className="mt-3 line-clamp-2 font-semibold text-gray-900 transition-colors group-hover:text-blue-600">
+        <h3 className="mt-3 line-clamp-2 font-semibold text-gray-900 transition-colors group-hover:text-brand-600">
           {offering.title}
         </h3>
         {offering.description && (

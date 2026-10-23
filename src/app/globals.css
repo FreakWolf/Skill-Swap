@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
-/* Design tokens matching the SkillSwap reference UI:
-   near-black primary buttons, blue-600 brand/nav accents, gray-50 canvas. */
+/* SkillSwap design tokens. Brand colours come from the logo
+   (public/brand/logo.png): purple #7c33ff and orange #ff8033.
+   Near-black primary buttons and a gray-50 canvas from the reference UI. */
 :root {
   --background: #f9fafb;      /* gray-50 page canvas */
   --foreground: #030213;      /* near-black text */
@@ -10,12 +11,38 @@
   --border: #e5e7eb;          /* gray-200 hairlines */
   --primary: #030213;         /* near-black — primary buttons */
   --primary-foreground: #ffffff;
-  --brand: #2563eb;           /* blue-600 — brand + nav accents */
-  --brand-foreground: #eff6ff;/* blue-50 */
+  --brand: #7c33ff;           /* logo purple — brand buttons, nav, links */
+  --brand-foreground: #f5f0ff;
   --accent: #14b8a6;
   --input-bg: #e5e5e5;        /* neutral-200 inputs */
-  --ring: #2563eb;
+  --ring: #7c33ff;
   --destructive: #d4183d;
+}
+
+/* Brand colour scales → classes like bg-brand-600, text-brand-orange-700.
+   Contrast vs white (WCAG AA needs 4.5:1 for normal text):
+     brand-500 4.5 · brand-600 5.6 · brand-700 6.9   → OK for text/buttons
+     brand-orange-500 2.5 (logo orange)             → decoration only
+     brand-orange-700 5.2                            → use for orange text */
+@theme {
+  --color-brand-50: #f5f0ff;
+  --color-brand-100: #ebe0ff;
+  --color-brand-200: #d9c5ff;
+  --color-brand-300: #bd99ff;
+  --color-brand-400: #9d66ff;
+  --color-brand-500: #8c4dff;
+  --color-brand-600: #7c33ff;
+  --color-brand-700: #6a1ff0;
+  --color-brand-800: #5716c4;
+  --color-brand-900: #45139a;
+
+  --color-brand-orange-50: #fff4ec;
+  --color-brand-orange-100: #ffe6d5;
+  --color-brand-orange-200: #ffcaa8;
+  --color-brand-orange-400: #ff9a5c;
+  --color-brand-orange-500: #ff8033;
+  --color-brand-orange-600: #e8691a;
+  --color-brand-orange-700: #b54d0b;
 }
 
 @theme inline {
