@@ -42,3 +42,11 @@ export const getBalance = cache(async (userId: string): Promise<number> => {
     .single<{ balance: number }>();
   return data?.balance ?? 0;
 });
+
+// Use in /admin pages: requires a signed-in admin, otherwise sends the user
+// to their dashboard (or to /login when signed out).
+export async function requireAdmin() {
+  const session = await requireUser();
+  if (!session.profile?.is_admin) redirect("/dashboard");
+  return session;
+}

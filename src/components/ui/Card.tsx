@@ -3,12 +3,15 @@ import { cn } from "@/lib/cn";
 export function Card({
   className,
   children,
+  id,
 }: {
   className?: string;
   children: React.ReactNode;
+  id?: string;
 }) {
   return (
     <div
+      id={id}
       className={cn(
         "rounded-xl border border-[var(--border)] bg-white",
         className,

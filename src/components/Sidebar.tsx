@@ -17,6 +17,7 @@ import {
   LogOut,
   Menu,
   Coins,
+  ShieldCheck,
   X,
 } from "lucide-react";
 import { Avatar } from "@/components/Avatar";
@@ -31,6 +32,7 @@ export function Sidebar({
   balance,
   unreadMessages = 0,
   unreadNotifications = 0,
+  isAdmin = false,
 }: {
   name: string;
   email: string;
@@ -38,6 +40,7 @@ export function Sidebar({
   balance: number;
   unreadMessages?: number;
   unreadNotifications?: number;
+  isAdmin?: boolean;
 }) {
   const nav = [
     { name: "Dashboard", href: "/dashboard", icon: Home, badge: 0 },
@@ -160,6 +163,22 @@ export function Sidebar({
             </Link>
           </div>
 
+          {isAdmin && (
+            <Link
+              href="/admin"
+              onClick={() => setOpen(false)}
+              className={cn(
+                "mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                isActive("/admin")
+                  ? "bg-brand-50 text-brand-600"
+                  : "text-gray-700 hover:bg-gray-50 hover:text-gray-900",
+              )}
+            >
+              <ShieldCheck className="h-5 w-5" />
+              <span className="flex-1 text-left">Admin</span>
+            </Link>
+          )}
+
           {/* Credits */}
           <div className="mt-4">
             <Link
@@ -216,6 +235,15 @@ export function Sidebar({
                 >
                   <Settings className="h-4 w-4" /> Settings
                 </Link>
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-brand-700 hover:bg-gray-50"
+                  >
+                    <ShieldCheck className="h-4 w-4" /> Admin panel
+                  </Link>
+                )}
                 <form action={logOut}>
                   <button
                     type="submit"

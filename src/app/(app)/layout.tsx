@@ -14,11 +14,13 @@ async function SidebarWithData({
   email,
   avatarUrl,
   userId,
+  isAdmin,
 }: {
   name: string;
   email: string;
   avatarUrl: string | null;
   userId: string;
+  isAdmin: boolean;
 }) {
   const [balance, unreadMessages, unreadNotifications] = await Promise.all([
     getBalance(userId),
@@ -34,6 +36,7 @@ async function SidebarWithData({
       balance={balance}
       unreadMessages={unreadMessages}
       unreadNotifications={unreadNotifications}
+      isAdmin={isAdmin}
     />
   );
 }
@@ -52,6 +55,7 @@ export default async function AppLayout({
 
   const name = profile?.full_name ?? "";
   const avatarUrl = profile?.avatar_url ?? null;
+  const isAdmin = profile?.is_admin ?? false;
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-50 lg:flex-row">
@@ -70,6 +74,7 @@ export default async function AppLayout({
             email={user.email ?? ""}
             avatarUrl={avatarUrl}
             balance={0}
+            isAdmin={isAdmin}
           />
         }
       >
@@ -78,6 +83,7 @@ export default async function AppLayout({
           email={user.email ?? ""}
           avatarUrl={avatarUrl}
           userId={user.id}
+          isAdmin={isAdmin}
         />
       </Suspense>
       {/* The page itself scrolls (not an inner box): smoother on phones,
