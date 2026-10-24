@@ -74,6 +74,7 @@ export default async function ContactPage() {
               <ContactForm
                 defaultName={session?.profile?.full_name ?? ""}
                 defaultEmail={session?.user.email ?? ""}
+                turnstileSiteKey={!session ? process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY : undefined}
               />
             </div>
           </Reveal>

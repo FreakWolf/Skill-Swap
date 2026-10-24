@@ -1,14 +1,13 @@
 import "server-only";
 
-import { createAdminClient } from "@/lib/supabase/admin";
 import type { SupportTicket } from "@/lib/types";
-import { PAGE_SIZE, paged, range, type Paged } from "./shared";
+import { adminDb, PAGE_SIZE, paged, range, type Paged } from "./shared";
 
 export async function listTickets(opts: {
   status?: string;
   page: number;
 }): Promise<Paged<SupportTicket>> {
-  const admin = createAdminClient();
+  const admin = await adminDb();
   const { from, to } = range(opts.page, PAGE_SIZE);
   let query = admin
     .from("support_tickets")

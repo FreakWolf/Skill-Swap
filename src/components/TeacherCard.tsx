@@ -51,11 +51,9 @@ export function TeacherCard({ teacher }: { teacher: TeacherSummary }) {
       </div>
 
       <div className="mt-auto flex items-center gap-2 pt-4">
-        <Link href={`/u/${teacher.id}`} className="flex-1">
-          <Button variant="outline" className="w-full">
-            View profile
-          </Button>
-        </Link>
+        <Button href={`/u/${teacher.id}`} variant="outline" className="w-full flex-1">
+          View profile
+        </Button>
         <MessageButton otherId={teacher.id} variant="brand" />
       </div>
 

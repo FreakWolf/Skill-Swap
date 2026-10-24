@@ -1,8 +1,7 @@
 import "server-only";
 
-import { createAdminClient } from "@/lib/supabase/admin";
 import type { Booking } from "@/lib/types";
-import { PAGE_SIZE, one, paged, range, type Paged } from "./shared";
+import { adminDb, PAGE_SIZE, one, paged, range, type Paged } from "./shared";
 
 export interface AdminBooking extends Booking {
   offering_title: string;
@@ -14,7 +13,7 @@ export async function listBookings(opts: {
   status?: string;
   page: number;
 }): Promise<Paged<AdminBooking>> {
-  const admin = createAdminClient();
+  const admin = await adminDb();
   const { from, to } = range(opts.page, PAGE_SIZE);
   let query = admin
     .from("bookings")

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Bookmark } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -30,9 +29,7 @@ export default async function SavedPage() {
           <p className="mt-1 text-sm text-gray-500">
             Tap the bookmark on any offering in the marketplace to keep it here.
           </p>
-          <Link href="/marketplace" className="mt-4">
-            <Button variant="brand">Explore the marketplace</Button>
-          </Link>
+          <Button href="/marketplace" variant="brand" className="mt-4">Explore the marketplace</Button>
         </Card>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">

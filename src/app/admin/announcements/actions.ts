@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { adminDb, publicError } from "@/lib/admin/shared";
 import { logAdminAction } from "@/lib/admin/audit";
 
 export type AnnouncementState = { error?: string; ok?: boolean } | undefined;
@@ -28,6 +28,15 @@ function refresh() {
   revalidatePath("/", "layout");
 }
 
+async function audit(adminId: string, action: string, id: string, details?: Record<string, unknown>) {
+  try {
+    await logAdminAction(adminId, action, "announcement", id, details);
+    return null;
+  } catch {
+    return "Saved, but the audit entry could not be written.";
+  }
+}
+
 export async function saveAnnouncement(_prev: AnnouncementState, formData: FormData): Promise<AnnouncementState> {
   const { user } = await requireAdmin();
   const parsed = schema.safeParse(Object.fromEntries(formData));
@@ -35,7 +44,7 @@ export async function saveAnnouncement(_prev: AnnouncementState, formData: FormD
   const d = parsed.data;
   if (d.starts_at && d.ends_at && d.ends_at <= d.starts_at) return { error: "End must be after start" };
 
-  const admin = createAdminClient();
+  const admin = await adminDb();
   const row = {
     title: d.title,
     body: d.body,
@@ -44,43 +53,58 @@ export async function saveAnnouncement(_prev: AnnouncementState, formData: FormD
     ends_at: d.ends_at,
   };
 
-  if (d.id) {
-    const { error } = await admin.from("announcements").update(row).eq("id", d.id);
-    if (error) return { error: error.message };
-    await logAdminAction(user.id, "announcement.update", "announcement", d.id, { title: d.title });
+  let id = d.id;
+  if (id) {
+    const { error } = await admin.from("announcements").update(row).eq("id", id);
+    if (error) return { error: publicError("saveAnnouncement.update", error) };
   } else {
     const { data, error } = await admin
       .from("announcements")
       .insert({ ...row, created_by: user.id })
       .select("id")
       .single();
-    if (error) return { error: error.message };
-    await logAdminAction(user.id, "announcement.create", "announcement", data.id, { title: d.title });
+    if (error) return { error: publicError("saveAnnouncement.insert", error) };
+    id = data.id as string;
   }
+
+  const auditError = await audit(user.id, d.id ? "announcement.update" : "announcement.create", id, { title: d.title });
   refresh();
-  return { ok: true };
+  return auditError ? { error: auditError } : { ok: true };
 }
 
-export async function toggleAnnouncement(formData: FormData) {
+export async function toggleAnnouncement(_prev: AnnouncementState, formData: FormData): Promise<AnnouncementState> {
   const { user } = await requireAdmin();
   const parsed = z
     .object({ id: z.string().uuid(), value: z.enum(["true", "false"]) })
     .safeParse(Object.fromEntries(formData));
-  if (!parsed.success) return;
+  if (!parsed.success) return { error: "Invalid request" };
 
-  const admin = createAdminClient();
-  await admin.from("announcements").update({ is_active: parsed.data.value === "true" }).eq("id", parsed.data.id);
-  await logAdminAction(user.id, parsed.data.value === "true" ? "announcement.activate" : "announcement.deactivate", "announcement", parsed.data.id);
+  const admin = await adminDb();
+  const { error } = await admin
+    .from("announcements")
+    .update({ is_active: parsed.data.value === "true" })
+    .eq("id", parsed.data.id);
+  if (error) return { error: publicError("toggleAnnouncement", error) };
+
+  const auditError = await audit(
+    user.id,
+    parsed.data.value === "true" ? "announcement.activate" : "announcement.deactivate",
+    parsed.data.id,
+  );
   refresh();
+  return auditError ? { error: auditError } : { ok: true };
 }
 
-export async function deleteAnnouncement(formData: FormData) {
+export async function deleteAnnouncement(_prev: AnnouncementState, formData: FormData): Promise<AnnouncementState> {
   const { user } = await requireAdmin();
   const parsed = z.string().uuid().safeParse(formData.get("id"));
-  if (!parsed.success) return;
+  if (!parsed.success) return { error: "Invalid request" };
 
-  const admin = createAdminClient();
-  await admin.from("announcements").delete().eq("id", parsed.data);
-  await logAdminAction(user.id, "announcement.delete", "announcement", parsed.data);
+  const admin = await adminDb();
+  const { error } = await admin.from("announcements").delete().eq("id", parsed.data);
+  if (error) return { error: publicError("deleteAnnouncement", error) };
+
+  const auditError = await audit(user.id, "announcement.delete", parsed.data);
   refresh();
+  return auditError ? { error: auditError } : { ok: true };
 }

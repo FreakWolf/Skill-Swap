@@ -1,8 +1,7 @@
 import "server-only";
 
-import { createAdminClient } from "@/lib/supabase/admin";
 import type { Offering } from "@/lib/types";
-import { PAGE_SIZE, like, one, paged, range, type Paged } from "./shared";
+import { adminDb, PAGE_SIZE, like, one, paged, range, type Paged } from "./shared";
 
 export type OfferingFilter = "all" | "active" | "paused" | "featured";
 
@@ -16,7 +15,7 @@ export async function listOfferings(opts: {
   filter?: OfferingFilter;
   page: number;
 }): Promise<Paged<AdminOffering>> {
-  const admin = createAdminClient();
+  const admin = await adminDb();
   const { from, to } = range(opts.page, PAGE_SIZE);
   let query = admin
     .from("offerings")

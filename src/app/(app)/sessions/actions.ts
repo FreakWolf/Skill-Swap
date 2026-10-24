@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { requireActiveUser } from "@/lib/auth";
 
 export type SessionActionState = { error?: string; ok?: boolean } | undefined;
 
@@ -18,6 +19,8 @@ export async function completeSession(
 ): Promise<SessionActionState> {
   const bookingId = String(formData.get("bookingId") ?? "");
   if (!bookingId) return { error: "Missing booking" };
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error };
 
   const supabase = await createClient();
   const { error } = await supabase.rpc("complete_booking", {
@@ -37,6 +40,8 @@ export async function cancelSession(
 ): Promise<SessionActionState> {
   const bookingId = String(formData.get("bookingId") ?? "");
   if (!bookingId) return { error: "Missing booking" };
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error };
 
   const supabase = await createClient();
   const { error } = await supabase.rpc("cancel_booking", {
@@ -67,11 +72,10 @@ export async function submitReview(
   }
   const { bookingId, revieweeId, rating, comment } = parsed.data;
 
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error };
+  const { user } = active.session;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in" };
 
   const { error } = await supabase.from("reviews").insert({
     booking_id: bookingId,

@@ -18,7 +18,7 @@ function Feedback({ state }: { state: AdminActionState }) {
     return <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>;
   }
   if (state?.ok) {
-    return <p role="status" className="rounded-lg bg-teal-50 px-3 py-2 text-sm text-teal-700">Done.</p>;
+    return <p role="status" className="rounded-lg bg-teal-50 px-3 py-2 text-sm text-teal-700">{state.message ?? "Done."}</p>;
   }
   return null;
 }
@@ -46,7 +46,7 @@ export function UserActions({
         {suspendedAt ? (
           <form action={unsuspendAction} className="mt-3 space-y-3">
             <input type="hidden" name="id" value={id} />
-            <p className="text-sm text-gray-600">This account is suspended. The member sees a notice and cannot use the app.</p>
+            <p className="text-sm text-gray-600">This account is suspended. The member sees a notice and cannot book, teach, message or edit anything.</p>
             <Button type="submit" variant="outline" disabled={unsuspending}>
               {unsuspending ? "Working…" : "Lift suspension"}
             </Button>
@@ -60,7 +60,7 @@ export function UserActions({
               <Textarea id="reason" name="reason" maxLength={300} className="min-h-20" placeholder="e.g. Repeated no-shows" />
             </div>
             <ConfirmButton
-              confirm="Suspend this account? They will be signed out of the app until you lift it."
+              confirm="Suspend this account? Their upcoming bookings are cancelled and refunded, and they cannot use the app until you lift it."
               variant="danger"
               disabled={suspending || isSelf}
             >

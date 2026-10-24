@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { requireActiveUser } from "@/lib/auth";
 
 export type BookState = { error?: string } | undefined;
 
@@ -16,6 +17,8 @@ export async function bookSlot(
   const slotId = String(formData.get("slotId") ?? "");
   const notes = String(formData.get("notes") ?? "");
   if (!slotId) return { error: "No slot selected" };
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error };
 
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("book_slot", {

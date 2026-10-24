@@ -18,8 +18,8 @@ export function DangerZone({ id, isActive }: { id: string; isActive: boolean }) 
           <p className="font-medium text-gray-900">{isActive ? "Pause this offering" : "Resume this offering"}</p>
           <p className="text-sm text-gray-500">
             {isActive
-              ? "Hides it from the marketplace and removes your open slots. Booked sessions are not affected."
-              : "Makes it bookable again. Add new time slots from Availability afterwards."}
+              ? "Hides it from the marketplace and keeps your open slots on hold. Booked sessions are not affected."
+              : "Makes it bookable again, with the time slots you already had."}
           </p>
         </div>
         <Button type="submit" variant="outline" disabled={pausing}>

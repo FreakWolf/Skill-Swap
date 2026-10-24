@@ -1,8 +1,7 @@
 import "server-only";
 
-import { createAdminClient } from "@/lib/supabase/admin";
 import type { Report } from "@/lib/types";
-import { PAGE_SIZE, one, paged, range, type Paged } from "./shared";
+import { adminDb, PAGE_SIZE, one, paged, range, type Paged } from "./shared";
 
 export interface AdminReport extends Report {
   reporter: { id: string; full_name: string } | null;
@@ -23,7 +22,7 @@ export async function listReports(opts: {
   status?: string;
   page: number;
 }): Promise<Paged<AdminReport>> {
-  const admin = createAdminClient();
+  const admin = await adminDb();
   const { from, to } = range(opts.page, PAGE_SIZE);
   let query = admin
     .from("reports")

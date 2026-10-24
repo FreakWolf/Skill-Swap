@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { CalendarPlus, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
@@ -14,16 +13,12 @@ export function OwnerControls({ id, isActive, openSlots }: { id: string; isActiv
             : "It has no open slots, so nobody can book it yet."
           : "It is paused and hidden from the marketplace."}
       </p>
-      <Link href={`/offerings/${id}/edit`} className="block">
-        <Button className="w-full">
-          <Pencil className="h-4 w-4" aria-hidden /> Edit offering
-        </Button>
-      </Link>
-      <Link href="/availability" className="block">
-        <Button variant="outline" className="w-full">
-          <CalendarPlus className="h-4 w-4" aria-hidden /> Manage time slots
-        </Button>
-      </Link>
+      <Button href={`/offerings/${id}/edit`} className="w-full">
+        <Pencil className="h-4 w-4" aria-hidden /> Edit offering
+      </Button>
+      <Button href="/availability" variant="outline" className="w-full">
+        <CalendarPlus className="h-4 w-4" aria-hidden /> Manage time slots
+      </Button>
     </div>
   );
 }

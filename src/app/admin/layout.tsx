@@ -1,9 +1,9 @@
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { requireAdmin } from "@/lib/auth";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { adminDb } from "@/lib/admin/shared";
 
 async function getBadges() {
-  const admin = createAdminClient();
+  const admin = await adminDb();
   const [reports, support] = await Promise.all([
     admin.from("reports").select("id", { count: "exact", head: true }).in("status", ["open", "reviewing"]),
     admin.from("support_tickets").select("id", { count: "exact", head: true }).eq("status", "open"),
@@ -12,7 +12,9 @@ async function getBadges() {
 }
 
 // Admin shell: requires profiles.is_admin. Full-width content with its own
-// navigation, separate from the member sidebar.
+// navigation, separate from the member sidebar. Every data helper under
+// src/lib/admin re-checks the session itself (adminDb), because pages render
+// concurrently with this layout.
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   await requireAdmin();
   const badges = await getBadges();

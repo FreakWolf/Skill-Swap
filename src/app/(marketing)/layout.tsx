@@ -5,6 +5,10 @@ import { PublicFooter } from "@/components/marketing/PublicFooter";
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col bg-white">
+      {/* Scroll-reveal hides sections until JS marks them visible; without JS show everything. */}
+      <noscript>
+        <style>{`.reveal{opacity:1!important;transform:none!important}`}</style>
+      </noscript>
       <PublicHeader />
       <main id="main" className="flex-1">
         {children}

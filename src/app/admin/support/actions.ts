@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { adminDb, publicError } from "@/lib/admin/shared";
 import { logAdminAction } from "@/lib/admin/audit";
 
 export type TicketState = { error?: string; ok?: boolean } | undefined;
@@ -21,17 +21,21 @@ export async function updateTicket(_prev: TicketState, formData: FormData): Prom
   const parsed = schema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid request" };
 
-  const admin = createAdminClient();
+  const admin = await adminDb();
   const { error } = await admin
     .from("support_tickets")
     .update({ status: parsed.data.status, admin_reply: parsed.data.admin_reply })
     .eq("id", parsed.data.id);
-  if (error) return { error: error.message };
+  if (error) return { error: publicError("updateTicket", error) };
 
-  await logAdminAction(user.id, "ticket.update", "support_ticket", parsed.data.id, {
-    status: parsed.data.status,
-    has_reply: parsed.data.admin_reply.length > 0,
-  });
+  try {
+    await logAdminAction(user.id, "ticket.update", "support_ticket", parsed.data.id, {
+      status: parsed.data.status,
+      has_reply: parsed.data.admin_reply.length > 0,
+    });
+  } catch {
+    return { error: "Saved, but the audit entry could not be written." };
+  }
   revalidatePath("/admin/support");
   revalidatePath("/admin", "layout");
   return { ok: true };

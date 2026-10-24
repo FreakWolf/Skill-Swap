@@ -37,17 +37,11 @@ export async function PublicHeader() {
 
         <div className="flex items-center gap-1 sm:gap-2">
           {session ? (
-            <Link href="/dashboard">
-              <Button variant="brand">Go to dashboard</Button>
-            </Link>
+            <Button href="/dashboard" variant="brand">Go to dashboard</Button>
           ) : (
             <>
-              <Link href="/login" className="hidden sm:block">
-                <Button variant="ghost">Log in</Button>
-              </Link>
-              <Link href="/signup">
-                <Button variant="brand">Sign up</Button>
-              </Link>
+              <Button href="/login" variant="ghost" className="hidden sm:block">Log in</Button>
+              <Button href="/signup" variant="brand">Sign up</Button>
             </>
           )}
 

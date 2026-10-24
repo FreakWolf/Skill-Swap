@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowRight, Clock, HeartHandshake, Scale, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -15,7 +14,7 @@ const values = [
   {
     icon: Clock,
     title: "Time is the only currency",
-    body: "An hour of your time is worth an hour of anyone else's. One credit always equals one hour, whatever the skill.",
+    body: "Credits are the only thing that changes hands. Teachers set the credit price of each session; most charge one credit for an hour.",
   },
   {
     icon: Scale,
@@ -126,14 +125,10 @@ export default function AboutPage() {
             Razorpay, and card details never touch our servers.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href="/signup">
-              <Button variant="brand" size="lg" className="w-full sm:w-auto">
+            <Button href="/signup" variant="brand" size="lg" className="w-full sm:w-auto">
                 Join the community <ArrowRight className="h-4 w-4" aria-hidden />
               </Button>
-            </Link>
-            <Link href="/faq">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto">Read the FAQ</Button>
-            </Link>
+            <Button href="/faq" variant="outline" size="lg" className="w-full sm:w-auto">Read the FAQ</Button>
           </div>
         </Reveal>
       </section>

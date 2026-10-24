@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
 import {
   DataTable,
   FilterChips,
@@ -11,26 +10,7 @@ import {
 } from "@/components/admin/ui";
 import { listOfferings, type AdminOffering, type OfferingFilter } from "@/lib/admin/offerings";
 import { pageFrom, param, type SearchParams } from "@/lib/admin/shared";
-import { setOfferingFlag } from "./actions";
-
-export const metadata = { title: "Offerings" };
-
-function FlagForm({ id, field, value, label, variant = "outline" }: {
-  id: string;
-  field: "is_featured" | "is_active";
-  value: boolean;
-  label: string;
-  variant?: "outline" | "ghost" | "danger";
-}) {
-  return (
-    <form action={setOfferingFlag} className="inline">
-      <input type="hidden" name="id" value={id} />
-      <input type="hidden" name="field" value={field} />
-      <input type="hidden" name="value" value={String(value)} />
-      <Button type="submit" size="sm" variant={variant}>{label}</Button>
-    </form>
-  );
-}
+import { FlagForm } from "./FlagForm";
 
 export default async function AdminOfferingsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const sp = await searchParams;

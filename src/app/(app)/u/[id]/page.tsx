@@ -6,7 +6,7 @@ import { OfferingCard } from "@/components/OfferingCard";
 import { MessageButton } from "@/components/MessageButton";
 import { ReportDialog } from "@/components/safety/ReportDialog";
 import { BlockButton } from "@/components/safety/BlockButton";
-import { requireUser } from "@/lib/auth";
+import { requireUser, PUBLIC_PROFILE_COLUMNS } from "@/lib/auth";
 import { getBlockStatus } from "@/lib/safety";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -29,9 +29,9 @@ export default async function PublicProfilePage({
   const supabase = await createClient();
   const { data: profile } = await supabase
     .from("profiles")
-    .select("*")
+    .select(PUBLIC_PROFILE_COLUMNS)
     .eq("id", id)
-    .maybeSingle<Profile>();
+    .maybeSingle<Pick<Profile, "id" | "full_name" | "bio" | "avatar_url" | "location" | "languages">>();
   if (!profile) notFound();
 
   const block = isSelf

@@ -14,6 +14,18 @@ const OFFERING_SELECT = `
 
 type RawOffering = Record<string, unknown>;
 
+// Offering reads must not silently degrade to "no results": a schema error
+// (for example a column missing because a migration has not run) would make
+// the marketplace, dashboard and offering pages look empty. Log and throw so
+// the error page shows and the deploy is noticed.
+function must<T>(res: { data: T | null; error: { message: string; code?: string } | null }, what: string): T {
+  if (res.error) {
+    console.error(`[data] ${what}: ${res.error.code ?? ""} ${res.error.message}`);
+    throw new Error(`Could not load ${what}`);
+  }
+  return (res.data ?? ([] as unknown as T)) as T;
+}
+
 // Supabase returns joined relations as either an object or a single-element
 // array depending on the relationship; normalize to our flat shape.
 function normalize(row: RawOffering): OfferingWithDetails {
@@ -53,13 +65,13 @@ export async function getOfferingsByTeacher(
   teacherId: string,
 ): Promise<OfferingWithDetails[]> {
   const supabase = await createClient();
-  const { data } = await supabase
+  const res = await supabase
     .from("offerings")
     .select(OFFERING_SELECT)
     .eq("teacher_id", teacherId)
     .eq("is_active", true)
     .order("created_at", { ascending: false });
-  return (data ?? []).map(normalize);
+  return must(res, "offerings").map(normalize);
 }
 
 // Skill ids the user wants to learn — used to recommend matching offerings.
@@ -93,8 +105,8 @@ export async function getRecommendedOfferings(
     query = query.in("skill_id", learnIds);
   }
 
-  const [{ data }, hidden] = await Promise.all([query, getHiddenUserIds()]);
-  return (data ?? []).map(normalize).filter((o) => !hidden.has(o.teacher_id));
+  const [res, hidden] = await Promise.all([query, getHiddenUserIds()]);
+  return must(res, "recommended offerings").map(normalize).filter((o) => !hidden.has(o.teacher_id));
 }
 
 export type OfferingSort = "newest" | "cost_asc" | "cost_desc" | "shortest" | "longest";
@@ -152,9 +164,9 @@ export async function searchOfferings(opts: OfferingSearch): Promise<OfferingWit
       query = query.order("created_at", { ascending: false });
   }
 
-  const [{ data }, hidden] = await Promise.all([query.limit(opts.limit ?? 60), getHiddenUserIds()]);
+  const [res, hidden] = await Promise.all([query.limit(opts.limit ?? 60), getHiddenUserIds()]);
   // Never show offerings from people the viewer blocked or was blocked by.
-  let rows = (data ?? []).map(normalize).filter((o) => !hidden.has(o.teacher_id));
+  let rows = must(res, "marketplace offerings").map(normalize).filter((o) => !hidden.has(o.teacher_id));
 
   if (opts.q) {
     const q = opts.q.toLowerCase();
@@ -174,7 +186,7 @@ export async function searchOfferings(opts: OfferingSearch): Promise<OfferingWit
 // Offerings an admin has featured (shown on the dashboard).
 export async function getFeaturedOfferings(userId: string, limit = 6): Promise<OfferingWithDetails[]> {
   const supabase = await createClient();
-  const [{ data }, hidden] = await Promise.all([
+  const [res, hidden] = await Promise.all([
     supabase
       .from("offerings")
       .select(OFFERING_SELECT)
@@ -185,18 +197,18 @@ export async function getFeaturedOfferings(userId: string, limit = 6): Promise<O
       .limit(limit),
     getHiddenUserIds(),
   ]);
-  return (data ?? []).map(normalize).filter((o) => !hidden.has(o.teacher_id));
+  return must(res, "featured offerings").map(normalize).filter((o) => !hidden.has(o.teacher_id));
 }
 
 // Offerings by id (any status the viewer may see), used for saved lists.
 export async function getOfferingsByIds(ids: string[]): Promise<OfferingWithDetails[]> {
   if (ids.length === 0) return [];
   const supabase = await createClient();
-  const [{ data }, hidden] = await Promise.all([
+  const [res, hidden] = await Promise.all([
     supabase.from("offerings").select(OFFERING_SELECT).in("id", ids),
     getHiddenUserIds(),
   ]);
-  return (data ?? []).map(normalize).filter((o) => !hidden.has(o.teacher_id));
+  return must(res, "saved offerings").map(normalize).filter((o) => !hidden.has(o.teacher_id));
 }
 
 export async function getCategories(): Promise<string[]> {
@@ -336,11 +348,16 @@ export async function hasReviewed(bookingId: string, reviewerId: string) {
 // A single offering with its open (unbooked, future) slots.
 export async function getOfferingWithSlots(offeringId: string) {
   const supabase = await createClient();
-  const { data: raw } = await supabase
+  const res = await supabase
     .from("offerings")
     .select(OFFERING_SELECT)
     .eq("id", offeringId)
     .maybeSingle();
+  if (res.error) {
+    console.error(`[data] offering ${offeringId}: ${res.error.message}`);
+    throw new Error("Could not load offering");
+  }
+  const raw = res.data;
   if (!raw) return null;
 
   const offering = normalize(raw as RawOffering);
@@ -478,17 +495,20 @@ export async function getMyOfferingsWithSlots(
 ): Promise<OfferingSlots[]> {
   const supabase = await createClient();
 
-  const { data: offerings } = await supabase
-    .from("offerings")
-    .select(
-      `id, title, duration_min, credit_cost, is_active,
-       skill:skills!offerings_skill_id_fkey ( name )`,
-    )
-    .eq("teacher_id", userId)
-    .order("is_active", { ascending: false })
-    .order("created_at", { ascending: false });
+  const offerings = must(
+    await supabase
+      .from("offerings")
+      .select(
+        `id, title, duration_min, credit_cost, is_active,
+         skill:skills!offerings_skill_id_fkey ( name )`,
+      )
+      .eq("teacher_id", userId)
+      .order("is_active", { ascending: false })
+      .order("created_at", { ascending: false }),
+    "your offerings",
+  );
 
-  if (!offerings || offerings.length === 0) return [];
+  if (offerings.length === 0) return [];
 
   const offeringIds = offerings.map((o) => o.id as string);
   const { data: slots } = await supabase
@@ -589,12 +609,14 @@ export async function getCalendarItems(
 // Counts of the user's own offerings for the dashboard card.
 export async function getMyOfferingSummary(userId: string) {
   const supabase = await createClient();
-  const { data } = await supabase
-    .from("offerings")
-    .select("id, title, is_active, is_featured")
-    .eq("teacher_id", userId)
-    .order("created_at", { ascending: false });
-  const rows = data ?? [];
+  const rows = must(
+    await supabase
+      .from("offerings")
+      .select("id, title, is_active, is_featured")
+      .eq("teacher_id", userId)
+      .order("created_at", { ascending: false }),
+    "your offerings",
+  );
   return {
     total: rows.length,
     active: rows.filter((o) => o.is_active).length,

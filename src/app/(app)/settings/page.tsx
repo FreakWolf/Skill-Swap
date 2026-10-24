@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { requireUser } from "@/lib/auth";
@@ -39,9 +38,7 @@ export default async function SettingsPage() {
         <p className="mb-3 text-sm text-slate-500">
           Update what you teach and want to learn.
         </p>
-        <Link href="/onboarding/skills">
-          <Button variant="outline">Manage skills</Button>
-        </Link>
+        <Button href="/onboarding/skills" variant="outline">Manage skills</Button>
       </Card>
 
       <Card className="p-6">
@@ -49,9 +46,7 @@ export default async function SettingsPage() {
         <p className="mb-3 text-sm text-slate-500">
           Open bookable time slots for the skills you teach.
         </p>
-        <Link href="/availability">
-          <Button variant="outline">Manage availability</Button>
-        </Link>
+        <Button href="/availability" variant="outline">Manage availability</Button>
       </Card>
 
       <Card className="p-6">

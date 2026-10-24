@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { publicError } from "@/lib/admin/shared";
 
 export type CancelState = { error?: string; ok?: boolean } | undefined;
 
@@ -21,7 +22,11 @@ export async function adminCancelBooking(_prev: CancelState, formData: FormData)
     p_booking_id: parsed.data.id,
     p_note: parsed.data.note,
   });
-  if (error) return { error: error.message };
+  if (error) {
+    const msg = error.message.replace(/^.*?:\s*/, "");
+    if (/admin only|booking not found|only confirmed/i.test(msg)) return { error: msg.charAt(0).toUpperCase() + msg.slice(1) };
+    return { error: publicError("adminCancelBooking", error) };
+  }
 
   revalidatePath("/admin/bookings");
   revalidatePath("/sessions");

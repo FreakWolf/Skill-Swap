@@ -1,8 +1,7 @@
 import "server-only";
 
-import { createAdminClient } from "@/lib/supabase/admin";
 import type { CreditPurchase } from "@/lib/types";
-import { PAGE_SIZE, one, paged, range, type Paged } from "./shared";
+import { adminDb, PAGE_SIZE, one, paged, range, type Paged } from "./shared";
 
 export interface AdminPurchase extends CreditPurchase {
   user_name: string;
@@ -19,7 +18,7 @@ export async function listPurchases(opts: {
   status?: string;
   page: number;
 }): Promise<{ purchases: Paged<AdminPurchase>; totals: PurchaseTotals }> {
-  const admin = createAdminClient();
+  const admin = await adminDb();
   const { from, to } = range(opts.page, PAGE_SIZE);
   let query = admin
     .from("credit_purchases")

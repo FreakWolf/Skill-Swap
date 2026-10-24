@@ -1,10 +1,11 @@
 import "server-only";
 
-import { createAdminClient } from "@/lib/supabase/admin";
+import { adminDb } from "./shared";
+
 import type { Announcement } from "@/lib/types";
 
 export async function listAnnouncements(): Promise<Announcement[]> {
-  const admin = createAdminClient();
+  const admin = await adminDb();
   const { data } = await admin
     .from("announcements")
     .select("*")

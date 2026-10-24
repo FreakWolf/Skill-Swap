@@ -19,7 +19,7 @@ only (`globals.css`) and respect `prefers-reduced-motion`.
 | `/about` | Mission, the credit model with an example ledger, safety |
 | `/pricing` | Free membership plus the credit packs from `src/lib/credit-packs.ts` |
 | `/faq` | Grouped accordions; content lives in `src/lib/marketing/faq.ts` |
-| `/contact` | Contact form; messages become `support_tickets` reviewed in `/admin/support` |
+| `/contact` | Contact form; messages become `support_tickets` reviewed in `/admin/support`. Honeypot, per-IP burst limit, per-email daily cap, and Cloudflare Turnstile for signed-out visitors when configured |
 | `/terms`, `/privacy` | Legal pages, same header and footer |
 
 Signed-in visitors see a "Go to dashboard" button instead of login/signup.
@@ -36,7 +36,10 @@ New public routes must be added to `PUBLIC_PATHS` in
 - Settings: edit profile, avatar upload to the `avatars` bucket, manage
   skills and availability, blocked members list, sign out.
 - Suspended accounts (set by an admin) see a full-screen notice with the
-  reason and a sign-out button instead of the app.
+  reason and a sign-out button instead of the app. Suspension is enforced in
+  the database (write policies, booking and messaging functions) and in every
+  mutating server action (`requireActiveUser`), and it cancels and refunds the
+  member's upcoming bookings.
 
 ## Member app shell
 
@@ -56,9 +59,10 @@ can be dismissed per browser. Admins get an extra Admin link.
 - `/offerings/[id]`: details, teacher card with rating, reviews, booking
   panel with open slots. Owners see Edit and Manage slots instead.
 - `/offerings/[id]/edit`: edit every field, pause/resume, delete. Pausing
-  hides the offering and clears open slots; the database also refuses
-  bookings on paused offerings. Delete is permanent only when the offering
-  was never booked, otherwise it is paused so history is kept.
+  hides the offering and keeps its open slots on hold; the database refuses
+  bookings on paused offerings and clears any featured flag. Delete is
+  permanent only when the offering was never booked, otherwise it is paused
+  so history is kept.
 - `/availability`: add and remove time slots per offering; paused offerings
   are listed with a Resume link.
 - `/saved`: bookmarked offerings. The bookmark toggle is on every card and on
@@ -103,8 +107,12 @@ average rating, six-month earned/spent chart, top taught skills.
 
 ## Admin panel (`/admin`)
 
-Requires `profiles.is_admin`. Pages read and write with the service role after
-a server-side check; every mutation is written to `admin_audit_log`.
+Requires `profiles.is_admin` (a suspended admin loses access). Every data
+helper under `src/lib/admin` obtains its service-role client through
+`adminDb()`, which re-checks the session first; every mutation is written to
+`admin_audit_log` and admin actions report database errors instead of
+succeeding silently. Moderation columns are protected by column privileges
+in the database (see `supabase/README.md`).
 
 | Page | What you can do |
 |---|---|
@@ -137,6 +145,7 @@ where id = (select id from auth.users where email = 'you@example.com');
 
 See `.env.example`. Required: Supabase URL, anon key, service role key.
 Optional: Razorpay keys (credits purchase), Sentry DSN and upload token,
+Cloudflare Turnstile keys and `CONTACT_HASH_KEY` for the contact form,
 `NEXT_PUBLIC_SITE_URL` for canonical links.
 
 ## Roadmap

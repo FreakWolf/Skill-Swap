@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { requireActiveUser } from "@/lib/auth";
 
 import type { Message } from "@/lib/types";
 
@@ -15,6 +16,8 @@ export type MessageState =
 export async function startConversation(formData: FormData) {
   const otherId = String(formData.get("otherId") ?? "");
   if (!otherId) return;
+  const active = await requireActiveUser();
+  if (!active.ok) redirect("/messages");
 
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("get_or_create_conversation", {
@@ -40,11 +43,10 @@ export async function sendMessage(
   }
   const { conversationId, body } = parsed.data;
 
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error };
+  const { user } = active.session;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in" };
 
   const { data, error } = await supabase
     .from("messages")
@@ -64,11 +66,10 @@ export async function sendMessage(
 
 // Mark a conversation read up to now (clears unread for the current user).
 export async function markConversationRead(conversationId: string) {
+  const active = await requireActiveUser();
+  if (!active.ok) return;
+  const { user } = active.session;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return;
 
   await supabase.from("conversation_reads").upsert(
     {

@@ -53,7 +53,7 @@ export function PublicFooter() {
         </div>
         <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border)] pt-6 text-sm text-gray-500">
           <span>© {new Date().getFullYear()} {SITE.name}. {SITE.tagline}.</span>
-          <span>1 credit = 1 hour of someone&apos;s time.</span>
+          <span>Earn credits by teaching. Spend them to learn.</span>
         </div>
       </div>
     </footer>

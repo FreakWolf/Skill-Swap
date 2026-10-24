@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/auth";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { adminDb, publicError } from "@/lib/admin/shared";
 import { logAdminAction } from "@/lib/admin/audit";
 
 export type ReportState = { error?: string; ok?: boolean } | undefined;
@@ -20,7 +20,7 @@ export async function updateReport(_prev: ReportState, formData: FormData): Prom
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid request" };
 
   const closed = parsed.data.status === "resolved" || parsed.data.status === "dismissed";
-  const admin = createAdminClient();
+  const admin = await adminDb();
   const { error } = await admin
     .from("reports")
     .update({
@@ -29,12 +29,16 @@ export async function updateReport(_prev: ReportState, formData: FormData): Prom
       resolved_by: closed ? user.id : null,
     })
     .eq("id", parsed.data.id);
-  if (error) return { error: error.message };
+  if (error) return { error: publicError("updateReport", error) };
 
-  await logAdminAction(user.id, "report.update", "report", parsed.data.id, {
-    status: parsed.data.status,
-    has_notes: parsed.data.admin_notes.length > 0,
-  });
+  try {
+    await logAdminAction(user.id, "report.update", "report", parsed.data.id, {
+      status: parsed.data.status,
+      has_notes: parsed.data.admin_notes.length > 0,
+    });
+  } catch {
+    return { error: "Saved, but the audit entry could not be written." };
+  }
   revalidatePath("/admin/reports");
   revalidatePath("/admin", "layout");
   return { ok: true };

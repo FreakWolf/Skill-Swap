@@ -3,16 +3,16 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { requireActiveUser } from "@/lib/auth";
 
 export async function toggleFavorite(offeringId: string, save: boolean): Promise<{ error?: string }> {
   const id = z.string().uuid().safeParse(offeringId);
   if (!id.success) return { error: "Invalid offering" };
 
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error };
+  const { user } = active.session;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in" };
 
   const { error } = save
     ? await supabase

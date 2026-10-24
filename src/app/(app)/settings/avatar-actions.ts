@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { requireActiveUser } from "@/lib/auth";
 
 const BUCKET = "avatars";
 
@@ -23,11 +24,10 @@ export type AvatarResult = { error?: string; url?: string };
 // profile, but only if it points into this user's own avatar folder, so a
 // client can't set an arbitrary image URL. Then removes the previous file.
 export async function setAvatar(url: string): Promise<AvatarResult> {
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error };
+  const { user } = active.session;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in" };
 
   const newPath = pathFromUrl(url, user.id);
   if (!newPath || newPath.includes("..")) {
@@ -57,11 +57,10 @@ export async function setAvatar(url: string): Promise<AvatarResult> {
 }
 
 export async function removeAvatar(): Promise<AvatarResult> {
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error };
+  const { user } = active.session;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in" };
 
   const { data: profile } = await supabase
     .from("profiles")

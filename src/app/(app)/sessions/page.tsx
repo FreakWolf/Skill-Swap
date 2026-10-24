@@ -82,9 +82,7 @@ export default async function SessionsPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Link href="/calendar">
-            <Button variant="outline" size="sm">Calendar</Button>
-          </Link>
+          <Button href="/calendar" variant="outline" size="sm">Calendar</Button>
           <CreditPill balance={balance} />
         </div>
       </div>

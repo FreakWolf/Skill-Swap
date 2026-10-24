@@ -4,25 +4,36 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { requireActiveUser } from "@/lib/auth";
 import { offeringFieldsSchema } from "@/lib/schemas/offering";
 
 export type EditState = { error?: string; ok?: boolean } | undefined;
 
 const idSchema = z.string().uuid();
 
-async function ownedOffering(id: string) {
+type Owned =
+  | { ok: false; error: string }
+  | { ok: true; supabase: Awaited<ReturnType<typeof createClient>>; userId: string; offering: { id: string; duration_min: number } };
+
+async function ownedOffering(id: string): Promise<Owned> {
+  const active = await requireActiveUser();
+  if (!active.ok) return { ok: false, error: active.error };
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { supabase, user: null, offering: null };
   const { data: offering } = await supabase
     .from("offerings")
     .select("id, teacher_id, duration_min")
     .eq("id", id)
     .maybeSingle<{ id: string; teacher_id: string; duration_min: number }>();
-  if (!offering || offering.teacher_id !== user.id) return { supabase, user, offering: null };
-  return { supabase, user, offering };
+  if (!offering || offering.teacher_id !== active.session.user.id) {
+    return { ok: false, error: "You can only change your own offerings" };
+  }
+  return { ok: true, supabase, userId: active.session.user.id, offering };
+}
+
+function friendly(error: { message: string; code?: string }, context: string): string {
+  console.error(`[offerings] ${context}: ${error.code ?? ""} ${error.message}`);
+  if (error.code === "42501") return "You don't have permission to do that.";
+  return "Something went wrong. Please try again.";
 }
 
 function refresh(id: string) {
@@ -39,9 +50,9 @@ export async function updateOffering(_prev: EditState, formData: FormData): Prom
   if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   const { id, skillName, title, description, level, duration, cost, mode } = parsed.data;
 
-  const { supabase, user, offering } = await ownedOffering(id);
-  if (!user) return { error: "Not signed in" };
-  if (!offering) return { error: "You can only edit your own offerings" };
+  const owned = await ownedOffering(id);
+  if (!owned.ok) return { error: owned.error };
+  const { supabase, userId, offering } = owned;
 
   // Resolve or create the skill (same rule as creating an offering).
   let skillId: string;
@@ -58,11 +69,11 @@ export async function updateOffering(_prev: EditState, formData: FormData): Prom
       .insert({ name: skillName.trim(), category: "Other", is_custom: true })
       .select("id")
       .single<{ id: string }>();
-    if (skillErr) return { error: skillErr.message };
+    if (skillErr) return { error: friendly(skillErr, "createSkill") };
     skillId = created.id;
   }
   await supabase.from("user_skills").upsert(
-    { user_id: user.id, skill_id: skillId, direction: "teach", level },
+    { user_id: userId, skill_id: skillId, direction: "teach", level },
     { onConflict: "user_id,skill_id,direction" },
   );
 
@@ -78,7 +89,7 @@ export async function updateOffering(_prev: EditState, formData: FormData): Prom
       mode,
     })
     .eq("id", id);
-  if (error) return { error: error.message };
+  if (error) return { error: friendly(error, "updateOffering") };
 
   // Keep open slots consistent with a changed duration.
   if (duration !== offering.duration_min) {
@@ -97,9 +108,10 @@ export async function updateOffering(_prev: EditState, formData: FormData): Prom
   return { ok: true };
 }
 
-// Pause hides the offering from the marketplace and clears its open slots so
-// nothing can be booked (the database refuses bookings on paused offerings
-// too). Resume just flips it back; add slots again from Availability.
+// Pause hides the offering from the marketplace; its open slots stay in place
+// (hidden with it) and the database refuses bookings on paused offerings.
+// Resume makes everything bookable again. Featured status is cleared by a
+// database trigger when an offering is paused.
 export async function setOfferingActive(_prev: EditState, formData: FormData): Promise<EditState> {
   const parsed = z
     .object({ id: idSchema, active: z.enum(["true", "false"]) })
@@ -107,25 +119,16 @@ export async function setOfferingActive(_prev: EditState, formData: FormData): P
   if (!parsed.success) return { error: "Invalid request" };
   const active = parsed.data.active === "true";
 
-  const { supabase, user, offering } = await ownedOffering(parsed.data.id);
-  if (!user) return { error: "Not signed in" };
-  if (!offering) return { error: "You can only change your own offerings" };
+  const owned = await ownedOffering(parsed.data.id);
+  if (!owned.ok) return { error: owned.error };
 
-  const { error } = await supabase
+  const { error } = await owned.supabase
     .from("offerings")
-    .update({ is_active: active, ...(active ? {} : { is_featured: false }) })
-    .eq("id", offering.id);
-  if (error) return { error: error.message };
+    .update({ is_active: active })
+    .eq("id", owned.offering.id);
+  if (error) return { error: friendly(error, "setOfferingActive") };
 
-  if (!active) {
-    await supabase
-      .from("availability")
-      .delete()
-      .eq("offering_id", offering.id)
-      .eq("is_booked", false);
-  }
-
-  refresh(offering.id);
+  refresh(owned.offering.id);
   return { ok: true };
 }
 
@@ -135,9 +138,9 @@ export async function deleteOffering(_prev: EditState, formData: FormData): Prom
   const parsed = idSchema.safeParse(formData.get("id"));
   if (!parsed.success) return { error: "Invalid request" };
 
-  const { supabase, user, offering } = await ownedOffering(parsed.data);
-  if (!user) return { error: "Not signed in" };
-  if (!offering) return { error: "You can only delete your own offerings" };
+  const owned = await ownedOffering(parsed.data);
+  if (!owned.ok) return { error: owned.error };
+  const { supabase, offering } = owned;
 
   const { count } = await supabase
     .from("bookings")
@@ -145,17 +148,14 @@ export async function deleteOffering(_prev: EditState, formData: FormData): Prom
     .eq("offering_id", offering.id);
 
   if ((count ?? 0) > 0) {
-    await supabase
-      .from("offerings")
-      .update({ is_active: false, is_featured: false })
-      .eq("id", offering.id);
-    await supabase.from("availability").delete().eq("offering_id", offering.id).eq("is_booked", false);
+    const { error } = await supabase.from("offerings").update({ is_active: false }).eq("id", offering.id);
+    if (error) return { error: friendly(error, "deleteOffering.pause") };
     refresh(offering.id);
     return { error: "This offering has bookings, so it was paused instead of deleted. Past sessions stay in everyone's history." };
   }
 
   const { error } = await supabase.from("offerings").delete().eq("id", offering.id);
-  if (error) return { error: error.message };
+  if (error) return { error: friendly(error, "deleteOffering") };
 
   refresh(offering.id);
   redirect("/availability?deleted=1");

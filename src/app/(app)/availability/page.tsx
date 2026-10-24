@@ -39,9 +39,7 @@ export default async function AvailabilityPage({
             Open time slots learners can book for the skills you teach.
           </p>
         </div>
-        <Link href="/calendar">
-          <Button variant="outline">View calendar</Button>
-        </Link>
+        <Button href="/calendar" variant="outline">View calendar</Button>
       </div>
 
       {deleted && (
@@ -59,9 +57,7 @@ export default async function AvailabilityPage({
           <p className="mt-1 text-sm text-gray-500">
             Publish a skill first, then open time slots for it.
           </p>
-          <Link href="/offer" className="mt-4">
-            <Button variant="brand">Offer a skill</Button>
-          </Link>
+          <Button href="/offer" variant="brand" className="mt-4">Offer a skill</Button>
         </Card>
       ) : (
         <div className="space-y-4">
@@ -84,13 +80,14 @@ export default async function AvailabilityPage({
               </div>
 
               <div className="mt-4 border-t border-[var(--border)] pt-4">
-                {!o.is_active ? (
-                  <p className="text-sm text-gray-500">
-                    Paused offerings can&apos;t be booked.{" "}
+                {!o.is_active && (
+                  <p className="mb-3 text-sm text-gray-500">
+                    This offering is paused, so these slots are hidden and can&apos;t be booked.{" "}
                     <Link href={`/offerings/${o.id}/edit`} className="font-medium text-brand-600 hover:underline">Resume it</Link>{" "}
-                    to add slots again.
+                    to open them again.
                   </p>
-                ) : o.slots.length === 0 ? (
+                )}
+                {o.slots.length === 0 ? (
                   <p className="text-sm text-gray-500">
                     No open slots. Add times above so people can book.
                   </p>

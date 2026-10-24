@@ -44,9 +44,13 @@ export default async function AdminSupportPage({ searchParams }: { searchParams:
                   <h2 className="mt-1 font-semibold text-gray-900">{t.subject}</h2>
                   <p className="text-sm text-gray-600">
                     {t.name} ·{" "}
-                    <a href={`mailto:${t.email}?subject=${encodeURIComponent(`Re: ${t.subject}`)}`} className="text-brand-700 hover:underline">
+                    <a
+                      href={`mailto:${t.email}?subject=${encodeURIComponent(`Re: ${t.subject}`)}${t.admin_reply ? `&body=${encodeURIComponent(t.admin_reply)}` : ""}`}
+                      className="text-brand-700 hover:underline"
+                    >
                       {t.email}
                     </a>
+                    {t.admin_reply && <span className="text-xs text-gray-500"> (opens your mail app with the saved reply)</span>}
                     {t.user_id && (
                       <>
                         {" · "}

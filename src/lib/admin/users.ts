@@ -1,8 +1,7 @@
 import "server-only";
 
-import { createAdminClient } from "@/lib/supabase/admin";
 import type { Booking, CreditTransaction, Offering, Profile, Report } from "@/lib/types";
-import { PAGE_SIZE, like, one, paged, range, type Paged } from "./shared";
+import { adminDb, PAGE_SIZE, like, one, paged, range, type Paged } from "./shared";
 
 export type UserFilter = "all" | "admins" | "suspended";
 
@@ -11,7 +10,7 @@ export async function listUsers(opts: {
   filter?: UserFilter;
   page: number;
 }): Promise<Paged<Profile>> {
-  const admin = createAdminClient();
+  const admin = await adminDb();
   const { from, to } = range(opts.page, PAGE_SIZE);
   let query = admin
     .from("profiles")
@@ -37,7 +36,7 @@ export interface UserDetail {
 }
 
 export async function getUserDetail(id: string): Promise<UserDetail | null> {
-  const admin = createAdminClient();
+  const admin = await adminDb();
   const { data: profile } = await admin.from("profiles").select("*").eq("id", id).maybeSingle<Profile>();
   if (!profile) return null;
 

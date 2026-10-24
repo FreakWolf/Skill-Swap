@@ -96,11 +96,9 @@ export default async function DashboardPage() {
         </p>
         <div className="relative mt-6 flex flex-wrap gap-3">
           {quickActions.map((a) => (
-            <Link key={a.href} href={a.href}>
-              <Button variant={a.href === "/marketplace" ? "onBrandSolid" : "onBrandGhost"}>
-                <a.icon className="h-4 w-4" aria-hidden /> {a.label}
-              </Button>
-            </Link>
+            <Button key={a.href} href={a.href} variant={a.href === "/marketplace" ? "onBrandSolid" : "onBrandGhost"}>
+              <a.icon className="h-4 w-4" aria-hidden /> {a.label}
+            </Button>
           ))}
         </div>
       </div>
@@ -184,11 +182,9 @@ export default async function DashboardPage() {
                       {b.learner_id === user.id ? "Learning" : "Teaching"} ·{" "}
                       {formatWhen(b.starts_at, tz)}
                     </p>
-                    <Link href={`/sessions/${b.id}`}>
-                      <Button size="sm" className="mt-3 w-full">
-                        View session
-                      </Button>
-                    </Link>
+                    <Button href={`/sessions/${b.id}`} size="sm" className="mt-3 w-full">
+                      View session
+                    </Button>
                   </Card>
                 ))}
               </div>
@@ -215,9 +211,7 @@ export default async function DashboardPage() {
               {mine.total === 0 ? (
                 <div className="text-center text-sm text-gray-500">
                   You haven&apos;t published a skill yet.
-                  <Link href="/offer" className="mt-3 block">
-                    <Button variant="brand" size="sm" className="w-full">Offer a skill</Button>
-                  </Link>
+                  <Button href="/offer" variant="brand" size="sm" className="mt-3 block w-full">Offer a skill</Button>
                 </div>
               ) : (
                 <>

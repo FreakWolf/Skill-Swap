@@ -62,11 +62,9 @@ export default async function PricingPage() {
                   </li>
                 ))}
               </ul>
-              <Link href={session ? "/dashboard" : "/signup"} className="mt-8 block">
-                <Button variant="brand" size="lg" className="w-full">
+              <Button href={session ? "/dashboard" : "/signup"} variant="brand" size="lg" className="mt-8 block w-full">
                   {session ? "Go to dashboard" : "Create free account"}
                 </Button>
-              </Link>
             </div>
           </Reveal>
 
@@ -74,7 +72,7 @@ export default async function PricingPage() {
             <Reveal delay={100}>
               <h2 className="text-2xl font-bold text-gray-900">Credit packs</h2>
               <p className="mt-2 text-gray-600">
-                Optional. One credit books one hour. Larger packs cost less per credit.
+                Optional. Teachers set the credit price of each session; most charge one credit per hour. Larger packs cost less per credit.
               </p>
             </Reveal>
             <div className="mt-6 grid gap-4 sm:grid-cols-3">
@@ -105,13 +103,11 @@ export default async function PricingPage() {
                       <p className="mt-4 flex-1 text-sm text-gray-600">
                         {pack.credits === 1
                           ? "Top up for a single session."
-                          : `Enough for ${pack.credits} hours of learning.`}
+                          : `Enough for ${pack.credits} one-credit sessions.`}
                       </p>
-                      <Link href={buyHref} className="mt-6 block">
-                        <Button variant={popular ? "brand" : "outline"} className="w-full">
+                      <Button href={buyHref} variant={popular ? "brand" : "outline"} className="mt-6 block w-full">
                           {session ? "Buy now" : "Sign up to buy"}
                         </Button>
-                      </Link>
                     </div>
                   </Reveal>
                 );

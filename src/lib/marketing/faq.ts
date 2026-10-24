@@ -18,7 +18,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
     items: [
       {
         q: "What is a credit?",
-        a: "One credit is one hour of someone's time. You spend credits to book a session and earn credits when you teach one. The whole exchange runs on time, not money.",
+        a: "A credit is what you spend to book a session and what you earn when you teach one. Each teacher sets the credit price of their sessions; most charge one credit for an hour. The whole exchange runs on credits, not money.",
       },
       {
         q: "Do I need to pay to join?",

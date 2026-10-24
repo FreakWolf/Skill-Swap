@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { requireActiveUser } from "@/lib/auth";
 import { offeringFieldsSchema } from "@/lib/schemas/offering";
 
 const offerSchema = offeringFieldsSchema.extend({
@@ -25,11 +26,10 @@ export async function createOffering(
   const { skillName, title, description, level, duration, cost, mode, slots } =
     parsed.data;
 
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error };
+  const { user } = active.session;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in" };
 
   // Resolve or create the skill.
   let skillId: string;

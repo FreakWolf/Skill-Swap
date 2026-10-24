@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import {
   ArrowRight,
@@ -27,7 +26,7 @@ const steps = [
   },
   {
     title: "Earn credits",
-    body: "Every completed session pays you in credits. 1 credit = 1 hour. Your time is the currency.",
+    body: "Every completed session pays you the credits the learner held. You set the credit price of each session you teach.",
   },
   {
     title: "Learn anything",
@@ -74,19 +73,11 @@ const skills = [
   "Digital marketing", "Singing", "Watercolour", "Interview prep", "React", "English conversation",
 ];
 
-const quotes = [
-  {
-    quote: "I taught three guitar lessons over a weekend and used the credits to finally learn Spanish. No money changed hands and it felt completely fair.",
-    who: "Guitar teacher, learning Spanish",
-  },
-  {
-    quote: "As a student I could never afford design coaching. Here I trade an hour of Python tutoring for an hour of Figma feedback.",
-    who: "Python tutor, learning design",
-  },
-  {
-    quote: "The scheduling just works. I set my slots once a week and learners book straight into my calendar.",
-    who: "Yoga instructor",
-  },
+// Illustrative examples of how a swap can balance out; not member quotes.
+const swaps = [
+  { teach: "Guitar basics", teachSessions: 3, learn: "Conversational Spanish", learnSessions: 3 },
+  { teach: "Python tutoring", teachSessions: 2, learn: "Figma feedback", learnSessions: 2 },
+  { teach: "Morning yoga", teachSessions: 4, learn: "Interview prep", learnSessions: 4 },
 ];
 
 export default function Home() {
@@ -114,20 +105,16 @@ export default function Home() {
             <p className="animate-fade-up delay-200 mx-auto mt-6 max-w-xl text-lg text-gray-600 lg:mx-0">
               SkillSwap is a community where you earn credits by teaching your
               skills, then spend them to learn from others. Everyone teaches.
-              Everyone learns. Nobody pays cash.
+              Everyone learns. No cash between members.
             </p>
             <div className="animate-fade-up delay-300 mt-10 flex flex-col justify-center gap-3 sm:flex-row sm:gap-4 lg:justify-start">
-              <Link href="/signup">
-                <Button variant="brand" size="lg" className="w-full sm:w-auto">
+              <Button href="/signup" variant="brand" size="lg" className="w-full sm:w-auto">
                   Get started free
                   <ArrowRight className="h-4 w-4" aria-hidden />
                 </Button>
-              </Link>
-              <Link href="/about">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto">
+              <Button href="/about" size="lg" variant="outline" className="w-full sm:w-auto">
                   How it works
                 </Button>
-              </Link>
             </div>
             <p className="animate-fade-up delay-500 mt-4 text-sm text-gray-500">
               3 free credits on signup. No card required.
@@ -154,9 +141,9 @@ export default function Home() {
       <section className="border-y border-[var(--border)] bg-white">
         <div className="mx-auto grid w-full max-w-screen-2xl grid-cols-2 gap-6 px-4 py-10 sm:px-6 md:grid-cols-4 lg:px-10">
           {[
-            { value: "1 = 1", label: "credit per hour taught" },
             { value: "3", label: "free credits to start" },
-            { value: "20+", label: "skill categories" },
+            { value: "8", label: "skill categories, from code to cooking" },
+            { value: "1+", label: "credits per session, set by the teacher" },
             { value: "0", label: "cash between members" },
           ].map((s, i) => (
             <Reveal key={s.label} delay={i * 80} className="text-center">
@@ -226,28 +213,35 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Quotes */}
+      {/* Example swaps */}
       <section className="bg-gradient-to-b from-white to-brand-50/60 py-20">
         <div className="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-10">
           <Reveal className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Trade time, not money</h2>
-            <p className="mt-4 text-gray-600">What swapping looks like in practice.</p>
+            <p className="mt-4 text-gray-600">Three illustrative swaps, each priced at one credit per session.</p>
           </Reveal>
           <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {quotes.map((q, i) => (
-              <Reveal key={q.who} delay={i * 120}>
-                <figure className="h-full rounded-2xl border border-[var(--border)] bg-white p-6">
-                  <div className="flex gap-0.5 text-brand-orange-500" aria-label="5 out of 5 stars">
-                    {Array.from({ length: 5 }).map((_, j) => (
-                      <Star key={j} className="h-4 w-4 fill-current" aria-hidden />
-                    ))}
+            {swaps.map((sw, i) => (
+              <Reveal key={sw.teach} delay={i * 120}>
+                <div className="h-full rounded-2xl border border-[var(--border)] bg-white p-6">
+                  <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Example swap</p>
+                  <div className="mt-4 flex items-center gap-3">
+                    <div className="flex-1 rounded-xl bg-brand-50 p-4">
+                      <p className="text-xs text-brand-700">Teach</p>
+                      <p className="font-semibold text-gray-900">{sw.teach}</p>
+                      <p className="text-sm text-gray-600">{sw.teachSessions} sessions · +{sw.teachSessions} credits</p>
+                    </div>
+                    <ArrowRight className="h-5 w-5 shrink-0 text-gray-400" aria-hidden />
+                    <div className="flex-1 rounded-xl bg-brand-orange-50 p-4">
+                      <p className="text-xs text-brand-orange-700">Learn</p>
+                      <p className="font-semibold text-gray-900">{sw.learn}</p>
+                      <p className="text-sm text-gray-600">{sw.learnSessions} sessions · −{sw.learnSessions} credits</p>
+                    </div>
                   </div>
-                  <blockquote className="mt-4 text-gray-700">&ldquo;{q.quote}&rdquo;</blockquote>
-                  <figcaption className="mt-4 flex items-center gap-2 text-sm text-gray-500">
-                    <Users className="h-4 w-4" aria-hidden />
-                    {q.who}
-                  </figcaption>
-                </figure>
+                  <p className="mt-4 flex items-center gap-2 text-sm text-gray-500">
+                    <Users className="h-4 w-4" aria-hidden /> Net cost: 0 credits, 0 rupees
+                  </p>
+                </div>
               </Reveal>
             ))}
           </div>
@@ -264,12 +258,8 @@ export default function Home() {
               Create a profile, list one skill you can teach, and book your first session with your free credits.
             </p>
             <div className="relative mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-              <Link href="/signup">
-                <Button variant="onBrandSolid" size="lg" className="w-full sm:w-auto">Create free account</Button>
-              </Link>
-              <Link href="/pricing">
-                <Button variant="onBrandGhost" size="lg" className="w-full sm:w-auto">See pricing</Button>
-              </Link>
+              <Button href="/signup" variant="onBrandSolid" size="lg" className="w-full sm:w-auto">Create free account</Button>
+              <Button href="/pricing" variant="onBrandGhost" size="lg" className="w-full sm:w-auto">See pricing</Button>
             </div>
           </div>
         </Reveal>

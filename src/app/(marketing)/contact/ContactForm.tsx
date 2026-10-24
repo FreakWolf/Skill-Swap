@@ -1,5 +1,6 @@
 "use client";
 
+import Script from "next/script";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input, Label, Textarea } from "@/components/ui/Input";
@@ -8,9 +9,12 @@ import { submitContact, type ContactState } from "./actions";
 export function ContactForm({
   defaultName = "",
   defaultEmail = "",
+  turnstileSiteKey,
 }: {
   defaultName?: string;
   defaultEmail?: string;
+  /** Set for signed-out visitors when Cloudflare Turnstile is configured. */
+  turnstileSiteKey?: string;
 }) {
   const [state, action, pending] = useActionState<ContactState, FormData>(submitContact, undefined);
 
@@ -50,6 +54,13 @@ export function ContactForm({
           <input name="website" tabIndex={-1} autoComplete="off" />
         </label>
       </div>
+
+      {turnstileSiteKey && (
+        <>
+          <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="lazyOnload" />
+          <div className="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="light" />
+        </>
+      )}
 
       {state?.error && (
         <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>
