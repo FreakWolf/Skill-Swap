@@ -43,10 +43,14 @@ export function PrivacyContent() {
       <h2>4. Service providers</h2>
       <p>
         We use trusted providers to run {companyName}: Supabase (database,
-        authentication, and file storage), Vercel (hosting), and Sentry (error
+        authentication, and file storage), Vercel (hosting), Sentry (error
         monitoring, which receives technical details when something crashes,
-        such as the page and browser involved). They process data on our
-        behalf. Your data may be stored on servers outside your country.
+        such as the page and browser involved), and Razorpay (payments, when
+        you buy credits). Razorpay collects your payment details directly;
+        we never see or store your card, UPI, or bank details, only a record
+        of the purchase (amount, credits, and Razorpay&apos;s payment ID). They
+        process data on our behalf. Your data may be stored on servers outside
+        your country.
       </p>
 
       <h2>5. How long we keep data</h2>

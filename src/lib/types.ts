@@ -11,7 +11,8 @@ export type LedgerReason =
   | "booking_hold"
   | "booking_refund"
   | "session_earning"
-  | "adjustment";
+  | "adjustment"
+  | "purchase";
 
 export const SKILL_LEVELS: SkillLevel[] = ["beginner", "intermediate", "expert"];
 

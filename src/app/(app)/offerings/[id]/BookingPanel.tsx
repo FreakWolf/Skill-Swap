@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import Link from "next/link";
 import { bookSlot, type BookState } from "./actions";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Input";
@@ -94,8 +95,11 @@ export function BookingPanel({
 
       {!canAfford && (
         <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-700">
-          You have {balance} {balance === 1 ? "credit" : "credits"} but this costs {cost}. Teach a skill to
-          earn more.
+          You have {balance} {balance === 1 ? "credit" : "credits"} but this costs {cost}.{" "}
+          <Link href="/credits" className="font-medium underline">
+            Buy credits
+          </Link>{" "}
+          or teach a skill to earn more.
         </p>
       )}
 

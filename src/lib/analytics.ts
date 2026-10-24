@@ -55,6 +55,8 @@ export async function getAnalytics(userId: string): Promise<Analytics> {
   for (const t of ledger ?? []) {
     const amt = t.amount as number;
     balance += amt;
+    // Bought credits count toward the balance, not toward "earned".
+    if (t.reason === "purchase") continue;
     if (amt > 0) totalEarned += amt;
     else totalSpent += -amt;
   }
@@ -79,6 +81,7 @@ export async function getAnalytics(userId: string): Promise<Analytics> {
     const idx = monthIndex.get(key);
     if (idx === undefined) continue;
     const amt = t.amount as number;
+    if (t.reason === "purchase") continue;
     if (amt > 0) months[idx].earned += amt;
     else months[idx].spent += -amt;
   }

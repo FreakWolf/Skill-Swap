@@ -28,7 +28,8 @@ export function TermsContent({ embedded = false }: { embedded?: boolean }) {
       <h2>2. Credits</h2>
       <ul>
         <li>Credits are an in-app unit used to book sessions. One credit represents one hour of a session unless the teacher sets a different price.</li>
-        <li>Credits have no cash value, cannot be withdrawn or exchanged for money, and cannot be transferred outside the platform.</li>
+        <li>You get credits by teaching, as a sign-up bonus, or by buying them. Credits have no cash value, cannot be withdrawn or exchanged for money, and cannot be transferred outside the platform. This applies to bought credits too.</li>
+        <li>Credit purchases are processed securely by our payment partner, Razorpay. Prices are shown in Indian rupees and include applicable taxes. Purchased credits are non-refundable once added to your balance, except where required by law or if you were charged in error (for example, charged twice). Email us about any payment problem.</li>
         <li>When you book, the session&apos;s credits are held. They move to the teacher when the learner confirms the session happened, or when the teacher claims them 48 hours after the session ends if the learner hasn&apos;t responded.</li>
         <li>Cancelling before a session starts refunds the held credits to the learner. Sessions can&apos;t be cancelled after they start.</li>
         <li>We may correct balances affected by errors, fraud, or abuse, and may remove credits obtained in breach of these terms.</li>

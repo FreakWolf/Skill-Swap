@@ -18,6 +18,8 @@ const PUBLIC_PATHS = [
   "/sitemap.xml",
   "/manifest.webmanifest",
   "/opengraph-image",
+  // Server-to-server from Razorpay (no session; verified by HMAC signature).
+  "/api/razorpay/webhook",
 ];
 
 export async function updateSession(request: NextRequest) {

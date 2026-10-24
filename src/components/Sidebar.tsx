@@ -163,14 +163,20 @@ export function Sidebar({
           {/* Credits */}
           <div className="mt-4">
             <Link
-              href="/sessions"
+              href="/credits"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-sm font-medium text-amber-700"
+              className={cn(
+                "flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors",
+                isActive("/credits")
+                  ? "border-amber-300 bg-amber-100 text-amber-800"
+                  : "border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100",
+              )}
             >
-              <Coins className="h-5 w-5" />
-              <span>
+              <Coins className="h-5 w-5" aria-hidden />
+              <span className="flex-1">
                 {balance} {balance === 1 ? "credit" : "credits"}
               </span>
+              <span className="text-xs font-semibold text-amber-800">Buy</span>
             </Link>
           </div>
         </nav>

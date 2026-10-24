@@ -1,0 +1,156 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { CheckCircle2, Coins } from "lucide-react";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { cn } from "@/lib/cn";
+import { formatPrice, savingsPercent, type CreditPack } from "@/lib/credit-packs";
+import { confirmCreditPayment, createCreditOrder } from "./actions";
+
+// Minimal typing for Razorpay's Checkout (https://checkout.razorpay.com/v1/checkout.js).
+interface RazorpayResponse {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+}
+interface RazorpayInstance {
+  open(): void;
+  on(event: "payment.failed", cb: (r: { error: { description?: string } }) => void): void;
+}
+declare global {
+  interface Window {
+    Razorpay?: new (options: Record<string, unknown>) => RazorpayInstance;
+  }
+}
+
+let scriptPromise: Promise<boolean> | null = null;
+function loadCheckout(): Promise<boolean> {
+  if (window.Razorpay) return Promise.resolve(true);
+  scriptPromise ??= new Promise((resolve) => {
+    const s = document.createElement("script");
+    s.src = "https://checkout.razorpay.com/v1/checkout.js";
+    s.async = true;
+    s.onload = () => resolve(true);
+    s.onerror = () => {
+      scriptPromise = null;
+      resolve(false);
+    };
+    document.body.appendChild(s);
+  });
+  return scriptPromise;
+}
+
+export function BuyCredits({ packs, enabled }: { packs: CreditPack[]; enabled: boolean }) {
+  const router = useRouter();
+  const [busy, setBusy] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<number | null>(null);
+
+  async function buy(pack: CreditPack) {
+    setError(null);
+    setSuccess(null);
+    setBusy(pack.id);
+
+    const [order, loaded] = await Promise.all([createCreditOrder(pack.id), loadCheckout()]);
+    if ("error" in order) {
+      setError(order.error);
+      setBusy(null);
+      return;
+    }
+    if (!loaded || !window.Razorpay) {
+      setError("Couldn't load the payment window. Check your connection and try again.");
+      setBusy(null);
+      return;
+    }
+
+    const rzp = new window.Razorpay({
+      key: order.keyId,
+      order_id: order.orderId,
+      amount: order.amount,
+      currency: order.currency,
+      name: "SkillSwap",
+      description: `${order.credits} credit${order.credits === 1 ? "" : "s"}`,
+      prefill: { name: order.name, email: order.email },
+      theme: { color: "#7c33ff" },
+      modal: { ondismiss: () => setBusy(null) },
+      handler: async (resp: RazorpayResponse) => {
+        const result = await confirmCreditPayment({
+          orderId: resp.razorpay_order_id,
+          paymentId: resp.razorpay_payment_id,
+          signature: resp.razorpay_signature,
+        });
+        setBusy(null);
+        if ("error" in result) {
+          setError(result.error);
+        } else {
+          setSuccess(result.credits);
+          router.refresh(); // updates balance + history
+        }
+      },
+    });
+    rzp.on("payment.failed", (r) => {
+      setError(r.error?.description || "The payment failed. You haven't been charged.");
+    });
+    rzp.open();
+  }
+
+  return (
+    <div className="space-y-4">
+      {success !== null && (
+        <p role="status" className="flex items-center gap-2 rounded-lg bg-teal-50 px-4 py-3 text-sm text-teal-800">
+          <CheckCircle2 className="h-5 w-5 shrink-0" aria-hidden />
+          {success} credit{success === 1 ? "" : "s"} added to your balance. Happy learning!
+        </p>
+      )}
+      {error && (
+        <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </p>
+      )}
+
+      <div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
+        {packs.map((pack) => {
+          const save = savingsPercent(pack);
+          const highlight = pack.tag === "Popular";
+          return (
+            <Card
+              key={pack.id}
+              className={cn(
+                "relative flex flex-col p-5",
+                highlight && "border-brand-400 ring-1 ring-brand-400",
+              )}
+            >
+              {pack.tag && (
+                <span className="absolute -top-2.5 left-5 rounded-full bg-brand-600 px-2.5 py-0.5 text-xs font-medium text-white">
+                  {pack.tag}
+                </span>
+              )}
+              <div className="flex items-center gap-2 text-amber-700">
+                <Coins className="h-5 w-5" aria-hidden />
+                <span className="text-2xl font-bold text-gray-900">{pack.credits}</span>
+                <span className="text-sm text-gray-600">credit{pack.credits === 1 ? "" : "s"}</span>
+              </div>
+              <p className="mt-3 text-xl font-semibold text-gray-900">{formatPrice(pack.pricePaise)}</p>
+              <p className="text-xs text-gray-500">
+                {formatPrice(Math.round(pack.pricePaise / pack.credits))} per credit
+                {save > 0 && <span className="font-medium text-teal-700"> · Save {save}%</span>}
+              </p>
+              <Button
+                type="button"
+                variant={highlight ? "brand" : "primary"}
+                className="mt-4 w-full"
+                disabled={!enabled || busy !== null}
+                onClick={() => buy(pack)}
+                aria-label={`Buy ${pack.credits} credit${pack.credits === 1 ? "" : "s"} for ${formatPrice(pack.pricePaise)}`}
+              >
+                {busy === pack.id ? "Opening payment…" : "Buy"}
+              </Button>
+            </Card>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
