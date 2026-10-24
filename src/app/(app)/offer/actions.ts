@@ -3,15 +3,9 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { offeringFieldsSchema } from "@/lib/schemas/offering";
 
-const offerSchema = z.object({
-  skillName: z.string().min(1, "Choose or enter a skill").max(60),
-  title: z.string().min(3, "Give your offering a clear title").max(120),
-  description: z.string().max(1000).optional(),
-  level: z.enum(["beginner", "intermediate", "expert"]),
-  duration: z.coerce.number().int().min(15).max(480),
-  cost: z.coerce.number().int().min(0).max(100),
-  mode: z.enum(["virtual", "in_person"]),
+const offerSchema = offeringFieldsSchema.extend({
   // Slots arrive as a JSON array of ISO datetime strings.
   slots: z.string().optional(),
 });

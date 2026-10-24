@@ -31,15 +31,18 @@ At [supabase.com](https://supabase.com) create a project (free tier is fine).
 
 ### 2. Apply the database schema
 
-In the Supabase Dashboard → **SQL Editor**, run these files in order (contents
-are in `supabase/`):
-
-1. `migrations/0001_init.sql`
-2. `migrations/0002_functions.sql`
-3. `migrations/0003_rls.sql`
-4. `seed.sql`
+In the Supabase Dashboard → **SQL Editor**, run the files in
+`supabase/migrations/` in order (`0001_init.sql` through `0010_favorites.sql`),
+then `supabase/seed.sql`.
 
 See `supabase/README.md` for details on the schema and the credit model.
+
+To open the admin panel at `/admin`, promote your account:
+
+```sql
+update public.profiles set is_admin = true
+where id = (select id from auth.users where email = 'you@example.com');
+```
 
 ### 3. Add your credentials
 
@@ -83,23 +86,26 @@ Open http://localhost:3000.
 ```
 src/
   app/
-    (auth)/        login, signup, auth server actions
-    (app)/         authenticated shell: dashboard, marketplace, offer,
-                   offerings/[id], sessions, u/[id], profile, settings
+    (marketing)/   public site: landing, about, pricing, faq, contact
+    (legal)/       terms, privacy
+    (auth)/        login, signup, password reset, auth server actions
+    (app)/         member shell: dashboard, marketplace, saved, offer,
+                   offerings/[id] (+ edit), sessions, calendar, availability,
+                   messages, notifications, analytics, credits, u/[id],
+                   profile, settings
+    admin/         admin panel (requires profiles.is_admin)
     onboarding/    profile + skills steps
-  components/      UI kit + shared components
+    api/razorpay/  payment webhook
+  components/      UI kit + shared components (marketing/, admin/, charts/)
   lib/
     supabase/      browser / server / admin clients + session proxy
+    admin/         service-role data helpers for the admin panel
     data.ts        typed data-access helpers
     types.ts       shared domain types (reused by a future mobile app)
 supabase/          SQL migrations + seed
 ```
 
-## What's next (post-MVP)
-
-Messaging, notifications, real video (Daily/Twilio/100ms), premium tiers +
-credit top-ups (Stripe), analytics, and then a React Native (Expo) mobile app
-that reuses `lib/types.ts` and the same Supabase backend.
+See [FEATURES.md](FEATURES.md) for the full feature map and the roadmap.
 
 ## Deploying to the web (Vercel)
 

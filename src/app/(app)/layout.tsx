@@ -1,7 +1,10 @@
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { Sidebar } from "@/components/Sidebar";
+import { AnnouncementBanner } from "@/components/AnnouncementBanner";
+import { SuspendedScreen } from "@/components/SuspendedScreen";
 import { requireUser, getBalance } from "@/lib/auth";
+import { getLiveAnnouncements } from "@/lib/announcements";
 import {
   getUnreadMessageCount,
   getUnreadNotificationCount,
@@ -41,12 +44,27 @@ async function SidebarWithData({
   );
 }
 
+async function Announcements() {
+  const announcements = await getLiveAnnouncements();
+  if (announcements.length === 0) return null;
+  return (
+    <div className="mb-6">
+      <AnnouncementBanner announcements={announcements} />
+    </div>
+  );
+}
+
 export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const { user, profile } = await requireUser();
+
+  // Suspended members see a notice instead of the app.
+  if (profile?.suspended_at) {
+    return <SuspendedScreen reason={profile.suspended_reason} since={profile.suspended_at} />;
+  }
 
   // Force users through onboarding before they reach the app.
   if (profile && !profile.onboarded) {
@@ -87,9 +105,13 @@ export default async function AppLayout({
         />
       </Suspense>
       {/* The page itself scrolls (not an inner box): smoother on phones,
-          and works with keyboard scrolling. */}
+          and works with keyboard scrolling. Content uses the full width;
+          pages that read better narrow set their own max-width. */}
       <main id="main" tabIndex={-1} className="min-w-0 flex-1 focus:outline-none">
-        <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-8">
+        <div className="w-full px-4 py-6 sm:px-6 lg:px-10">
+          <Suspense fallback={null}>
+            <Announcements />
+          </Suspense>
           {children}
         </div>
       </main>

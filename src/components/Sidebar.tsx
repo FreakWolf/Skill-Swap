@@ -11,6 +11,7 @@ import {
   MessageSquare,
   Bell,
   BarChart3,
+  Bookmark,
   User,
   Settings,
   PlusCircle,
@@ -45,6 +46,7 @@ export function Sidebar({
   const nav = [
     { name: "Dashboard", href: "/dashboard", icon: Home, badge: 0 },
     { name: "Marketplace", href: "/marketplace", icon: Search, badge: 0 },
+    { name: "Saved", href: "/saved", icon: Bookmark, badge: 0 },
     { name: "Calendar", href: "/calendar", icon: Calendar, badge: 0 },
     { name: "Sessions", href: "/sessions", icon: CalendarCheck, badge: 0 },
     { name: "Messages", href: "/messages", icon: MessageSquare, badge: unreadMessages },
