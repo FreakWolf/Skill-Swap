@@ -64,10 +64,13 @@ export async function createCreditOrder(packId: string): Promise<CreateOrderResu
   });
   if (error) {
     console.error("credit_purchases insert failed", error);
+    // 23514 = check violation: the pack is bigger than the DB allows (run 0011).
+    if (error.code === "23514") return { error: "That pack isn't available yet. Please pick another one." };
     return {
-      error: error.message.includes("credit_purchases")
-        ? "Buying credits isn't set up yet (database migration 0008 missing)."
-        : "We couldn't start the payment. Please try again.",
+      error:
+        error.code === "42P01" || error.message.includes("does not exist")
+          ? "Buying credits isn't set up yet (database migration 0008 missing)."
+          : "We couldn't start the payment. Please try again.",
     };
   }
 

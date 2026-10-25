@@ -6,7 +6,7 @@ import { CheckCircle2, Coins } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { cn } from "@/lib/cn";
-import { formatPrice, savingsPercent, type CreditPack } from "@/lib/credit-packs";
+import { bonusCredits, formatPrice, savingsPercent, type CreditPack } from "@/lib/credit-packs";
 import { confirmCreditPayment, createCreditOrder } from "./actions";
 
 // Minimal typing for Razorpay's Checkout (https://checkout.razorpay.com/v1/checkout.js).
@@ -113,6 +113,7 @@ export function BuyCredits({ packs, enabled }: { packs: CreditPack[]; enabled: b
       <div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
         {packs.map((pack) => {
           const save = savingsPercent(pack);
+          const bonus = bonusCredits(pack);
           const highlight = pack.tag === "Popular";
           return (
             <Card
@@ -137,6 +138,9 @@ export function BuyCredits({ packs, enabled }: { packs: CreditPack[]; enabled: b
                 {formatPrice(Math.round(pack.pricePaise / pack.credits))} per credit
                 {save > 0 && <span className="font-medium text-teal-700"> · Save {save}%</span>}
               </p>
+              {bonus > 0 && (
+                <p className="mt-1 text-xs font-medium text-teal-700">Includes {bonus} bonus credits</p>
+              )}
               <Button
                 type="button"
                 variant={highlight ? "brand" : "primary"}
