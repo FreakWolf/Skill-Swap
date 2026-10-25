@@ -82,7 +82,7 @@ export default async function PublicProfilePage({
     <div className="space-y-6">
       {/* Header */}
       <Card className="relative overflow-hidden p-6">
-        <div aria-hidden className="blob -right-10 -top-16 h-40 w-40 bg-brand-orange-500/30" />
+        <div aria-hidden className="blob -right-10 -top-16 h-40 w-40 bg-brand-orange-200/50 dark:bg-brand-orange-500/10" />
         <div className="relative flex flex-wrap items-center gap-4">
           <Avatar name={profile.full_name} url={profile.avatar_url} size={80} />
           <div>
