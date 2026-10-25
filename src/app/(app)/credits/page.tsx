@@ -31,7 +31,7 @@ export default async function CreditsPage({
   ]);
   const enabled = razorpayConfigured();
 
-  const earned = ledger.filter((e) => e.amount > 0 && e.reason !== "purchase" && e.reason !== "signup_grant").reduce((s, e) => s + e.amount, 0);
+  const earned = ledger.filter((e) => e.reason === "session_earning").reduce((s, e) => s + e.amount, 0);
   const spent = ledger.filter((e) => e.amount < 0).reduce((s, e) => s - e.amount, 0);
 
   return (
