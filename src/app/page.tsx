@@ -1,80 +1,121 @@
-import Link from "next/link";
-import { Logo } from "@/components/Logo";
-import { Button } from "@/components/ui/Button";
+import type { Metadata } from "next";
+import { Coins } from "lucide-react";
+import { ButtonLink } from "@/components/ui/Button";
+import { SiteHeader } from "@/components/site/SiteHeader";
+import { SiteFooter } from "@/components/site/SiteFooter";
+import { HeroVisual } from "@/components/landing/HeroVisual";
+import {
+  Audience,
+  Categories,
+  Faq,
+  FeatureBento,
+  FinalCta,
+  HowItWorks,
+  PricingTeaser,
+  Safety,
+} from "@/components/landing/Sections";
+import { FAQS } from "@/components/landing/content";
+import { SITE } from "@/lib/site";
 
-const steps = [
-  { title: "Teach what you know", body: "Share a skill you're good at and earn credits for every session." },
-  { title: "Earn credits", body: "1 credit = 1 hour. No cash — your time is the currency." },
-  { title: "Learn anything", body: "Spend credits to book sessions with people who teach what you want to learn." },
-];
+export const metadata: Metadata = {
+  title: { absolute: SITE.title },
+  description: SITE.description,
+  alternates: { canonical: "/" },
+};
+
+// Structured data for search engines. The FAQPage uses the same FAQS array
+// as the visible FAQ, so they can never drift apart.
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE.url}/#organization`,
+      name: SITE.name,
+      url: SITE.url,
+      logo: `${SITE.url}/brand/logo.png`,
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE.url}/#website`,
+      name: SITE.name,
+      url: SITE.url,
+      publisher: { "@id": `${SITE.url}/#organization` },
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: FAQS.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ],
+};
 
 export default function Home() {
   return (
-    <main className="flex-1 bg-white">
-      <header className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-5 sm:px-6">
-        <Logo height={22} priority className="max-w-[45vw] object-contain" />
-        <nav className="flex shrink-0 items-center gap-1 sm:gap-2">
-          <Link href="/login">
-            <Button variant="ghost">Log in</Button>
-          </Link>
-          <Link href="/signup">
-            <Button variant="brand">Sign up</Button>
-          </Link>
-        </nav>
-      </header>
+    <div className="flex min-h-screen flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+      />
+      <a
+        href="#main"
+        className="sr-only z-[60] rounded-full bg-elevated px-4 py-2 text-sm font-semibold text-link shadow-lift focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:ring-2 focus:ring-ring"
+      >
+        Skip to content
+      </a>
+      <SiteHeader anchors />
 
-      <section className="bg-gradient-to-br from-brand-50 to-brand-orange-50">
-        <div className="mx-auto max-w-6xl px-6 pt-12 pb-24 text-center sm:pt-16">
-          <div className="mb-8 flex justify-center">
-            <Logo variant="illustration" height={200} decorative priority className="max-w-full" />
-          </div>
-          <span className="inline-flex items-center rounded-full bg-white/70 px-3 py-1 text-sm font-medium text-brand-600">
-            Trade skills, not cash
-          </span>
-          <h1 className="mx-auto mt-6 max-w-3xl text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-            Learn anything by teaching what you know
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
-            SkillSwap is a community where you earn credits by teaching your
-            skills, then spend them to learn from others. Everyone teaches.
-            Everyone learns.
-          </p>
-          <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
-            <Link href="/signup">
-              <Button variant="brand" size="lg" className="w-full sm:w-auto">Get started free</Button>
-            </Link>
-            <Link href="/login">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto">I have an account</Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-6 py-20">
-        <div className="grid gap-6 text-left sm:grid-cols-3">
-          {steps.map((s, i) => (
-            <div key={s.title} className="rounded-xl border border-[var(--border)] bg-white p-6 transition-shadow hover:shadow-md">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-50 font-semibold text-brand-600">
-                {i + 1}
+      <main id="main" className="flex-1 overflow-x-clip">
+        {/* Hero */}
+        <section aria-labelledby="hero-heading" className="px-4 pb-16 pt-10 sm:px-6 sm:pt-16 lg:pb-24">
+          <div className="glass mx-auto grid max-w-6xl items-center gap-12 rounded-[2rem] px-5 py-10 sm:px-10 sm:py-14 lg:grid-cols-[1.1fr_1fr]">
+            <div className="text-center lg:text-left">
+              <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card-solid px-3.5 py-1.5 text-sm font-semibold text-link shadow-soft">
+                <span aria-hidden className="h-2 w-2 rounded-full bg-brand-orange-500" />
+                {SITE.tagline}
+              </span>
+              <h1
+                id="hero-heading"
+                className="mt-6 text-4xl font-extrabold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-6xl"
+              >
+                Learn anything by <span className="text-gradient">teaching what you know</span>
+              </h1>
+              <p className="mx-auto mt-6 max-w-xl text-lg text-muted lg:mx-0">
+                SkillSwap is a community where you earn credits by teaching your skills, then spend
+                them to learn from others. Everyone teaches. Everyone learns.
+              </p>
+              <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
+                <ButtonLink href="/signup" size="lg">
+                  Get started free
+                </ButtonLink>
+                <ButtonLink href="#how-it-works" variant="outline" size="lg">
+                  See how it works
+                </ButtonLink>
               </div>
-              <h3 className="mt-4 font-semibold text-gray-900">{s.title}</h3>
-              <p className="mt-2 text-sm text-gray-600">{s.body}</p>
+              <p className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-accent-fg">
+                <Coins className="h-4 w-4" aria-hidden />3 free credits when you sign up
+              </p>
             </div>
-          ))}
-        </div>
-      </section>
+            <div className="animate-fade-up">
+              <HeroVisual />
+            </div>
+          </div>
+        </section>
 
-      <footer className="border-t border-[var(--border)]">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-6 text-sm text-gray-500">
-          <span>© {new Date().getFullYear()} SkillSwap</span>
-          <nav className="flex gap-4">
-            <Link href="/terms" className="inline-block py-2 hover:text-gray-900">Terms</Link>
-            <Link href="/privacy" className="inline-block py-2 hover:text-gray-900">Privacy</Link>
-          </nav>
-        </div>
-      </footer>
-    </main>
+        <HowItWorks />
+        <Categories />
+        <FeatureBento />
+        <Audience />
+        <PricingTeaser />
+        <Safety />
+        <Faq />
+        <FinalCta />
+      </main>
+
+      <SiteFooter onLanding />
+    </div>
   );
 }
-
-export const metadata = { alternates: { canonical: "/" } };
