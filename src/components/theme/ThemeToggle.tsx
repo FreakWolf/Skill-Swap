@@ -57,7 +57,10 @@ export function ThemeToggle({
         >
           <Icon className="h-5 w-5" aria-hidden />
         </button>
-        <ThemeToggle size={size} className={cn("hidden sm:inline-flex", className)} />
+        {/* Wrapper carries the breakpoint: cn() doesn't merge conflicting classes. */}
+        <span className={cn("hidden sm:inline-flex", className)}>
+          <ThemeToggle size={size} />
+        </span>
       </>
     );
   }

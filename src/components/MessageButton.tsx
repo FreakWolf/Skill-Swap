@@ -17,7 +17,7 @@ export function MessageButton({
     <form action={startConversation}>
       <input type="hidden" name="otherId" value={otherId} />
       <Button type="submit" variant={variant}>
-        <MessageSquare className="h-4 w-4" />
+        <MessageSquare className="h-4 w-4" aria-hidden />
         {label}
       </Button>
     </form>

@@ -9,6 +9,7 @@ type Variant =
   | "secondary"
   | "outline"
   | "ghost"
+  | "dangerGhost"
   | "danger"
   | "onBrandSolid"
   | "onBrandGhost";
@@ -28,6 +29,7 @@ const variants: Record<Variant, string> = {
   outline:
     "border border-border-strong bg-card text-foreground backdrop-blur-md hover:bg-card-solid",
   ghost: "text-foreground hover:bg-brand-soft",
+  dangerGhost: "text-danger-fg hover:bg-danger-soft",
   danger: "bg-destructive text-white hover:brightness-110",
   // For the purple hero gradient: solid white with deep purple text, and a
   // translucent white outline.

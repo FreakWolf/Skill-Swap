@@ -53,7 +53,7 @@ export function ReportDialog({
 
   return (
     <>
-      <Button type="button" variant="ghost" size="sm" onClick={open} className={compact ? "h-10 px-2.5 sm:h-8 sm:px-3" : undefined}>
+      <Button type="button" variant="ghost" size="sm" onClick={open} className={compact ? "max-sm:h-10 max-sm:px-2.5" : undefined}>
         <Flag className="h-4 w-4" aria-hidden />
         <span className={compact ? "sr-only sm:not-sr-only" : undefined}>{label}</span>
       </Button>
@@ -64,29 +64,29 @@ export function ReportDialog({
         onClick={(e) => {
           if (e.target === dialogRef.current) close();
         }}
-        className="m-auto w-[min(32rem,calc(100vw-2rem))] rounded-xl bg-white p-0 shadow-2xl backdrop:bg-black/50"
+        className="m-auto w-[min(32rem,calc(100vw-2rem))] rounded-[28px] border border-glass-border bg-elevated p-0 text-foreground shadow-lift"
       >
-        <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4">
-          <h2 id={`report-title-${userId}`} className="font-semibold text-gray-900">
+        <div className="flex items-center justify-between border-b border-border px-5 py-4">
+          <h2 id={`report-title-${userId}`} className="font-semibold tracking-tight text-foreground">
             Report {userName}
           </h2>
           <button
             type="button"
             onClick={close}
             aria-label="Close"
-            className="flex h-8 w-8 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100"
+            className="flex h-10 w-10 items-center justify-center rounded-full text-muted hover:bg-brand-soft hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5" aria-hidden />
           </button>
         </div>
 
         {state?.ok ? (
           <div className="space-y-4 px-5 py-6">
-            <p className="text-sm text-gray-700">
+            <p className="text-sm text-muted">
               Thanks for letting us know. Our team will review this report.
               {userName} won&apos;t be told who reported them.
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-subtle">
               If you&apos;re in immediate danger, contact your local emergency
               services.
             </p>
@@ -101,19 +101,19 @@ export function ReportDialog({
             {contextId && <input type="hidden" name="contextId" value={contextId} />}
 
             <fieldset>
-              <legend className="mb-2 text-sm font-medium text-gray-700">
+              <legend className="mb-2 text-sm font-semibold text-foreground">
                 What&apos;s the problem?
               </legend>
               <div className="space-y-1.5">
                 {REASONS.map((r) => (
                   <label
                     key={r.value}
-                    className="flex cursor-pointer items-start gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-gray-50"
+                    className="flex cursor-pointer items-start gap-2.5 rounded-xl px-2.5 py-2 text-sm transition-colors hover:bg-brand-soft has-[:checked]:bg-brand-soft"
                   >
-                    <input type="radio" name="reason" value={r.value} required className="mt-1" />
+                    <input type="radio" name="reason" value={r.value} required className="mt-0.5 h-4 w-4 accent-[var(--primary)]" />
                     <span>
-                      <span className="text-gray-800">{r.label}</span>
-                      {r.hint && <span className="block text-xs text-gray-500">{r.hint}</span>}
+                      <span className="text-foreground">{r.label}</span>
+                      {r.hint && <span className="block text-xs text-muted">{r.hint}</span>}
                     </span>
                   </label>
                 ))}
@@ -121,8 +121,8 @@ export function ReportDialog({
             </fieldset>
 
             <div>
-              <label htmlFor={`report-details-${userId}`} className="mb-1.5 block text-sm font-medium text-gray-700">
-                Details <span className="font-normal text-gray-500">(optional)</span>
+              <label htmlFor={`report-details-${userId}`} className="mb-1.5 block text-sm font-semibold text-foreground">
+                Details <span className="font-normal text-subtle">(optional)</span>
               </label>
               <Textarea
                 id={`report-details-${userId}`}
@@ -133,14 +133,14 @@ export function ReportDialog({
             </div>
 
             {showBlockOption && (
-              <label className="flex items-center gap-2 text-sm text-gray-700">
-                <input type="checkbox" name="alsoBlock" defaultChecked className="h-4 w-4" />
+              <label className="flex items-center gap-2 text-sm text-muted">
+                <input type="checkbox" name="alsoBlock" defaultChecked className="h-4 w-4 accent-[var(--primary)]" />
                 Also block {userName}
               </label>
             )}
 
             {state?.error && (
-              <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{state.error}</p>
+              <p className="rounded-2xl border border-danger-fg/25 bg-danger-soft px-4 py-3 text-sm text-danger-fg">{state.error}</p>
             )}
 
             <div className="flex justify-end gap-2">

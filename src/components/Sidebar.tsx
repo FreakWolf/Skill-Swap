@@ -95,7 +95,7 @@ export function Sidebar({
         <Link
           href="/dashboard"
           aria-label="SkillSwap home"
-          className="min-w-0 rounded-full py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="shrink-0 rounded-full py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <Logo height={16} decorative priority />
         </Link>

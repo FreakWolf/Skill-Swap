@@ -42,7 +42,7 @@ export function BookingPanel({
 
   if (isOwnOffering) {
     return (
-      <p className="rounded-lg bg-slate-50 p-4 text-sm text-slate-500">
+      <p className="rounded-2xl bg-input p-4 text-sm text-muted">
         This is your own offering. Manage its slots from your profile.
       </p>
     );
@@ -50,7 +50,7 @@ export function BookingPanel({
 
   if (slots.length === 0) {
     return (
-      <p className="rounded-lg bg-slate-50 p-4 text-sm text-slate-500">
+      <p className="rounded-2xl bg-input p-4 text-sm text-muted">
         No open time slots right now. Check back soon or message the teacher.
       </p>
     );
@@ -61,18 +61,19 @@ export function BookingPanel({
       <input type="hidden" name="slotId" value={selected ?? ""} />
 
       <div>
-        <p className="mb-2 text-sm font-medium text-slate-700">Pick a time</p>
+        <p className="mb-2 text-sm font-semibold text-foreground">Pick a time</p>
         <div className="grid gap-2 sm:grid-cols-2">
           {slots.map((s) => (
             <button
               type="button"
               key={s.id}
               onClick={() => setSelected(s.id)}
+              aria-pressed={selected === s.id}
               className={cn(
-                "rounded-lg border px-3 py-2 text-left text-sm transition-colors",
+                "rounded-xl border px-3 py-2.5 text-left text-sm font-medium transition-[color,background-color,border-color,transform] duration-150 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:active:scale-100",
                 selected === s.id
-                  ? "border-brand-600 bg-brand-50 text-brand-600"
-                  : "border-[var(--border)] bg-white text-slate-700 hover:bg-slate-50",
+                  ? "border-link bg-brand-soft text-brand-soft-fg ring-1 ring-link"
+                  : "border-border-strong bg-card-solid text-foreground hover:bg-brand-soft",
               )}
             >
               {formatSlot(s.starts_at, tz)}
@@ -82,21 +83,21 @@ export function BookingPanel({
       </div>
 
       <div>
-        <p className="mb-1.5 text-sm font-medium text-slate-700">
+        <p className="mb-1.5 text-sm font-semibold text-foreground">
           Anything the teacher should know? (optional)
         </p>
         <Textarea name="notes" placeholder="e.g. I'm a complete beginner and want to focus on…" />
       </div>
 
-      <div className="flex items-center justify-between rounded-lg bg-slate-50 px-4 py-3">
-        <span className="text-sm text-slate-600">Cost</span>
-        <span className="font-semibold text-amber-700">{cost} {cost === 1 ? "credit" : "credits"}</span>
+      <div className="flex items-center justify-between rounded-2xl border border-accent/30 bg-accent-soft px-4 py-3">
+        <span className="text-sm text-muted">Cost</span>
+        <span className="font-bold text-accent-fg">{cost} {cost === 1 ? "credit" : "credits"}</span>
       </div>
 
       {!canAfford && (
-        <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-700">
+        <p className="rounded-2xl border border-warning-fg/25 bg-warning-soft px-4 py-3 text-sm text-warning-fg">
           You have {balance} {balance === 1 ? "credit" : "credits"} but this costs {cost}.{" "}
-          <Link href="/credits" className="font-medium underline">
+          <Link href="/credits" className="font-semibold underline">
             Buy credits
           </Link>{" "}
           or teach a skill to earn more.
@@ -104,7 +105,7 @@ export function BookingPanel({
       )}
 
       {state?.error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-2xl border border-danger-fg/25 bg-danger-soft px-4 py-3 text-sm text-danger-fg">
           {state.error}
         </p>
       )}

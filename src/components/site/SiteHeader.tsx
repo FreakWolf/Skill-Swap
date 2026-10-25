@@ -19,7 +19,7 @@ export function SiteHeader({ anchors = false }: { anchors?: boolean }) {
         <Link
           href="/"
           aria-label="SkillSwap home"
-          className="min-w-0 shrink rounded-full py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="shrink-0 rounded-full py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <Logo height={18} decorative priority />
         </Link>
@@ -38,9 +38,11 @@ export function SiteHeader({ anchors = false }: { anchors?: boolean }) {
         )}
         <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
           <ThemeToggle compactOnMobile />
-          <ButtonLink href="/login" variant="ghost" size="sm" className="hidden sm:inline-flex">
-            Log in
-          </ButtonLink>
+          <span className="hidden sm:inline-flex">
+            <ButtonLink href="/login" variant="ghost" size="sm">
+              Log in
+            </ButtonLink>
+          </span>
           <ButtonLink href="/signup" size="sm">
             Sign up
           </ButtonLink>

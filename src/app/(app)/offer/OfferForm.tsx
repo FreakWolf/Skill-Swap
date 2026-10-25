@@ -3,7 +3,8 @@
 import { useActionState, useState } from "react";
 import { createOffering, type OfferState } from "./actions";
 import { Button } from "@/components/ui/Button";
-import { Input, Label, Textarea } from "@/components/ui/Input";
+import { Input, Label, Textarea, selectClass } from "@/components/ui/Input";
+import { cn } from "@/lib/cn";
 import { SKILL_LEVELS } from "@/lib/types";
 
 export function OfferForm({ skillNames }: { skillNames: string[] }) {
@@ -74,7 +75,7 @@ export function OfferForm({ skillNames }: { skillNames: string[] }) {
             id="level"
             name="level"
             defaultValue="beginner"
-            className="h-10 w-full rounded-lg border border-[var(--border)] bg-white px-3 text-sm capitalize"
+            className={cn(selectClass, "capitalize")}
           >
             {SKILL_LEVELS.map((l) => (
               <option key={l} value={l}>
@@ -99,7 +100,7 @@ export function OfferForm({ skillNames }: { skillNames: string[] }) {
           id="mode"
           name="mode"
           defaultValue="virtual"
-          className="h-10 w-full rounded-lg border border-[var(--border)] bg-white px-3 text-sm"
+          className={selectClass}
         >
           <option value="virtual">Virtual (video call)</option>
           <option value="in_person">In person</option>
@@ -118,7 +119,7 @@ export function OfferForm({ skillNames }: { skillNames: string[] }) {
             onChange={(e) => setSlotInput(e.target.value)}
             className="min-w-0"
           />
-          <Button type="button" variant="outline" onClick={addSlot} className="h-11 shrink-0">
+          <Button type="button" variant="secondary" onClick={addSlot} className="h-11 shrink-0">
 
             Add slot
           </Button>
@@ -128,7 +129,7 @@ export function OfferForm({ skillNames }: { skillNames: string[] }) {
             {slots.map((s) => (
               <li
                 key={s}
-                className="flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700"
+                className="animate-fade-up flex items-center gap-2 rounded-full border border-link/30 bg-brand-soft px-3 py-1 text-sm font-medium text-brand-soft-fg"
               >
                 {new Date(s).toLocaleString(undefined, {
                   month: "short",
@@ -139,7 +140,7 @@ export function OfferForm({ skillNames }: { skillNames: string[] }) {
                 <button
                   type="button"
                   onClick={() => setSlots((p) => p.filter((x) => x !== s))}
-                  className="-my-1 -mr-1.5 flex h-7 w-7 items-center justify-center rounded text-slate-500 hover:bg-red-50 hover:text-red-600"
+                  className="-my-1 -mr-1.5 flex h-7 w-7 items-center justify-center rounded-full hover:bg-danger-soft hover:text-danger-fg"
                   aria-label="Remove slot"
                 >
                   ✕
@@ -148,13 +149,13 @@ export function OfferForm({ skillNames }: { skillNames: string[] }) {
             ))}
           </ul>
         )}
-        <p className="mt-2 text-xs text-slate-500">
+        <p className="mt-2 text-xs text-muted">
           Add one or more times learners can book. You can add more later.
         </p>
       </div>
 
       {state?.error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-2xl border border-danger-fg/25 bg-danger-soft px-4 py-3 text-sm text-danger-fg">
           {state.error}
         </p>
       )}

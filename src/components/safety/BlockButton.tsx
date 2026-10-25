@@ -42,21 +42,18 @@ export function BlockButton({
     <span className="inline-flex flex-col items-start">
       <Button
         type="button"
-        variant={blocked ? "outline" : "ghost"}
+        variant={blocked ? "outline" : "dangerGhost"}
         size="sm"
         onClick={onClick}
         disabled={pending}
-        className={cn(
-          blocked ? "" : "text-red-600 hover:bg-red-50",
-          compact && "h-10 px-2.5 sm:h-8 sm:px-3",
-        )}
+        className={cn(compact && "max-sm:h-10 max-sm:px-2.5")}
       >
         <Ban className="h-4 w-4" aria-hidden />
         <span className={compact ? "sr-only sm:not-sr-only" : undefined}>
           {pending ? (blocked ? "Unblocking…" : "Blocking…") : blocked ? "Unblock" : "Block"}
         </span>
       </Button>
-      {error && <span className="mt-1 text-xs text-red-600">{error}</span>}
+      {error && <span className="mt-1 text-xs text-danger-fg">{error}</span>}
     </span>
   );
 }

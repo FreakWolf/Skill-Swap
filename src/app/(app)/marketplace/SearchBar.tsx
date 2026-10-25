@@ -35,16 +35,17 @@ export function SearchBar({ categories }: { categories: string[] }) {
   return (
     <div className="space-y-4">
       {/* View tabs */}
-      <div className="inline-flex rounded-lg border border-[var(--border)] bg-white p-1">
+      <div className="inline-flex rounded-full border border-border bg-card p-1 shadow-soft backdrop-blur-md">
         {(["skills", "people"] as const).map((v) => (
           <button
             key={v}
             onClick={() => apply({ view: v })}
+            aria-pressed={view === v}
             className={cn(
-              "rounded-md px-4 py-1.5 text-sm font-medium capitalize transition-colors",
+              "rounded-full px-5 py-2 text-sm font-semibold capitalize transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
               view === v
-                ? "bg-brand-600 text-white"
-                : "text-slate-600 hover:bg-slate-50",
+                ? "bg-gradient-primary text-white shadow-soft"
+                : "text-muted hover:bg-brand-soft hover:text-foreground",
             )}
           >
             {v === "skills" ? "Skills" : "People"}
@@ -81,11 +82,12 @@ export function SearchBar({ categories }: { categories: string[] }) {
             <button
               key={c}
               onClick={() => apply({ category: c })}
+              aria-pressed={activeCategory === c}
               className={cn(
-                "rounded-full border px-3 py-1.5 text-sm transition-colors",
+                "rounded-full border px-3.5 py-1.5 text-sm font-medium transition-[color,background-color,border-color,transform] duration-150 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:hover:translate-y-0",
                 activeCategory === c
-                  ? "border-brand-600 bg-brand-50 text-brand-600"
-                  : "border-[var(--border)] bg-white text-slate-600 hover:bg-slate-50",
+                  ? "border-link bg-brand-soft text-brand-soft-fg"
+                  : "border-border-strong bg-card-solid text-foreground hover:bg-brand-soft",
               )}
             >
               {c}
