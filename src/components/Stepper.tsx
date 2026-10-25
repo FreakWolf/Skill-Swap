@@ -1,3 +1,4 @@
+import { Check } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 export function Stepper({
@@ -13,27 +14,31 @@ export function Stepper({
         const active = i === current;
         const done = i < current;
         return (
-          <li key={label} className="flex flex-1 items-center gap-2">
+          <li
+            key={label}
+            className="flex flex-1 items-center gap-2"
+            aria-current={active ? "step" : undefined}
+          >
             <span
               className={cn(
-                "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
-                done && "bg-[var(--accent)] text-white",
-                active && "bg-[var(--primary)] text-white",
-                !done && !active && "bg-slate-200 text-slate-500",
+                "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold",
+                done && "bg-success-soft text-success-fg",
+                active && "bg-gradient-primary text-white shadow-soft",
+                !done && !active && "bg-input text-muted",
               )}
             >
-              {done ? "✓" : i + 1}
+              {done ? <Check className="h-4 w-4" aria-label="Done" /> : i + 1}
             </span>
             <span
               className={cn(
                 "hidden text-sm sm:block",
-                active ? "font-medium text-slate-900" : "text-slate-500",
+                active ? "font-semibold text-foreground" : "text-muted",
               )}
             >
               {label}
             </span>
             {i < steps.length - 1 && (
-              <span className="h-px flex-1 bg-[var(--border)]" />
+              <span className="h-px flex-1 bg-border-strong/40" />
             )}
           </li>
         );

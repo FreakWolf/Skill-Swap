@@ -8,8 +8,8 @@ export function Stars({ value, size = 16 }: { value: number; size?: number }) {
           width={size}
           height={size}
           viewBox="0 0 24 24"
-          fill={n <= rounded ? "#f59e0b" : "none"}
-          stroke={n <= rounded ? "#f59e0b" : "#cbd5e1"}
+          aria-hidden
+          className={n <= rounded ? "fill-star stroke-star" : "fill-none stroke-border-strong"}
           strokeWidth="1.5"
         >
           <path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7L12 2z" />

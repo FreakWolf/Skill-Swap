@@ -25,7 +25,7 @@ export function Avatar({
         alt={name}
         width={size}
         height={size}
-        className={cn("rounded-full object-cover", className)}
+        className={cn("shrink-0 rounded-full object-cover ring-2 ring-white/60 dark:ring-white/10", className)}
         style={{ width: size, height: size }}
       />
     );
@@ -34,7 +34,7 @@ export function Avatar({
     <span
       className={cn(
         // Gradient initials fallback, matching the reference aesthetic.
-        "inline-flex items-center justify-center rounded-full bg-gradient-to-br from-brand-700 to-brand-500 font-semibold text-white",
+        "bg-gradient-hero inline-flex shrink-0 items-center justify-center rounded-full font-semibold text-white ring-2 ring-white/60 dark:ring-white/10",
         className,
       )}
       style={{ width: size, height: size, fontSize: size * 0.4 }}
