@@ -2,6 +2,8 @@
 // Set NEXT_PUBLIC_SITE_URL to override (e.g. for a future domain).
 export const SITE = {
   name: "SkillSwap",
+  // Other names people use for the site (matches the domain), for Google's site name.
+  alternateNames: ["SwapSkills", "Swap Skills"],
   url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://swapskills.dpdns.org").replace(/\/$/, ""),
   title: "SkillSwap — Trade skills, not cash",
   tagline: "Trade skills, not cash",

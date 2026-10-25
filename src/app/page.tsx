@@ -32,14 +32,19 @@ const jsonLd = {
       "@type": "Organization",
       "@id": `${SITE.url}/#organization`,
       name: SITE.name,
+      alternateName: SITE.alternateNames,
       url: SITE.url,
       logo: `${SITE.url}/brand/logo.png`,
     },
     {
+      // Google's site name (shown above the result instead of "DigitalPlat
+      // Domain"). alternateName gives it fallbacks, most preferred first; the
+      // lowercase host is Google's documented last-resort option.
       "@type": "WebSite",
       "@id": `${SITE.url}/#website`,
       name: SITE.name,
-      url: SITE.url,
+      alternateName: [...SITE.alternateNames, new URL(SITE.url).host],
+      url: `${SITE.url}/`,
       publisher: { "@id": `${SITE.url}/#organization` },
     },
     {
