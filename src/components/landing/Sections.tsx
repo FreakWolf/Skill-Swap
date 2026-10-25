@@ -209,7 +209,7 @@ export function FeatureBento() {
             badge="Mobile app coming soon"
             className="lg:col-span-3"
           >
-            SkillSwap is built mobile-first and runs in any modern browser. Add it to your home
+            SwapSkills is built mobile-first and runs in any modern browser. Add it to your home
             screen for an app-like feel.
           </Tile>
         </ul>

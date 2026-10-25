@@ -87,7 +87,7 @@ export default async function OfferingDetailPage({
               />
               <div>
                 <p className="font-semibold text-foreground">
-                  {offering.teacher?.full_name || "SkillSwap member"}
+                  {offering.teacher?.full_name || "SwapSkills member"}
                 </p>
                 <div className="mt-0.5 flex items-center gap-2 text-sm text-muted">
                   <Stars value={rating.avg} />

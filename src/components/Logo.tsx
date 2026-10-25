@@ -3,8 +3,8 @@ import { cn } from "@/lib/cn";
 
 // Brand artwork lives in public/brand/ (cut from the original logo.png).
 const ASSETS = {
-  // "SKILLSWAP" lettering only, for compact spots (sidebar, headers).
-  wordmark: { src: "/brand/wordmark.png", width: 426, height: 51 },
+  // "SWAPSKILLS" lettering only, for compact spots (sidebar, headers).
+  wordmark: { src: "/brand/wordmark.png", width: 474, height: 51 },
   // Illustration + lettering, for hero spots (auth pages).
   full: { src: "/brand/logo.png", width: 480, height: 328 },
   // Illustration only (two people in speech bubbles).
@@ -44,7 +44,7 @@ export function Logo({
     >
       <Image
         src={a.src}
-        alt={decorative ? "" : "SkillSwap"}
+        alt={decorative ? "" : "SwapSkills"}
         width={width}
         height={height}
         priority={priority}

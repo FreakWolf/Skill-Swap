@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
     default: SITE.title,
-    // Pages set just their own name, e.g. "Explore" -> "Explore · SkillSwap".
+    // Pages set just their own name, e.g. "Explore" -> "Explore · SwapSkills".
     template: `%s · ${SITE.name}`,
   },
   description: SITE.description,

@@ -320,7 +320,7 @@ export async function searchTeachers(opts: {
     if (!byTeacher.has(tid)) {
       byTeacher.set(tid, {
         id: tid,
-        full_name: (teacher.full_name as string) || "SkillSwap member",
+        full_name: (teacher.full_name as string) || "SwapSkills member",
         avatar_url: (teacher.avatar_url as string) ?? null,
         location: (teacher.location as string) ?? "",
         bio: (teacher.bio as string) ?? "",

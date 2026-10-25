@@ -55,9 +55,9 @@ export default async function CreditsPage({
         <p className="flex items-start gap-2 text-xs text-muted">
           <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-success-fg" aria-hidden />
           <span>
-            Secure payment by Razorpay (UPI, cards, netbanking, wallets). SkillSwap
+            Secure payment by Razorpay (UPI, cards, netbanking, wallets). SwapSkills
             never sees your card or bank details. Prices include taxes. Credits
-            can only be used on SkillSwap; they can&apos;t be withdrawn or
+            can only be used on SwapSkills; they can&apos;t be withdrawn or
             exchanged for money. See our{" "}
             <Link href="/terms" className="font-medium text-link underline">Terms</Link>.
           </span>

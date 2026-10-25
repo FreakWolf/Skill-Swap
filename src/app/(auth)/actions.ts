@@ -32,7 +32,7 @@ const signupSchema = z
       .string()
       .regex(/^\d{4}-\d{2}-\d{2}$/, "Please enter your birthdate")
       .refine((d) => isAtLeast(d, MIN_AGE), {
-        message: `You must be at least ${MIN_AGE} to join SkillSwap`,
+        message: `You must be at least ${MIN_AGE} to join SwapSkills`,
       }),
     terms: z.string().optional(),
   })

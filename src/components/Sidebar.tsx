@@ -94,7 +94,7 @@ export function Sidebar({
         </button>
         <Link
           href="/dashboard"
-          aria-label="SkillSwap home"
+          aria-label="SwapSkills home"
           className="shrink-0 rounded-full py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <Logo height={16} decorative priority />
@@ -117,7 +117,7 @@ export function Sidebar({
         <div className="flex h-16 items-center justify-between gap-2 px-5">
           <Link
             href="/dashboard"
-            aria-label="SkillSwap home"
+            aria-label="SwapSkills home"
             className="min-w-0 rounded-full py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <Logo height={21} decorative priority />

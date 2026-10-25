@@ -1,4 +1,4 @@
-// Shared domain types for SkillSwap.
+// Shared domain types for SwapSkills.
 // These mirror the database schema (see supabase/migrations) and are the
 // contract used across the app — and reusable by the future mobile client.
 

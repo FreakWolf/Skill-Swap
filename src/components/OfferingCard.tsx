@@ -32,7 +32,7 @@ export function OfferingCard({ offering }: { offering: OfferingWithDetails }) {
           size={28}
         />
         <span className="truncate text-sm text-muted">
-          {offering.teacher?.full_name || "SkillSwap member"}
+          {offering.teacher?.full_name || "SwapSkills member"}
         </span>
         <span className="ml-auto flex shrink-0 items-center gap-1 text-xs text-muted">
           <Clock className="h-3.5 w-3.5" aria-hidden /> {offering.duration_min}m

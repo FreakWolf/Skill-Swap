@@ -29,10 +29,10 @@ export const CATEGORIES: { name: string; icon: LucideIcon; skills: string[] }[] 
 export const FAQS: { q: string; a: string }[] = [
   {
     q: "What is a credit?",
-    a: "Credits are how sessions are paid for on SkillSwap. Teachers set a credit cost for each session, and the guide is 1 credit = 1 hour. You earn credits by teaching and spend them to learn.",
+    a: "Credits are how sessions are paid for on SwapSkills. Teachers set a credit cost for each session, and the guide is 1 credit = 1 hour. You earn credits by teaching and spend them to learn.",
   },
   {
-    q: "Is SkillSwap free?",
+    q: "Is SwapSkills free?",
     a: "Yes. Joining is free and you get 3 free credits when you sign up. You can earn more by teaching. Buying a credit pack is optional, for when you want to learn more than you teach.",
   },
   {
@@ -41,7 +41,7 @@ export const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "Can I withdraw my credits as money?",
-    a: "No. Credits can only be used on SkillSwap. They can't be withdrawn or exchanged for money.",
+    a: "No. Credits can only be used on SwapSkills. They can't be withdrawn or exchanged for money.",
   },
   {
     q: "Who can join?",
@@ -49,7 +49,7 @@ export const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "How do payments work?",
-    a: "Credit packs are paid securely through Razorpay (UPI, cards, netbanking and wallets). Prices include taxes, and SkillSwap never sees your card or bank details. No cash changes hands between members.",
+    a: "Credit packs are paid securely through Razorpay (UPI, cards, netbanking and wallets). Prices include taxes, and SwapSkills never sees your card or bank details. No cash changes hands between members.",
   },
   {
     q: "What happens if a session is cancelled?",

@@ -116,7 +116,7 @@ export default async function SessionDetailPage({
           <Avatar name={other?.full_name ?? ""} url={other?.avatar_url} size={44} />
           <div className="min-w-0 flex-1">
             <p className="truncate font-semibold text-foreground">
-              {other?.full_name || "SkillSwap member"}
+              {other?.full_name || "SwapSkills member"}
             </p>
             <p className="text-sm text-muted">
               {iAmLearner ? "Your teacher" : "Your learner"}
@@ -157,7 +157,7 @@ export default async function SessionDetailPage({
           </div>
         )}
 
-        {/* Interim: SkillSwap doesn't create meeting links yet, so tell people how to meet. */}
+        {/* Interim: SwapSkills doesn't create meeting links yet, so tell people how to meet. */}
         {booking.status === "confirmed" && (
           <div className="mt-4 flex gap-3 rounded-2xl border border-link/30 bg-brand-soft p-4 text-sm text-foreground">
             <Video className="mt-0.5 h-4 w-4 shrink-0 text-link" aria-hidden />

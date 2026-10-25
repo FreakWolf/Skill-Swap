@@ -83,7 +83,7 @@ export function BuyCredits({
       order_id: order.orderId,
       amount: order.amount,
       currency: order.currency,
-      name: "SkillSwap",
+      name: "SwapSkills",
       description: `${order.credits} credit${order.credits === 1 ? "" : "s"}`,
       prefill: { name: order.name, email: order.email },
       theme: { color: "#7c33ff" },

@@ -89,7 +89,7 @@ export default function Home() {
                 Learn anything by <span className="text-gradient">teaching what you know</span>
               </h1>
               <p className="mx-auto mt-6 max-w-xl text-lg text-muted lg:mx-0">
-                SkillSwap is a community where you earn credits by teaching your skills, then spend
+                SwapSkills is a community where you earn credits by teaching your skills, then spend
                 them to learn from others. Everyone teaches. Everyone learns.
               </p>
               <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">

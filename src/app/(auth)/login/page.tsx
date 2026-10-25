@@ -12,7 +12,7 @@ export default async function LoginPage({
   const { error, next } = await searchParams;
   return (
     <AuthShell subtitle="Learn skills, teach others, grow together.">
-      <h1 className="sr-only">Log in to SkillSwap</h1>
+      <h1 className="sr-only">Log in to SwapSkills</h1>
       <AuthTabs active="login" />
       {error === "link_expired" && (
         <Alert tone="warning" className="mb-4">
@@ -30,6 +30,6 @@ export default async function LoginPage({
 
 export const metadata = {
   title: "Log in",
-  description: "Log in to SkillSwap to book sessions, message teachers, and manage your credits.",
+  description: "Log in to SwapSkills to book sessions, message teachers, and manage your credits.",
   alternates: { canonical: "/login" },
 };

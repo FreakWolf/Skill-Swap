@@ -60,7 +60,7 @@ export async function getMyBlockedUsers(myId: string): Promise<BlockedUser[]> {
     const p = Array.isArray(r.blocked) ? r.blocked[0] : r.blocked;
     return {
       id: (p?.id as string) ?? "",
-      full_name: (p?.full_name as string) || "SkillSwap member",
+      full_name: (p?.full_name as string) || "SwapSkills member",
       avatar_url: (p?.avatar_url as string) ?? null,
       blockedAt: r.created_at as string,
     };

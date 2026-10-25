@@ -38,7 +38,7 @@ export default async function PublicProfilePage({
   const block = isSelf
     ? { iBlocked: false, blockedMe: false }
     : await getBlockStatus(user.id, id);
-  const name = profile.full_name || "SkillSwap member";
+  const name = profile.full_name || "SwapSkills member";
 
   // They blocked me: don't reveal the profile or that a block exists.
   if (block.blockedMe) {
@@ -87,7 +87,7 @@ export default async function PublicProfilePage({
           <Avatar name={profile.full_name} url={profile.avatar_url} size={80} />
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-foreground">
-              {profile.full_name || "SkillSwap member"}
+              {profile.full_name || "SwapSkills member"}
             </h1>
             <div className="mt-1 flex items-center gap-2 text-sm text-muted">
               <Stars value={rating.avg} />

@@ -18,7 +18,7 @@ export function SiteHeader({ anchors = false }: { anchors?: boolean }) {
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-2 px-4 sm:gap-3 sm:px-6">
         <Link
           href="/"
-          aria-label="SkillSwap home"
+          aria-label="SwapSkills home"
           className="shrink-0 rounded-full py-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <Logo height={18} decorative priority />

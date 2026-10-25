@@ -53,7 +53,7 @@ export function LoginForm({ next }: { next: string }) {
       </div>
 
       <p className="text-center text-sm text-muted">
-        New to SkillSwap?{" "}
+        New to SwapSkills?{" "}
         <Link href="/signup" className="font-medium text-link hover:underline">
           Create an account
         </Link>

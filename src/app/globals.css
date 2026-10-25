@@ -4,7 +4,7 @@
    ThemeScript (src/components/theme/ThemeScript.tsx). */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* SkillSwap "soft glass" design tokens. Brand colours come from the logo
+/* SwapSkills "soft glass" design tokens. Brand colours come from the logo
    (public/brand/logo.png): purple #7c33ff, orange #ff8033, ink #1f1147.
    Every text token below is contrast-checked (WCAG AA ≥4.5:1) on the canvas,
    on the ambient blobs at their peak, on solid cards and on glass, in both
