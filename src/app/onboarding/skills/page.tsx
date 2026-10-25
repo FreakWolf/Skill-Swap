@@ -17,10 +17,10 @@ export default async function SkillsSetupPage() {
   return (
     <div>
       <Stepper steps={["Profile", "Skills"]} current={1} />
-      <h1 className="text-2xl font-bold text-slate-900">
+      <h1 className="text-3xl font-bold tracking-tight text-foreground">
         What can you teach &amp; learn?
       </h1>
-      <p className="mt-1 text-slate-600">
+      <p className="mt-1 text-muted">
         Add skills you can teach to earn credits, and skills you want to learn.
       </p>
       <Card className="mt-6 p-6">

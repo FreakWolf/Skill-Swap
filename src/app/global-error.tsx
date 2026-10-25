@@ -8,7 +8,7 @@ import { ErrorFallback } from "@/components/ErrorFallback";
 export default function GlobalError(props: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <html lang="en">
-      <body className="bg-gray-50">
+      <body className="bg-ambient min-h-screen text-foreground">
         <ErrorFallback {...props} />
       </body>
     </html>

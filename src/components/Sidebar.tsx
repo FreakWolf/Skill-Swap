@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import { Avatar } from "@/components/Avatar";
 import { Logo } from "@/components/Logo";
+import { CountUp } from "@/components/motion/CountUp";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { logOut } from "@/app/(auth)/actions";
 import { cn } from "@/lib/cn";
 
@@ -79,20 +81,25 @@ export function Sidebar({
   return (
     <>
       {/* Mobile header (stays at the top while the page scrolls) */}
-      <header className="sticky top-0 z-30 flex h-16 items-center border-b border-gray-200 bg-white px-4 lg:hidden">
+      <header className="glass-strong sticky top-0 z-30 flex h-16 items-center gap-2 border-b px-4 lg:hidden">
         <button
           ref={openButtonRef}
           onClick={() => setOpen(true)}
-          className="mr-2 flex h-10 w-10 items-center justify-center rounded-md hover:bg-gray-100"
+          className="flex h-10 w-10 items-center justify-center rounded-full text-foreground transition-colors hover:bg-brand-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label="Open menu"
           aria-expanded={open}
           aria-controls="app-sidebar"
         >
-          <Menu className="h-6 w-6" />
+          <Menu className="h-6 w-6" aria-hidden />
         </button>
-        <Link href="/dashboard" aria-label="SkillSwap home" className="py-2">
-          <Logo height={20} decorative priority />
+        <Link
+          href="/dashboard"
+          aria-label="SkillSwap home"
+          className="min-w-0 rounded-full py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <Logo height={16} decorative priority />
         </Link>
+        <ThemeToggle className="ml-auto" />
       </header>
 
       {/* Sidebar: slide-in drawer on mobile, sticky column on desktop.
@@ -102,46 +109,54 @@ export function Sidebar({
         id="app-sidebar"
         aria-label="Main navigation"
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-gray-200 bg-white transition-[transform,visibility] duration-200 ease-in-out lg:visible lg:sticky lg:top-0 lg:h-screen lg:translate-x-0",
+          "glass-strong fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r shadow-soft transition-[transform,visibility] duration-[250ms] ease-[var(--ease-out)] lg:visible lg:sticky lg:top-0 lg:h-screen lg:w-64 lg:translate-x-0 lg:shadow-none",
           open ? "visible translate-x-0" : "invisible -translate-x-full",
         )}
       >
         {/* Brand */}
-        <div className="flex h-16 items-center justify-between border-b border-gray-200 px-5">
-          <Link href="/dashboard" aria-label="SkillSwap home" className="py-2">
-            {/* 25px tall ≈ 209px wide: fills the 216px-wide brand area. */}
-            <Logo height={25} decorative priority />
+        <div className="flex h-16 items-center justify-between gap-2 px-5">
+          <Link
+            href="/dashboard"
+            aria-label="SkillSwap home"
+            className="min-w-0 rounded-full py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <Logo height={21} decorative priority />
           </Link>
           <button
             ref={closeButtonRef}
             onClick={() => setOpen(false)}
-            className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 lg:hidden"
+            className="-mr-2 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-muted transition-colors hover:bg-brand-soft hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:hidden"
             aria-label="Close menu"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5" aria-hidden />
           </button>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-3">
           {nav.map((item) => {
             const Icon = item.icon;
+            const active = isActive(item.href);
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
+                aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-                  isActive(item.href)
-                    ? "bg-brand-50 text-brand-600"
-                    : "text-gray-700 hover:bg-gray-50 hover:text-gray-900",
+                  "group flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium transition-[background-color,color,transform] duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                  active
+                    ? "bg-brand-soft font-semibold text-brand-soft-fg"
+                    : "text-muted hover:translate-x-0.5 hover:bg-card hover:text-foreground motion-reduce:hover:translate-x-0",
                 )}
               >
-                <Icon className="h-5 w-5" />
+                <Icon
+                  className={cn("h-5 w-5 transition-transform duration-150 group-hover:scale-110 motion-reduce:group-hover:scale-100", active && "text-link")}
+                  aria-hidden
+                />
                 <span className="flex-1 text-left">{item.name}</span>
                 {item.badge > 0 && (
-                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-xs font-semibold text-white">
+                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1.5 text-xs font-semibold text-white">
                     {item.badge}
                   </span>
                 )}
@@ -149,50 +164,56 @@ export function Sidebar({
             );
           })}
 
-          <div className="mt-4 border-t border-gray-200 pt-4">
+          <div className="mt-4 border-t border-border pt-4">
             <Link
               href="/offer"
               onClick={() => setOpen(false)}
-              className="flex w-full items-center gap-3 rounded-lg bg-brand-600 px-3 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand-700"
+              className="lift bg-gradient-primary flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold text-white shadow-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              <PlusCircle className="h-5 w-5" />
+              <PlusCircle className="h-5 w-5" aria-hidden />
               <span>Offer a Skill</span>
             </Link>
           </div>
 
           {/* Credits */}
-          <div className="mt-4">
+          <div className="mt-3">
             <Link
               href="/credits"
               onClick={() => setOpen(false)}
+              aria-current={isActive("/credits") ? "page" : undefined}
               className={cn(
-                "flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm font-medium transition-colors",
+                "flex items-center gap-2 rounded-2xl border px-3 py-2.5 text-sm font-semibold text-accent-fg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 isActive("/credits")
-                  ? "border-amber-300 bg-amber-100 text-amber-800"
-                  : "border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100",
+                  ? "border-accent/60 bg-accent-soft"
+                  : "border-accent/30 bg-accent-soft hover:border-accent/60",
               )}
             >
               <Coins className="h-5 w-5" aria-hidden />
               <span className="flex-1">
-                {balance} {balance === 1 ? "credit" : "credits"}
+                <CountUp value={balance} /> {balance === 1 ? "credit" : "credits"}
               </span>
-              <span className="text-xs font-semibold text-amber-800">Buy</span>
+              <span className="rounded-full bg-card-solid px-2 py-0.5 text-xs font-bold">Buy</span>
             </Link>
           </div>
         </nav>
 
+        <div className="flex items-center justify-between gap-2 px-5 pb-2">
+          <span className="text-xs font-medium text-muted">Theme</span>
+          <ThemeToggle />
+        </div>
+
         {/* User */}
-        <div className="relative border-t border-gray-200 p-3">
+        <div className="relative border-t border-border p-3">
           <button
             onClick={() => setMenuOpen((o) => !o)}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-gray-50"
+            className="flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 transition-colors hover:bg-card focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             <Avatar name={name} url={avatarUrl} size={36} />
-            <div className="flex-1 text-left">
-              <p className="line-clamp-1 text-sm font-medium text-gray-900">
+            <div className="min-w-0 flex-1 text-left">
+              <p className="line-clamp-1 text-sm font-semibold text-foreground">
                 {name || "User"}
               </p>
-              <p className="line-clamp-1 text-xs text-gray-500">
+              <p className="line-clamp-1 text-xs text-muted">
                 {email || "user@example.com"}
               </p>
             </div>
@@ -201,27 +222,27 @@ export function Sidebar({
           {menuOpen && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
-              <div className="absolute bottom-16 left-3 right-3 z-20 overflow-hidden rounded-xl border border-[var(--border)] bg-white py-1 shadow-lg">
+              <div className="animate-fade-up absolute bottom-16 left-3 right-3 z-20 overflow-hidden rounded-2xl border border-border bg-elevated py-1.5 shadow-lift">
                 <Link
                   href="/profile"
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-gray-50"
+                  className="flex items-center gap-2 px-4 py-2.5 text-sm text-foreground hover:bg-brand-soft focus:outline-none focus-visible:bg-brand-soft"
                 >
-                  <User className="h-4 w-4" /> Profile
+                  <User className="h-4 w-4" aria-hidden /> Profile
                 </Link>
                 <Link
                   href="/settings"
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-gray-50"
+                  className="flex items-center gap-2 px-4 py-2.5 text-sm text-foreground hover:bg-brand-soft focus:outline-none focus-visible:bg-brand-soft"
                 >
-                  <Settings className="h-4 w-4" /> Settings
+                  <Settings className="h-4 w-4" aria-hidden /> Settings
                 </Link>
                 <form action={logOut}>
                   <button
                     type="submit"
-                    className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-red-600 hover:bg-gray-50"
+                    className="flex w-full items-center gap-2 px-4 py-2.5 text-left text-sm font-medium text-danger-fg hover:bg-danger-soft focus:outline-none focus-visible:bg-danger-soft"
                   >
-                    <LogOut className="h-4 w-4" /> Logout
+                    <LogOut className="h-4 w-4" aria-hidden /> Logout
                   </button>
                 </form>
               </div>
@@ -233,7 +254,7 @@ export function Sidebar({
       {/* Mobile overlay */}
       {open && (
         <div
-          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+          className="fixed inset-0 z-40 bg-overlay backdrop-blur-sm lg:hidden"
           onClick={() => setOpen(false)}
         />
       )}

@@ -10,14 +10,14 @@ export default async function ProfileSetupPage() {
   return (
     <div>
       <Stepper steps={["Profile", "Skills"]} current={0} />
-      <h1 className="text-2xl font-bold text-slate-900">Set up your profile</h1>
-      <p className="mt-1 text-slate-600">
+      <h1 className="text-3xl font-bold tracking-tight text-foreground">Set up your profile</h1>
+      <p className="mt-1 text-muted">
         Tell the community a bit about yourself. You can change this anytime.
       </p>
       <Card className="mt-6 p-6">
-        <div className="mb-6 border-b border-[var(--border)] pb-6">
-          <p className="mb-3 text-sm font-medium text-slate-700">
-            Profile photo <span className="font-normal text-slate-500">(optional)</span>
+        <div className="mb-6 border-b border-border pb-6">
+          <p className="mb-3 text-sm font-medium text-muted">
+            Profile photo <span className="font-normal text-subtle">(optional)</span>
           </p>
           <AvatarUpload
             userId={user.id}

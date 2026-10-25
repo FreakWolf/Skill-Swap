@@ -1,4 +1,5 @@
 import { Logo } from "@/components/Logo";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { requireUser } from "@/lib/auth";
 
 export default async function OnboardingLayout({
@@ -9,12 +10,13 @@ export default async function OnboardingLayout({
   await requireUser();
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-b border-[var(--border)] bg-white">
-        <div className="mx-auto flex max-w-3xl items-center px-6 py-4">
-          <Logo height={24} priority />
+      <header className="glass-strong sticky top-0 z-30 border-b">
+        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
+          <Logo height={20} priority />
+          <ThemeToggle />
         </div>
       </header>
-      <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-10">
+      <main className="animate-page-in mx-auto w-full max-w-3xl flex-1 px-4 py-10 sm:px-6">
         {children}
       </main>
     </div>

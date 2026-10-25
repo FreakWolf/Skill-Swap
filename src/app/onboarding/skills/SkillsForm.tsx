@@ -59,7 +59,7 @@ export function SkillsForm({
       <div className="space-y-5">
         {categories.map((cat) => (
           <div key={cat}>
-            <h3 className="mb-2 text-sm font-semibold text-slate-500">{cat}</h3>
+            <h3 className="mb-2 text-sm font-semibold text-subtle">{cat}</h3>
             <div className="flex flex-wrap gap-2">
               {catalog
                 .filter((c) => c.category === cat)
@@ -70,10 +70,10 @@ export function SkillsForm({
                     onClick={() => add(c.name, "teach")}
                     disabled={has(c.name)}
                     className={cn(
-                      "rounded-full border px-3 py-1.5 text-sm transition-colors",
+                      "rounded-full border px-3.5 py-1.5 text-sm font-medium transition-[color,border-color,transform] duration-150 hover:-translate-y-0.5 motion-reduce:hover:translate-y-0",
                       has(c.name)
-                        ? "cursor-default border-transparent bg-slate-100 text-slate-500"
-                        : "border-[var(--border)] bg-white text-slate-700 hover:border-brand-600 hover:text-brand-600",
+                        ? "cursor-default border-transparent bg-input text-subtle"
+                        : "border-border-strong bg-card-solid text-foreground hover:border-link hover:text-link",
                     )}
                   >
                     {c.name}
@@ -86,7 +86,7 @@ export function SkillsForm({
 
       {/* Custom skill */}
       <div>
-        <h3 className="mb-2 text-sm font-semibold text-slate-500">
+        <h3 className="mb-2 text-sm font-semibold text-subtle">
           Don&apos;t see it? Add your own
         </h3>
         <div className="flex gap-2">
@@ -117,11 +117,11 @@ export function SkillsForm({
 
       {/* Selected */}
       <div>
-        <h3 className="mb-3 text-sm font-semibold text-slate-500">
+        <h3 className="mb-3 text-sm font-semibold text-subtle">
           Your skills ({selections.length})
         </h3>
         {selections.length === 0 ? (
-          <p className="rounded-lg border border-dashed border-[var(--border)] p-4 text-sm text-slate-500">
+          <p className="rounded-2xl border border-dashed border-border-strong p-4 text-sm text-muted">
             Tap skills above to add them. For each one, choose whether you can
             teach it or want to learn it, and set your level.
           </p>
@@ -130,13 +130,13 @@ export function SkillsForm({
             {selections.map((s) => (
               <li
                 key={s.name}
-                className="flex flex-wrap items-center gap-3 rounded-lg border border-[var(--border)] bg-white p-3"
+                className="animate-fade-up flex flex-wrap items-center gap-3 rounded-2xl border border-border bg-card-solid p-3 shadow-soft"
               >
-                <span className="font-medium text-slate-800">{s.name}</span>
+                <span className="font-medium text-foreground">{s.name}</span>
 
                 <div className="ml-auto flex flex-wrap items-center gap-2">
                   {/* teach / learn toggle */}
-                  <div className="flex overflow-hidden rounded-lg border border-[var(--border)]">
+                  <div className="flex overflow-hidden rounded-full border border-border-strong">
                     {(["teach", "learn"] as SkillDirection[]).map((d) => (
                       <button
                         key={d}
@@ -145,8 +145,8 @@ export function SkillsForm({
                         className={cn(
                           "px-3 py-1 text-xs font-medium capitalize",
                           s.direction === d
-                            ? "bg-[var(--primary)] text-white"
-                            : "bg-white text-slate-600 hover:bg-slate-50",
+                            ? "bg-gradient-primary text-white"
+                            : "bg-card-solid text-muted hover:bg-brand-soft",
                         )}
                       >
                         {d === "teach" ? "I teach" : "I want to learn"}
@@ -160,7 +160,7 @@ export function SkillsForm({
                     onChange={(e) =>
                       update(s.name, { level: e.target.value as SkillLevel })
                     }
-                    className="rounded-lg border border-[var(--border)] bg-white px-2 py-1 text-xs capitalize"
+                    className="h-8 rounded-full border border-border-strong bg-input px-2.5 text-xs capitalize text-foreground"
                   >
                     {SKILL_LEVELS.map((l) => (
                       <option key={l} value={l}>
@@ -172,7 +172,7 @@ export function SkillsForm({
                   <button
                     type="button"
                     onClick={() => remove(s.name)}
-                    className="text-slate-500 hover:text-red-600"
+                    className="flex h-8 w-8 items-center justify-center rounded-full text-subtle hover:bg-danger-soft hover:text-danger-fg"
                     aria-label={`Remove ${s.name}`}
                   >
                     ✕
@@ -185,15 +185,15 @@ export function SkillsForm({
       </div>
 
       {state?.error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-2xl border border-danger-fg/25 bg-danger-soft px-4 py-3 text-sm text-danger-fg">
           {state.error}
         </p>
       )}
 
-      <div className="flex items-center justify-between">
-        <div className="flex gap-2 text-xs text-slate-500">
-          <Badge>Teach = earn credits</Badge>
-          <Badge>Learn = spend credits</Badge>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex gap-2 text-xs text-subtle">
+          <Badge tone="brand">Teach = earn credits</Badge>
+          <Badge tone="accent">Learn = spend credits</Badge>
         </div>
         <Button type="submit" size="lg" disabled={pending}>
           {pending ? "Finishing…" : "Finish setup"}

@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
+import { AlertTriangle } from "lucide-react";
 import * as Sentry from "@sentry/nextjs";
+import { Button, ButtonLink } from "@/components/ui/Button";
 
 // Friendly "something went wrong" screen. Reports the error to Sentry (a no-op
 // until a DSN is configured) and lets the user retry.
@@ -19,28 +20,24 @@ export function ErrorFallback({
 
   return (
     <div className="flex min-h-[60vh] items-center justify-center p-6">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold text-gray-900">Something went wrong</h1>
-        <p className="mt-2 text-sm text-gray-600">
+      <div className="glass max-w-md rounded-3xl px-6 py-10 text-center">
+        <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-danger-soft text-danger-fg">
+          <AlertTriangle className="h-7 w-7" aria-hidden />
+        </span>
+        <h1 className="mt-4 text-xl font-bold tracking-tight text-foreground">Something went wrong</h1>
+        <p className="mt-2 text-sm text-muted">
           Sorry about that. Please try again. If it keeps happening, let us know.
         </p>
         {error.digest && (
-          <p className="mt-2 text-xs text-gray-500">Error reference: {error.digest}</p>
+          <p className="mt-2 text-xs text-subtle">Error reference: {error.digest}</p>
         )}
-        <div className="mt-6 flex justify-center gap-3">
-          <button
-            type="button"
-            onClick={reset}
-            className="h-9 rounded-md bg-brand-600 px-4 text-sm font-medium text-white hover:bg-brand-700"
-          >
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <Button type="button" onClick={reset}>
             Try again
-          </button>
-          <Link
-            href="/dashboard"
-            className="flex h-9 items-center rounded-md border border-gray-200 px-4 text-sm font-medium text-gray-800 hover:bg-gray-50"
-          >
+          </Button>
+          <ButtonLink href="/dashboard" variant="outline">
             Go to dashboard
-          </Link>
+          </ButtonLink>
         </div>
       </div>
     </div>
