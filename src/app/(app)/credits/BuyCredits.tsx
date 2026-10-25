@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, Coins } from "lucide-react";
 import { Button } from "@/components/ui/Button";
@@ -42,8 +42,21 @@ function loadCheckout(): Promise<boolean> {
   return scriptPromise;
 }
 
-export function BuyCredits({ packs, enabled }: { packs: CreditPack[]; enabled: boolean }) {
+export function BuyCredits({
+  packs,
+  enabled,
+  selectedId,
+}: {
+  packs: CreditPack[];
+  enabled: boolean;
+  // Pack chosen in the mobile app (?pack=…): highlighted and scrolled into view.
+  selectedId?: string;
+}) {
   const router = useRouter();
+  const selectedRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    selectedRef.current?.scrollIntoView({ block: "center" });
+  }, []);
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<number | null>(null);
@@ -114,18 +127,20 @@ export function BuyCredits({ packs, enabled }: { packs: CreditPack[]; enabled: b
         {packs.map((pack) => {
           const save = savingsPercent(pack);
           const bonus = bonusCredits(pack);
-          const highlight = pack.tag === "Popular";
+          const selected = pack.id === selectedId;
+          const highlight = selectedId ? selected : pack.tag === "Popular";
           return (
+            <div key={pack.id} ref={selected ? selectedRef : undefined}>
             <Card
-              key={pack.id}
               className={cn(
-                "relative flex flex-col p-5",
+                "relative flex h-full flex-col p-5",
                 highlight && "border-brand-400 ring-1 ring-brand-400",
+                selected && "ring-2 ring-brand-600",
               )}
             >
-              {pack.tag && (
+              {(selected || pack.tag) && (
                 <span className="absolute -top-2.5 left-5 rounded-full bg-brand-600 px-2.5 py-0.5 text-xs font-medium text-white">
-                  {pack.tag}
+                  {selected ? "Your pick" : pack.tag}
                 </span>
               )}
               <div className="flex items-center gap-2 text-amber-700">
@@ -152,6 +167,7 @@ export function BuyCredits({ packs, enabled }: { packs: CreditPack[]; enabled: b
                 {busy === pack.id ? "Opening payment…" : "Buy"}
               </Button>
             </Card>
+            </div>
           );
         })}
       </div>

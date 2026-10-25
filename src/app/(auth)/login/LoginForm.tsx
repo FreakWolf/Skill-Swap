@@ -6,7 +6,7 @@ import { logIn, type AuthState } from "../actions";
 import { Button } from "@/components/ui/Button";
 import { Input, Label } from "@/components/ui/Input";
 
-export function LoginForm() {
+export function LoginForm({ next }: { next: string }) {
   const [state, action, pending] = useActionState<AuthState, FormData>(
     logIn,
     undefined,
@@ -14,6 +14,7 @@ export function LoginForm() {
 
   return (
     <form action={action} className="space-y-4">
+      <input type="hidden" name="next" value={next} />
       <div>
         <Label htmlFor="email">Email</Label>
         <Input id="email" name="email" type="email" autoComplete="email" required placeholder="you@example.com" />

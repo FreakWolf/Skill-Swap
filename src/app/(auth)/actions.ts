@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
 import { LEGAL } from "@/lib/legal-config";
+import { safeNext } from "@/lib/safe-next";
 
 // Single source of truth for the minimum age, shared with the legal pages.
 const MIN_AGE = LEGAL.minimumAge;
@@ -182,7 +183,8 @@ export async function logIn(
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return { error: error.message };
 
-  redirect("/dashboard");
+  // Back to the page that sent them to login (e.g. /credits from the app).
+  redirect(safeNext(formData.get("next")));
 }
 
 export async function logOut() {

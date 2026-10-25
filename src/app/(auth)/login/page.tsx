@@ -1,14 +1,15 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { Card } from "@/components/ui/Card";
+import { safeNext } from "@/lib/safe-next";
 import { LoginForm } from "./LoginForm";
 
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; next?: string }>;
 }) {
-  const { error } = await searchParams;
+  const { error, next } = await searchParams;
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-50 to-brand-orange-50 p-4">
       <div className="w-full max-w-md">
@@ -38,7 +39,7 @@ export default async function LoginPage({
               .
             </p>
           )}
-          <LoginForm />
+          <LoginForm next={safeNext(next)} />
         </Card>
       </div>
     </div>

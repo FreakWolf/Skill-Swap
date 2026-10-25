@@ -9,8 +9,15 @@ import { razorpayConfigured } from "@/lib/razorpay";
 import { getTimeZone, formatInTz } from "@/lib/time";
 import { BuyCredits } from "./BuyCredits";
 
-export default async function CreditsPage() {
+export default async function CreditsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ pack?: string }>;
+}) {
   const { user } = await requireUser();
+  // ?pack=… comes from the mobile app's plan cards: highlight that pack.
+  const { pack } = await searchParams;
+  const selectedId = CREDIT_PACKS.some((p) => p.id === pack) ? pack : undefined;
   const [balance, purchases, tz] = await Promise.all([
     getBalance(user.id),
     getMyPurchases(),
@@ -44,7 +51,7 @@ export default async function CreditsPage() {
             .
           </p>
         )}
-        <BuyCredits packs={CREDIT_PACKS} enabled={enabled} />
+        <BuyCredits packs={CREDIT_PACKS} enabled={enabled} selectedId={selectedId} />
         <p className="flex items-start gap-2 text-xs text-gray-500">
           <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
           <span>
