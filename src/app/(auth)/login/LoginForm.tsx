@@ -24,7 +24,7 @@ export function LoginForm({ next }: { next: string }) {
           <Label htmlFor="password">Password</Label>
           <Link
             href="/forgot-password"
-            className="-my-1 mb-0.5 inline-block py-1 text-sm font-medium text-brand-600 hover:underline"
+            className="-my-1 mb-0.5 inline-block py-1 text-sm font-medium text-link hover:underline"
           >
             Forgot password?
           </Link>
@@ -33,7 +33,7 @@ export function LoginForm({ next }: { next: string }) {
       </div>
 
       {state?.error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-2xl border border-danger-fg/25 bg-danger-soft px-4 py-3 text-sm text-danger-fg">
           {state.error}
         </p>
       )}
@@ -42,18 +42,19 @@ export function LoginForm({ next }: { next: string }) {
         {pending ? "Signing in…" : "Log in"}
       </Button>
 
-      <div className="relative py-2 text-center text-xs text-slate-500">
-        <span className="bg-white px-2">or continue with</span>
-        <span className="absolute inset-x-0 top-1/2 -z-10 h-px bg-[var(--border)]" />
+      <div className="flex items-center gap-3 py-1 text-xs text-subtle">
+        <span aria-hidden className="h-px flex-1 bg-border" />
+        <span>or continue with</span>
+        <span aria-hidden className="h-px flex-1 bg-border" />
       </div>
       <div className="grid grid-cols-2 gap-3">
         <Button type="button" variant="outline" disabled title="Coming soon">Google</Button>
         <Button type="button" variant="outline" disabled title="Coming soon">Apple</Button>
       </div>
 
-      <p className="text-center text-sm text-slate-600">
+      <p className="text-center text-sm text-muted">
         New to SkillSwap?{" "}
-        <Link href="/signup" className="font-medium text-brand-600 hover:underline">
+        <Link href="/signup" className="font-medium text-link hover:underline">
           Create an account
         </Link>
       </p>

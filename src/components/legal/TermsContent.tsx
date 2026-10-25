@@ -9,7 +9,7 @@ export function TermsContent({ embedded = false }: { embedded?: boolean }) {
   return (
     <>
       <h1>Terms of Service</h1>
-      <p className="text-sm text-gray-500">Last updated: {lastUpdated}</p>
+      <p className="text-sm text-subtle">Last updated: {lastUpdated}</p>
 
       <p>
         These terms govern your use of {companyName}, a community where members

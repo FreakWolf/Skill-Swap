@@ -1,26 +1,12 @@
-import Link from "next/link";
-import { Logo } from "@/components/Logo";
-import { Card } from "@/components/ui/Card";
+import { AuthShell } from "@/components/site/AuthShell";
 import { ForgotPasswordForm } from "./ForgotPasswordForm";
 
 export default function ForgotPasswordPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-brand-50 to-brand-orange-50 p-4">
-      <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <Link href="/" className="inline-block">
-            <Logo variant="full" height={150} priority />
-          </Link>
-          <p className="mt-3 text-slate-600">
-            Enter your email and we&apos;ll send you a link to reset your password.
-          </p>
-        </div>
-        <Card className="p-6 shadow-lg sm:p-8">
-          <h1 className="mb-4 text-lg font-semibold text-gray-900">Reset your password</h1>
-          <ForgotPasswordForm />
-        </Card>
-      </div>
-    </div>
+    <AuthShell subtitle="Enter your email and we'll send you a link to reset your password.">
+      <h1 className="mb-4 text-2xl font-bold tracking-tight text-foreground">Reset your password</h1>
+      <ForgotPasswordForm />
+    </AuthShell>
   );
 }
 

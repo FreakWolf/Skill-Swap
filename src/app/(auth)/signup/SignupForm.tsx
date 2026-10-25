@@ -36,19 +36,19 @@ export function SignupForm() {
       <div>
         <Label htmlFor="birthdate">Birthdate</Label>
         <Input id="birthdate" name="birthdate" type="date" required />
-        <p className="mt-1 text-xs text-slate-500">You must be 18 or older to join.</p>
+        <p className="mt-1 text-xs text-subtle">You must be 18 or older to join.</p>
       </div>
 
       <TermsConsent />
 
       {state?.message && (
-        <p className="rounded-lg bg-teal-50 px-3 py-2 text-sm text-teal-700">
+        <p className="rounded-2xl border border-info-fg/25 bg-info-soft px-4 py-3 text-sm text-info-fg">
           {state.message}
         </p>
       )}
 
       {state?.error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-2xl border border-danger-fg/25 bg-danger-soft px-4 py-3 text-sm text-danger-fg">
           {state.error}
         </p>
       )}
@@ -57,9 +57,9 @@ export function SignupForm() {
         {pending ? "Creating account…" : "Create account"}
       </Button>
 
-      <p className="text-center text-sm text-slate-600">
+      <p className="text-center text-sm text-muted">
         Already have an account?{" "}
-        <Link href="/login" className="font-medium text-brand-600 hover:underline">
+        <Link href="/login" className="font-medium text-link hover:underline">
           Log in
         </Link>
       </p>

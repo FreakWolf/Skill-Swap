@@ -25,16 +25,42 @@ function choose(pref: ThemePref) {
 }
 
 /** Light / Dark / System segmented control built from native radios, so it
- *  gets arrow-key navigation and screen-reader semantics for free. */
+ *  gets arrow-key navigation and screen-reader semantics for free.
+ *  `compactOnMobile` swaps it for a single cycling button below 640px, for
+ *  tight headers. */
 export function ThemeToggle({
   size = "sm",
   className,
+  compactOnMobile = false,
 }: {
   size?: "sm" | "md";
   className?: string;
+  compactOnMobile?: boolean;
 }) {
   const name = useId();
   const pref = useSyncExternalStore(subscribeThemePref, getThemePrefSnapshot, () => "system" as const);
+  if (compactOnMobile) {
+    const i = OPTIONS.findIndex((o) => o.value === pref);
+    const current = OPTIONS[i];
+    const next = OPTIONS[(i + 1) % OPTIONS.length];
+    const Icon = current.icon;
+    return (
+      <>
+        <button
+          type="button"
+          onClick={() => choose(next.value)}
+          aria-label={`Colour theme: ${current.label}. Switch to ${next.label}`}
+          className={cn(
+            "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-card text-foreground backdrop-blur-md transition-colors hover:bg-brand-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-ring sm:hidden",
+            className,
+          )}
+        >
+          <Icon className="h-5 w-5" aria-hidden />
+        </button>
+        <ThemeToggle size={size} className={cn("hidden sm:inline-flex", className)} />
+      </>
+    );
+  }
   return (
     <fieldset
       className={cn(

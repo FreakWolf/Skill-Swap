@@ -7,7 +7,7 @@ export function PrivacyContent() {
   return (
     <>
       <h1>Privacy Policy</h1>
-      <p className="text-sm text-gray-500">Last updated: {lastUpdated}</p>
+      <p className="text-sm text-subtle">Last updated: {lastUpdated}</p>
 
       <p>
         This policy explains what information {companyName} collects, how we use

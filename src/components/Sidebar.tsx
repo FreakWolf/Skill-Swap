@@ -99,7 +99,7 @@ export function Sidebar({
         >
           <Logo height={16} decorative priority />
         </Link>
-        <ThemeToggle className="ml-auto" />
+        <ThemeToggle compactOnMobile className="ml-auto" />
       </header>
 
       {/* Sidebar: slide-in drawer on mobile, sticky column on desktop.

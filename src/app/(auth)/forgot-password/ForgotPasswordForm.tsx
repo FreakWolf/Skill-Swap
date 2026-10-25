@@ -15,10 +15,10 @@ export function ForgotPasswordForm() {
   if (state?.message) {
     return (
       <div className="space-y-4 text-center">
-        <p className="rounded-lg bg-teal-50 px-3 py-3 text-sm text-teal-700">
+        <p className="rounded-2xl border border-info-fg/25 bg-info-soft px-4 py-3 text-sm text-info-fg">
           {state.message}
         </p>
-        <Link href="/login" className="text-sm font-medium text-brand-600 hover:underline">
+        <Link href="/login" className="text-sm font-medium text-link hover:underline">
           Back to log in
         </Link>
       </div>
@@ -40,7 +40,7 @@ export function ForgotPasswordForm() {
       </div>
 
       {state?.error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-2xl border border-danger-fg/25 bg-danger-soft px-4 py-3 text-sm text-danger-fg">
           {state.error}
         </p>
       )}
@@ -49,9 +49,9 @@ export function ForgotPasswordForm() {
         {pending ? "Sending…" : "Send reset link"}
       </Button>
 
-      <p className="text-center text-sm text-slate-600">
+      <p className="text-center text-sm text-muted">
         Remembered it?{" "}
-        <Link href="/login" className="font-medium text-brand-600 hover:underline">
+        <Link href="/login" className="font-medium text-link hover:underline">
           Log in
         </Link>
       </p>
