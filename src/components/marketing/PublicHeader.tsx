@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Menu } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { Button } from "@/components/ui/Button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { getSessionUser } from "@/lib/auth";
 
 export const MARKETING_NAV = [
@@ -17,7 +18,7 @@ export async function PublicHeader() {
   const session = await getSessionUser();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-[var(--border)]/60 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/70">
+    <header className="sticky top-0 z-40 border-b border-[var(--border)]/60 bg-card/80 backdrop-blur supports-[backdrop-filter]:bg-card/70">
       <div className="mx-auto flex h-16 w-full max-w-screen-2xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-10">
         <Link href="/" className="shrink-0 py-1" aria-label="SkillSwap home">
           <Logo height={22} priority className="max-w-[40vw] object-contain" />
@@ -36,6 +37,7 @@ export async function PublicHeader() {
         </nav>
 
         <div className="flex items-center gap-1 sm:gap-2">
+          <ThemeToggle compact className="hidden sm:inline-flex" />
           {session ? (
             <Button href="/dashboard" variant="brand">Go to dashboard</Button>
           ) : (
@@ -53,7 +55,7 @@ export async function PublicHeader() {
             >
               <Menu className="h-5 w-5" aria-hidden />
             </summary>
-            <div className="absolute right-0 mt-2 w-48 rounded-xl border border-[var(--border)] bg-white p-2 shadow-lg">
+            <div className="absolute right-0 mt-2 w-48 rounded-xl border border-[var(--border)] bg-card p-2 shadow-lg">
               {MARKETING_NAV.map((item) => (
                 <Link
                   key={item.href}
@@ -71,6 +73,9 @@ export async function PublicHeader() {
                   Log in
                 </Link>
               )}
+              <div className="mt-2 border-t border-border px-1 pt-2 sm:hidden">
+                <ThemeToggle className="w-full justify-between" />
+              </div>
             </div>
           </details>
         </div>

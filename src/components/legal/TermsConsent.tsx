@@ -77,11 +77,11 @@ export function TermsConsent() {
           <label htmlFor="terms" className="cursor-pointer">
             I have read and agree to the
           </label>{" "}
-          <button type="button" onClick={openDialog} className="text-brand-600 hover:underline">
+          <button type="button" onClick={openDialog} className="text-brand-fg hover:underline">
             Terms of Service
           </button>{" "}
           and{" "}
-          <button type="button" onClick={openDialog} className="text-brand-600 hover:underline">
+          <button type="button" onClick={openDialog} className="text-brand-fg hover:underline">
             Privacy Policy
           </button>
           .
@@ -103,7 +103,7 @@ export function TermsConsent() {
           // Click on the backdrop (outside the panel) closes it.
           if (e.target === dialogRef.current) closeDialog();
         }}
-        className="m-auto w-[min(42rem,calc(100vw-2rem))] overflow-hidden rounded-xl bg-white p-0 shadow-2xl backdrop:bg-black/50"
+        className="m-auto w-[min(42rem,calc(100vw-2rem))] overflow-hidden rounded-xl bg-card p-0 shadow-2xl backdrop:bg-black/50"
       >
         <div className="flex max-h-[85vh] flex-col">
           {/* Header */}

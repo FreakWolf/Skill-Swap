@@ -78,7 +78,7 @@ export default async function AdminUsersPage({
             header: "",
             className: "text-right",
             render: (u) => (
-              <Link href={`/admin/users/${u.id}`} className="text-sm font-medium text-brand-700 hover:underline">
+              <Link href={`/admin/users/${u.id}`} className="text-sm font-medium text-brand-fg hover:underline">
                 Manage
               </Link>
             ),

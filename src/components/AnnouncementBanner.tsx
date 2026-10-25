@@ -65,18 +65,18 @@ export function AnnouncementBanner({ announcements }: { announcements: Announcem
         <div
           key={a.id}
           role="status"
-          className="flex items-start gap-3 rounded-xl border border-brand-200 bg-brand-50 px-4 py-3 text-sm text-brand-900"
+          className="flex items-start gap-3 rounded-xl border border-brand-200 bg-brand-50 px-4 py-3 text-sm text-brand-fg"
         >
-          <Megaphone className="mt-0.5 h-4 w-4 shrink-0 text-brand-700" aria-hidden />
+          <Megaphone className="mt-0.5 h-4 w-4 shrink-0 text-brand-fg" aria-hidden />
           <div className="min-w-0 flex-1">
             <p className="font-semibold">{a.title}</p>
-            {a.body && <p className="mt-0.5 whitespace-pre-wrap text-brand-800">{a.body}</p>}
+            {a.body && <p className="mt-0.5 whitespace-pre-wrap text-brand-fg">{a.body}</p>}
           </div>
           <button
             type="button"
             onClick={() => dismiss(a.id)}
             aria-label="Dismiss announcement"
-            className="-m-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-brand-700 hover:bg-brand-100"
+            className="-m-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-brand-fg hover:bg-brand-100"
           >
             <X className="h-4 w-4" aria-hidden />
           </button>

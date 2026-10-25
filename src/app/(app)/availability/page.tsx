@@ -73,7 +73,7 @@ export default async function AvailabilityPage({
                   </div>
                   <p className="text-sm text-gray-500">
                     {o.skillName} · {o.duration_min} min · {o.credit_cost} cr ·{" "}
-                    <Link href={`/offerings/${o.id}/edit`} className="font-medium text-brand-600 hover:underline">Edit</Link>
+                    <Link href={`/offerings/${o.id}/edit`} className="font-medium text-brand-fg hover:underline">Edit</Link>
                   </p>
                 </div>
                 {o.is_active && <AddSlotForm offeringId={o.id} />}
@@ -83,7 +83,7 @@ export default async function AvailabilityPage({
                 {!o.is_active && (
                   <p className="mb-3 text-sm text-gray-500">
                     This offering is paused, so these slots are hidden and can&apos;t be booked.{" "}
-                    <Link href={`/offerings/${o.id}/edit`} className="font-medium text-brand-600 hover:underline">Resume it</Link>{" "}
+                    <Link href={`/offerings/${o.id}/edit`} className="font-medium text-brand-fg hover:underline">Resume it</Link>{" "}
                     to open them again.
                   </p>
                 )}
@@ -96,7 +96,7 @@ export default async function AvailabilityPage({
                     {o.slots.map((s) => (
                       <li
                         key={s.id}
-                        className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-sm"
+                        className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-card px-3 py-1.5 text-sm"
                       >
                         <span className="text-gray-700">
                           {slotLabel(s.starts_at, tz)}

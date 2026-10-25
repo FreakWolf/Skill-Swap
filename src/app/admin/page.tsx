@@ -67,11 +67,11 @@ export default async function AdminOverviewPage() {
             ))}
           </ul>
           <div className="mt-6 flex flex-wrap gap-2 text-sm">
-            <Link href="/admin/reports" className="font-medium text-brand-700 hover:underline">Review reports</Link>
+            <Link href="/admin/reports" className="font-medium text-brand-fg hover:underline">Review reports</Link>
             <span className="text-gray-300">·</span>
-            <Link href="/admin/support" className="font-medium text-brand-700 hover:underline">Answer tickets</Link>
+            <Link href="/admin/support" className="font-medium text-brand-fg hover:underline">Answer tickets</Link>
             <span className="text-gray-300">·</span>
-            <Link href="/admin/announcements" className="font-medium text-brand-700 hover:underline">Post an announcement</Link>
+            <Link href="/admin/announcements" className="font-medium text-brand-fg hover:underline">Post an announcement</Link>
           </div>
         </Card>
       </div>

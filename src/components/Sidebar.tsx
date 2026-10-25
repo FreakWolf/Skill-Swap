@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { Avatar } from "@/components/Avatar";
 import { Logo } from "@/components/Logo";
+import { ThemeCycleButton } from "@/components/ThemeToggle";
 import { logOut } from "@/app/(auth)/actions";
 import { cn } from "@/lib/cn";
 
@@ -84,7 +85,7 @@ export function Sidebar({
   return (
     <>
       {/* Mobile header (stays at the top while the page scrolls) */}
-      <header className="sticky top-0 z-30 flex h-16 items-center border-b border-gray-200 bg-white px-4 lg:hidden">
+      <header className="sticky top-0 z-30 flex h-16 items-center border-b border-gray-200 bg-card px-4 lg:hidden">
         <button
           ref={openButtonRef}
           onClick={() => setOpen(true)}
@@ -107,7 +108,7 @@ export function Sidebar({
         id="app-sidebar"
         aria-label="Main navigation"
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-gray-200 bg-white transition-[transform,visibility] duration-200 ease-in-out lg:visible lg:sticky lg:top-0 lg:h-screen lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-gray-200 bg-card transition-[transform,visibility] duration-200 ease-in-out lg:visible lg:sticky lg:top-0 lg:h-screen lg:translate-x-0",
           open ? "visible translate-x-0" : "invisible -translate-x-full",
         )}
       >
@@ -139,7 +140,7 @@ export function Sidebar({
                 className={cn(
                   "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                   isActive(item.href)
-                    ? "bg-brand-50 text-brand-600"
+                    ? "bg-brand-50 text-brand-fg"
                     : "text-gray-700 hover:bg-gray-50 hover:text-gray-900",
                 )}
               >
@@ -172,7 +173,7 @@ export function Sidebar({
               className={cn(
                 "mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 isActive("/admin")
-                  ? "bg-brand-50 text-brand-600"
+                  ? "bg-brand-50 text-brand-fg"
                   : "text-gray-700 hover:bg-gray-50 hover:text-gray-900",
               )}
             >
@@ -202,8 +203,13 @@ export function Sidebar({
           </div>
         </nav>
 
+        {/* Theme */}
+        <div className="border-t border-gray-200 px-3 pt-2">
+          <ThemeCycleButton />
+        </div>
+
         {/* User */}
-        <div className="relative border-t border-gray-200 p-3">
+        <div className="relative p-3">
           <button
             onClick={() => setMenuOpen((o) => !o)}
             className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-gray-50"
@@ -222,7 +228,7 @@ export function Sidebar({
           {menuOpen && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
-              <div className="absolute bottom-16 left-3 right-3 z-20 overflow-hidden rounded-xl border border-[var(--border)] bg-white py-1 shadow-lg">
+              <div className="absolute bottom-16 left-3 right-3 z-20 overflow-hidden rounded-xl border border-[var(--border)] bg-card py-1 shadow-lg">
                 <Link
                   href="/profile"
                   onClick={() => setMenuOpen(false)}
@@ -241,7 +247,7 @@ export function Sidebar({
                   <Link
                     href="/admin"
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-brand-700 hover:bg-gray-50"
+                    className="flex items-center gap-2 px-4 py-2 text-sm text-brand-fg hover:bg-gray-50"
                   >
                     <ShieldCheck className="h-4 w-4" /> Admin panel
                   </Link>

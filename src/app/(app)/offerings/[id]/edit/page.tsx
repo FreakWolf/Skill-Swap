@@ -42,7 +42,7 @@ export default async function EditOfferingPage({ params }: { params: Promise<{ i
         </div>
         <p className="mt-1 text-gray-600">
           Manage time slots from{" "}
-          <Link href="/availability" className="font-medium text-brand-600 hover:underline">Availability</Link>.
+          <Link href="/availability" className="font-medium text-brand-fg hover:underline">Availability</Link>.
         </p>
       </div>
 

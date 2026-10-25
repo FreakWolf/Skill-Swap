@@ -13,14 +13,14 @@ export const metadata: Metadata = {
 export default function FaqPage() {
   return (
     <>
-      <section className="bg-gradient-to-br from-brand-50 via-white to-brand-orange-50">
+      <section className="bg-gradient-to-br from-brand-50 via-background to-brand-orange-50">
         <div className="mx-auto w-full max-w-screen-2xl px-4 py-16 text-center sm:px-6 lg:px-10">
           <div className="animate-fade-up mx-auto max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-wider text-brand-700">FAQ</p>
+            <p className="text-sm font-semibold uppercase tracking-wider text-brand-fg">FAQ</p>
             <h1 className="mt-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Frequently asked questions</h1>
             <p className="mt-4 text-lg text-gray-600">
               Can&apos;t find what you need?{" "}
-              <Link href="/contact" className="font-medium text-brand-700 hover:underline">Contact us</Link>.
+              <Link href="/contact" className="font-medium text-brand-fg hover:underline">Contact us</Link>.
             </p>
           </div>
         </div>

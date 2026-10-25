@@ -22,10 +22,10 @@ export default async function LoginPage({
         </div>
         <Card className="p-6 shadow-lg sm:p-8">
           <div className="mb-6 grid grid-cols-2 gap-1 rounded-full bg-neutral-200 p-1 text-sm font-medium">
-            <span className="rounded-full bg-white py-2 text-center text-black shadow-sm">
+            <span className="rounded-full bg-card py-2 text-center text-foreground shadow-sm">
               Log in
             </span>
-            <Link href="/signup" className="rounded-full py-2 text-center text-slate-600 hover:text-black">
+            <Link href="/signup" className="rounded-full py-2 text-center text-slate-600 hover:text-foreground">
               Sign up
             </Link>
           </div>

@@ -149,7 +149,7 @@ export default async function CalendarPage({
                 <span
                   className={cn(
                     "text-xs font-medium",
-                    isToday ? "text-brand-600" : "text-gray-500",
+                    isToday ? "text-brand-fg" : "text-gray-500",
                   )}
                 >
                   {day}

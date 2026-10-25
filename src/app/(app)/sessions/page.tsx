@@ -18,7 +18,7 @@ function when(iso: string, tz: string) {
 }
 
 const statusStyle: Record<string, string> = {
-  confirmed: "bg-brand-50 text-brand-600",
+  confirmed: "bg-brand-50 text-brand-fg",
   completed: "bg-teal-50 text-teal-700",
   cancelled: "bg-slate-100 text-slate-500",
   pending: "bg-amber-50 text-amber-700",
@@ -98,7 +98,7 @@ export default async function SessionsPage() {
         ) : (
           <Card className="p-6 text-center text-sm text-slate-500">
             Nothing scheduled.{" "}
-            <Link href="/marketplace" className="font-medium text-brand-600 hover:underline">
+            <Link href="/marketplace" className="font-medium text-brand-fg hover:underline">
               Find a teacher
             </Link>
             .

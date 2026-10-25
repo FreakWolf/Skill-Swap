@@ -4,7 +4,7 @@ import { PublicFooter } from "@/components/marketing/PublicFooter";
 // Shell for public marketing pages: full-width header, page content, footer.
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-background">
       {/* Scroll-reveal hides sections until JS marks them visible; without JS show everything. */}
       <noscript>
         <style>{`.reveal{opacity:1!important;transform:none!important}`}</style>

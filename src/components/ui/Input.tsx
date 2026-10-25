@@ -2,7 +2,7 @@ import { cn } from "@/lib/cn";
 import type { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 
 const base =
-  "w-full rounded-md border border-transparent bg-neutral-200 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:bg-white focus:border-[var(--ring)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]/30";
+  "w-full rounded-md border border-transparent bg-neutral-200 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-500 focus:bg-card focus:border-[var(--ring)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]/30";
 
 export function Input({
   className,

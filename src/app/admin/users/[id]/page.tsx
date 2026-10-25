@@ -32,7 +32,7 @@ export default async function AdminUserPage({ params }: { params: Promise<{ id: 
       <Link href="/admin/users" className="text-sm text-gray-500 hover:text-gray-900">← All users</Link>
 
       <PageHeader title={p.full_name || "Unnamed member"} description={d.email}>
-        <Link href={`/u/${p.id}`} className="text-sm font-medium text-brand-700 hover:underline">View public profile</Link>
+        <Link href={`/u/${p.id}`} className="text-sm font-medium text-brand-fg hover:underline">View public profile</Link>
       </PageHeader>
 
       <Card className="flex flex-wrap items-center gap-5 p-5">
@@ -150,7 +150,7 @@ export default async function AdminUserPage({ params }: { params: Promise<{ id: 
               header: "",
               className: "text-right",
               render: (r) => (
-                <Link href={`/admin/reports?status=${r.status}#${shortId(r.id)}`} className="text-brand-700 hover:underline">Open</Link>
+                <Link href={`/admin/reports?status=${r.status}#${shortId(r.id)}`} className="text-brand-fg hover:underline">Open</Link>
               ),
             },
           ]}

@@ -52,7 +52,7 @@ export default async function OfferingDetailPage({
           ← Back to explore
         </Link>
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <Badge className="bg-brand-50 text-brand-600">
+          <Badge className="bg-brand-50 text-brand-fg">
             {offering.skill?.name}
           </Badge>
           <Badge className="capitalize">{offering.level}</Badge>

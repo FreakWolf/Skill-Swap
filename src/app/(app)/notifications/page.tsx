@@ -12,7 +12,7 @@ import {
 function iconFor(kind: string) {
   switch (kind) {
     case "booking":
-      return { Icon: Calendar, tile: "bg-brand-100 text-brand-600" };
+      return { Icon: Calendar, tile: "bg-brand-100 text-brand-fg" };
     case "message":
       return { Icon: MessageSquare, tile: "bg-brand-orange-100 text-brand-orange-700" };
     case "credit":
@@ -116,7 +116,7 @@ export default async function NotificationsPage() {
                     <input type="hidden" name="id" value={n.id} />
                     <button
                       type="submit"
-                      className="-my-1.5 shrink-0 rounded px-2 py-1.5 text-xs font-medium text-brand-600 hover:bg-brand-50 hover:underline"
+                      className="-my-1.5 shrink-0 rounded px-2 py-1.5 text-xs font-medium text-brand-fg hover:bg-brand-50 hover:underline"
                     >
                       Mark read
                     </button>

@@ -76,11 +76,11 @@ export default async function AppLayout({
   const isAdmin = profile?.is_admin ?? false;
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50 lg:flex-row">
+    <div className="flex min-h-screen flex-col bg-background lg:flex-row">
       {/* Keyboard users can jump past the navigation. */}
       <a
         href="#main"
-        className="sr-only z-[60] rounded-md bg-white px-4 py-2 text-sm font-medium text-brand-700 shadow focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        className="sr-only z-[60] rounded-md bg-card px-4 py-2 text-sm font-medium text-brand-fg shadow focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
       >
         Skip to content
       </a>

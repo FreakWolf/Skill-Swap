@@ -1,9 +1,16 @@
 @import "tailwindcss";
 
+/* Dark mode is class-based: the inline script in the root layout puts `dark`
+   on <html> before first paint (Light / Dark / System, stored in
+   localStorage). Components never use `dark:` classes; instead every colour
+   they reference is a CSS variable that changes under `.dark` below. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* SkillSwap design tokens. Brand colours come from the logo
    (public/brand/logo.png): purple #7c33ff and orange #ff8033.
    Near-black primary buttons and a gray-50 canvas from the reference UI. */
 :root {
+  color-scheme: light;
   --background: #f9fafb;      /* gray-50 page canvas */
   --foreground: #030213;      /* near-black text */
   --card: #ffffff;
@@ -13,6 +20,7 @@
   --primary-foreground: #ffffff;
   --brand: #7c33ff;           /* logo purple — brand buttons, nav, links */
   --brand-foreground: #f5f0ff;
+  --brand-fg: #6a1ff0;        /* purple as TEXT (links, active nav): 6.9:1 on white */
   --accent: #14b8a6;
   --input-bg: #e5e5e5;        /* neutral-200 inputs */
   --ring: #7c33ff;
@@ -54,11 +62,105 @@
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-brand: var(--brand);
+  --color-brand-fg: var(--brand-fg);
   --color-accent: var(--accent);
+  --color-input: var(--input-bg);
   --color-ring: var(--ring);
   --color-destructive: var(--destructive);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+/* ---------- Dark theme ----------------------------------------------------
+   A deep ink canvas (near the logo's #1f1147) rather than pure black. The
+   semantic tokens flip, and the Tailwind palette variables the components
+   already use are remapped so that:
+     * gray/slate/neutral scales invert (gray-900 text becomes light, gray-50
+       panels become dark) with every text step ≥ 4.5:1 on the card colour;
+     * light tints (brand-50, amber-50, green-50, …) become dark tints and the
+       text shades that sit on them (amber-700, green-700, …) become light;
+     * brand-500/600 stay as button backgrounds (white text passes on both),
+       while purple text uses --brand-fg, which lightens to brand-300. */
+.dark {
+  color-scheme: dark;
+  --background: #0f0a1f;
+  --foreground: #f5f3fa;
+  --card: #17122b;
+  --muted: #a39dba;
+  --border: #2f2850;
+  --primary: #f5f3fa;
+  --primary-foreground: #0f0a1f;
+  --brand: #9d66ff;
+  --brand-foreground: #f5f0ff;
+  --brand-fg: #c4a3ff;        /* 8.6:1 on the ink canvas */
+  --accent: #2dd4bf;
+  --input-bg: #1f1936;
+  --ring: #bd99ff;
+  --destructive: #d4183d;
+
+  /* neutral scales (purple-tinted ink). `white` is left alone: surfaces use
+     bg-card, and text-white stays white on brand buttons and gradients. */
+  --color-gray-50: #1c1633;
+  --color-gray-100: #241d3d;
+  --color-gray-200: #2f2850;
+  --color-gray-300: #3d3561;
+  --color-gray-400: #8a84a5;
+  --color-gray-500: #a39dba;
+  --color-gray-600: #bfb9d3;
+  --color-gray-700: #d6d1e5;
+  --color-gray-800: #e8e4f2;
+  --color-gray-900: #f5f3fa;
+  --color-slate-50: #1c1633;
+  --color-slate-100: #241d3d;
+  --color-slate-200: #2f2850;
+  --color-slate-300: #3d3561;
+  --color-slate-400: #8a84a5;
+  --color-slate-500: #a39dba;
+  --color-slate-600: #bfb9d3;
+  --color-slate-700: #d6d1e5;
+  --color-slate-800: #e8e4f2;
+  --color-slate-900: #f5f3fa;
+  --color-neutral-100: #241d3d;
+  --color-neutral-200: #1f1936;
+  --color-neutral-300: #2f2850;
+
+  /* brand tints and dark text shades */
+  --color-brand-50: #241a45;
+  --color-brand-100: #2c2057;
+  --color-brand-200: #3d2c78;
+  --color-brand-800: #d9c5ff;
+  --color-brand-900: #ebe0ff;
+  --color-brand-orange-50: #3a2212;
+  --color-brand-orange-100: #4a2a14;
+  --color-brand-orange-200: #5c3518;
+  --color-brand-orange-700: #ffb380;
+
+  /* status tints */
+  --color-amber-50: #332406;
+  --color-amber-100: #3f2d08;
+  --color-amber-200: #5a4210;
+  --color-amber-300: #7a5a14;
+  --color-amber-700: #fbbf24;
+  --color-amber-800: #fcd34d;
+  --color-green-50: #0c2a1b;
+  --color-green-100: #10372a;
+  --color-green-600: #4ade80;
+  --color-green-700: #6ee7a0;
+  --color-red-50: #3a1016;
+  --color-red-100: #4a1420;
+  --color-red-600: #f87171;
+  --color-red-700: #fca5a5;
+  --color-teal-50: #0b2926;
+  --color-teal-200: #134e4a;
+  --color-teal-700: #5eead4;
+  --color-teal-800: #99f6e4;
+  --color-yellow-100: #3a2e05;
+  --color-yellow-600: #facc15;
+}
+
+/* The purple wordmark is a PNG; lift it on the ink canvas. */
+.dark .logo-adaptive {
+  filter: brightness(1.45) saturate(0.9);
 }
 
 body {
@@ -123,4 +225,7 @@ body {
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+.dark .text-gradient-brand {
+  background-image: linear-gradient(90deg, #bd99ff, #ffb380, #bd99ff);
 }

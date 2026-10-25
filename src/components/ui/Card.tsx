@@ -13,7 +13,7 @@ export function Card({
     <div
       id={id}
       className={cn(
-        "rounded-xl border border-[var(--border)] bg-white",
+        "rounded-xl border border-[var(--border)] bg-card",
         className,
       )}
     >

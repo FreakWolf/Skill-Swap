@@ -6,6 +6,7 @@ import { AvatarUpload } from "@/components/AvatarUpload";
 import { Avatar } from "@/components/Avatar";
 import { BlockButton } from "@/components/safety/BlockButton";
 import { getMyBlockedUsers } from "@/lib/safety";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { SettingsForm } from "./SettingsForm";
 
 export default async function SettingsPage() {
@@ -69,6 +70,16 @@ export default async function SettingsPage() {
             ))}
           </ul>
         )}
+      </Card>
+
+      <Card className="flex flex-wrap items-center justify-between gap-4 p-6">
+        <div>
+          <h2 className="font-semibold text-slate-900">Appearance</h2>
+          <p className="text-sm text-slate-500">
+            Light, dark, or follow your device. Saved on this browser.
+          </p>
+        </div>
+        <ThemeToggle />
       </Card>
 
       <Card className="flex items-center justify-between p-6">

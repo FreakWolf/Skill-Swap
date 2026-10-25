@@ -153,14 +153,14 @@ export default async function SessionDetailPage({
         {/* Interim: SkillSwap doesn't create meeting links yet, so tell people how to meet. */}
         {booking.status === "confirmed" && (
           <div className="mt-4 flex gap-3 rounded-lg border border-brand-200 bg-brand-50 p-3 text-sm text-slate-700">
-            <Video className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" aria-hidden />
+            <Video className="mt-0.5 h-4 w-4 shrink-0 text-brand-fg" aria-hidden />
             <p>
               <span className="font-medium text-slate-900">How to meet: </span>
               {booking.mode === "in_person"
                 ? "agree on a safe, public place and time with "
                 : "share a Zoom or Google Meet link with "}
               {other?.full_name || "your partner"} in{" "}
-              <Link href="/messages" className="font-medium text-brand-600 hover:underline">
+              <Link href="/messages" className="font-medium text-brand-fg hover:underline">
                 Messages
               </Link>{" "}
               before the session starts.

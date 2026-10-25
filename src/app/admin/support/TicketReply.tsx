@@ -21,7 +21,7 @@ export function TicketReply({ id, status, reply }: { id: string; status: string;
           name="status"
           defaultValue={status}
           aria-label="Ticket status"
-          className="h-9 rounded-md border border-[var(--border)] bg-white px-3 text-sm capitalize focus:border-[var(--ring)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]/30"
+          className="h-9 rounded-md border border-[var(--border)] bg-card px-3 text-sm capitalize focus:border-[var(--ring)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]/30"
         >
           {STATUSES.map((s) => (
             <option key={s} value={s}>{s}</option>

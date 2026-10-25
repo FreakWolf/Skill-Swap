@@ -18,7 +18,7 @@ export function ForgotPasswordForm() {
         <p className="rounded-lg bg-teal-50 px-3 py-3 text-sm text-teal-700">
           {state.message}
         </p>
-        <Link href="/login" className="text-sm font-medium text-brand-600 hover:underline">
+        <Link href="/login" className="text-sm font-medium text-brand-fg hover:underline">
           Back to log in
         </Link>
       </div>
@@ -51,7 +51,7 @@ export function ForgotPasswordForm() {
 
       <p className="text-center text-sm text-slate-600">
         Remembered it?{" "}
-        <Link href="/login" className="font-medium text-brand-600 hover:underline">
+        <Link href="/login" className="font-medium text-brand-fg hover:underline">
           Log in
         </Link>
       </p>

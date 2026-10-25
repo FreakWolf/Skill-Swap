@@ -79,7 +79,7 @@ export default async function MessagesPage() {
           </p>
           <Link
             href="/marketplace"
-            className="mt-4 text-sm font-medium text-brand-600 hover:underline"
+            className="mt-4 text-sm font-medium text-brand-fg hover:underline"
           >
             Explore skills
           </Link>

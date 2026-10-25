@@ -73,7 +73,7 @@ export function SkillsForm({
                       "rounded-full border px-3 py-1.5 text-sm transition-colors",
                       has(c.name)
                         ? "cursor-default border-transparent bg-slate-100 text-slate-500"
-                        : "border-[var(--border)] bg-white text-slate-700 hover:border-brand-600 hover:text-brand-600",
+                        : "border-[var(--border)] bg-card text-slate-700 hover:border-brand-600 hover:text-brand-fg",
                     )}
                   >
                     {c.name}
@@ -130,7 +130,7 @@ export function SkillsForm({
             {selections.map((s) => (
               <li
                 key={s.name}
-                className="flex flex-wrap items-center gap-3 rounded-lg border border-[var(--border)] bg-white p-3"
+                className="flex flex-wrap items-center gap-3 rounded-lg border border-[var(--border)] bg-card p-3"
               >
                 <span className="font-medium text-slate-800">{s.name}</span>
 
@@ -146,7 +146,7 @@ export function SkillsForm({
                           "px-3 py-1 text-xs font-medium capitalize",
                           s.direction === d
                             ? "bg-[var(--primary)] text-white"
-                            : "bg-white text-slate-600 hover:bg-slate-50",
+                            : "bg-card text-slate-600 hover:bg-slate-50",
                         )}
                       >
                         {d === "teach" ? "I teach" : "I want to learn"}
@@ -160,7 +160,7 @@ export function SkillsForm({
                     onChange={(e) =>
                       update(s.name, { level: e.target.value as SkillLevel })
                     }
-                    className="rounded-lg border border-[var(--border)] bg-white px-2 py-1 text-xs capitalize"
+                    className="rounded-lg border border-[var(--border)] bg-card px-2 py-1 text-xs capitalize"
                   >
                     {SKILL_LEVELS.map((l) => (
                       <option key={l} value={l}>

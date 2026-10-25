@@ -29,7 +29,7 @@ const columns = [
 
 export function PublicFooter() {
   return (
-    <footer className="border-t border-[var(--border)] bg-white">
+    <footer className="border-t border-[var(--border)] bg-card">
       <div className="mx-auto w-full max-w-screen-2xl px-4 py-12 sm:px-6 lg:px-10">
         <div className="grid gap-10 md:grid-cols-[1.5fr_repeat(3,1fr)]">
           <div>
