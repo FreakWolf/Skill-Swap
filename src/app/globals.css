@@ -1,29 +1,120 @@
 @import "tailwindcss";
 
-/* SkillSwap design tokens. Brand colours come from the logo
-   (public/brand/logo.png): purple #7c33ff and orange #ff8033.
-   Near-black primary buttons and a gray-50 canvas from the reference UI. */
+/* Class-based dark mode: `.dark` on <html> is set before paint by
+   ThemeScript (src/components/theme/ThemeScript.tsx). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* SkillSwap "soft glass" design tokens. Brand colours come from the logo
+   (public/brand/logo.png): purple #7c33ff, orange #ff8033, ink #1f1147.
+   Every text token below is contrast-checked (WCAG AA ≥4.5:1) on the canvas,
+   on the ambient blobs at their peak, on solid cards and on glass, in both
+   themes. Raw brand-orange-400/500 and brand-300/400 are decoration only. */
 :root {
-  --background: #f9fafb;      /* gray-50 page canvas */
-  --foreground: #030213;      /* near-black text */
-  --card: #ffffff;
-  --muted: #717182;
-  --border: #e5e7eb;          /* gray-200 hairlines */
-  --primary: #030213;         /* near-black — primary buttons */
+  color-scheme: light;
+  --background: #f7f4ff;
+  --background-2: #fff4ec;
+  --foreground: #1f1147;
+  --muted: #5b5478;
+  --subtle: #625b80;
+  --card: rgba(255, 255, 255, 0.72);
+  --card-solid: #ffffff;
+  --elevated: #ffffff;
+  --glass-strong: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(255, 255, 255, 0.65);
+  --border: rgba(124, 51, 255, 0.14);
+  --border-strong: #8f86b0;
+  --input-bg: #f1ecfb;
+  --primary: #7c33ff;
+  --primary-2: #5716c4;
   --primary-foreground: #ffffff;
-  --brand: #7c33ff;           /* logo purple — brand buttons, nav, links */
-  --brand-foreground: #f5f0ff;
-  --accent: #14b8a6;
-  --input-bg: #e5e5e5;        /* neutral-200 inputs */
+  --brand: #7c33ff;
+  --brand-foreground: #ffffff;
+  --link: #6a1ff0;
+  --brand-soft: #ebe0ff;
+  --brand-soft-fg: #5716c4;
+  --accent: #ff8033;
+  --accent-fg: #a3440a;
+  --accent-soft: #fff1e6;
+  --success-fg: #0f6b34;
+  --success-soft: #dcfce7;
+  --warning-fg: #92400e;
+  --warning-soft: #fef3c7;
+  --danger-fg: #c0122f;
+  --danger-soft: #fef2f2;
+  --destructive: #c0122f;
+  --info-fg: #0f766e;
+  --info-soft: #f0fdfa;
   --ring: #7c33ff;
-  --destructive: #d4183d;
+  --chart-1: #7c33ff;
+  --chart-2: #c2560f;
+  --star: #f59e0b;
+  --overlay: rgba(31, 17, 71, 0.45);
+
+  --blob-1: rgb(217 197 255 / 0.55);
+  --blob-2: rgb(255 202 168 / 0.45);
+  --blob-3: rgb(235 224 255 / 0.4);
+  --canvas: linear-gradient(160deg, #f7f4ff 0%, #fbf7ff 45%, #fff4ec 100%);
+
+  --shadow-soft: 0 1px 2px rgb(31 17 71 / 0.06), 0 8px 24px -6px rgb(124 51 255 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(31 17 71 / 0.08), 0 18px 40px -10px rgb(124 51 255 / 0.3);
+  --shadow-glow-orange: 0 10px 30px -8px rgb(255 128 51 / 0.45);
+
+  --dur-fast: 150ms;
+  --dur-base: 250ms;
+  --dur-slow: 450ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Brand colour scales → classes like bg-brand-600, text-brand-orange-700.
-   Contrast vs white (WCAG AA needs 4.5:1 for normal text):
-     brand-500 4.5 · brand-600 5.6 · brand-700 6.9   → OK for text/buttons
-     brand-orange-500 2.5 (logo orange)             → decoration only
-     brand-orange-700 5.2                            → use for orange text */
+.dark {
+  color-scheme: dark;
+  --background: #0f0a1f;
+  --background-2: #150d2b;
+  --foreground: #f4f0ff;
+  --muted: #b4abd3;
+  --subtle: #aaa1cb;
+  --card: rgba(255, 255, 255, 0.06);
+  --card-solid: #1a1430;
+  --elevated: #241c3d;
+  --glass-strong: rgba(21, 13, 43, 0.78);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --border: rgba(255, 255, 255, 0.12);
+  --border-strong: #7d72a3;
+  --input-bg: #1d1733;
+  --link: #c4a3ff;
+  --brand-soft: rgba(124, 51, 255, 0.22);
+  --brand-soft-fg: #c4a3ff;
+  --accent-fg: #ffa366;
+  --accent-soft: rgba(255, 128, 51, 0.16);
+  --success-fg: #4ade80;
+  --success-soft: rgba(74, 222, 128, 0.14);
+  --warning-fg: #fcd34d;
+  --warning-soft: rgba(252, 211, 77, 0.12);
+  --danger-fg: #ff7a8f;
+  --danger-soft: rgba(255, 122, 143, 0.14);
+  --info-fg: #5eead4;
+  --info-soft: rgba(94, 234, 212, 0.12);
+  --ring: #c4a3ff;
+  --chart-1: #a77bff;
+  --chart-2: #ff9a5c;
+  --star: #fbbf24;
+  --overlay: rgba(0, 0, 0, 0.6);
+
+  --blob-1: rgb(124 51 255 / 0.28);
+  --blob-2: rgb(255 128 51 / 0.18);
+  --blob-3: rgb(87 22 196 / 0.22);
+  --canvas: linear-gradient(160deg, #0f0a1f 0%, #120c26 50%, #150d2b 100%);
+
+  --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.5), 0 10px 28px -8px rgb(124 51 255 / 0.35);
+  --shadow-lift: 0 2px 6px rgb(0 0 0 / 0.5), 0 20px 44px -10px rgb(124 51 255 / 0.5);
+  --shadow-glow-orange: 0 10px 30px -8px rgb(255 128 51 / 0.35);
+}
+
+/* Brand colour scales (unchanged). Contrast vs white:
+     brand-600 5.6 · brand-700 6.9 → OK for text on light only
+     brand-orange-500 2.5 (logo orange) → decoration only
+   Prefer the semantic tokens (text-link, text-accent-fg, …): they adapt to
+   dark mode. */
 @theme {
   --color-brand-50: #f5f0ff;
   --color-brand-100: #ebe0ff;
@@ -43,22 +134,59 @@
   --color-brand-orange-500: #ff8033;
   --color-brand-orange-600: #e8691a;
   --color-brand-orange-700: #b54d0b;
+
+  --color-ink: #1f1147;
+
+  --animate-blob: blob-float 20s ease-in-out infinite alternate;
+  --animate-shimmer: shimmer 1.4s linear infinite;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-2: var(--background-2);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
+  --color-card-solid: var(--card-solid);
+  --color-elevated: var(--elevated);
   --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-glass-border: var(--glass-border);
+  --color-input: var(--input-bg);
   --color-primary: var(--primary);
+  --color-primary-2: var(--primary-2);
   --color-primary-foreground: var(--primary-foreground);
   --color-brand: var(--brand);
+  --color-link: var(--link);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-soft-fg: var(--brand-soft-fg);
   --color-accent: var(--accent);
-  --color-ring: var(--ring);
+  --color-accent-fg: var(--accent-fg);
+  --color-accent-soft: var(--accent-soft);
+  --color-success-fg: var(--success-fg);
+  --color-success-soft: var(--success-soft);
+  --color-warning-fg: var(--warning-fg);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger-fg: var(--danger-fg);
+  --color-danger-soft: var(--danger-soft);
   --color-destructive: var(--destructive);
+  --color-info-fg: var(--info-fg);
+  --color-info-soft: var(--info-soft);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-star: var(--star);
+  --color-overlay: var(--overlay);
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lift: var(--shadow-lift);
+  --shadow-glow-orange: var(--shadow-glow-orange);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+html {
+  background-color: var(--background);
 }
 
 body {
@@ -67,10 +195,351 @@ body {
   font-family: var(--font-sans), system-ui, -apple-system, Arial, sans-serif;
 }
 
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
+/* Theme cross-fade only while the user switches (ThemeToggle adds the class
+   for a moment), so first paint and normal navigation stay instant. */
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition:
+    background-color var(--dur-base) ease,
+    border-color var(--dur-base) ease,
+    color var(--dur-base) ease !important;
 }
-.hide-scrollbar {
+
+@utility hide-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ---------- Surfaces ---------- */
+
+/* Frosted glass card. The fill alone keeps text readable even where
+   backdrop-filter isn't supported. */
+@utility glass {
+  background-color: var(--card);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Heavier glass for chrome: header, sidebar, mobile nav, dialogs, composer. */
+@utility glass-strong {
+  background-color: var(--glass-strong);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  backdrop-filter: blur(24px) saturate(160%);
+  border-color: var(--glass-border);
+}
+
+@utility bg-gradient-primary {
+  background-image: linear-gradient(135deg, #7c33ff, #5716c4);
+}
+
+@utility bg-gradient-accent {
+  background-image: linear-gradient(135deg, #ff9a5c, #ff8033);
+}
+
+/* Hero/brand banner: white text passes on every stop (≥5.56:1). */
+@utility bg-gradient-hero {
+  background-image: linear-gradient(135deg, #45139a, #7c33ff);
+}
+
+@utility text-gradient {
+  background-image: linear-gradient(90deg, #6a1ff0, #a3440a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  .dark & {
+    background-image: linear-gradient(90deg, #c4a3ff, #ffa366);
+  }
+}
+
+/* Ambient canvas: gradient + three soft blobs on fixed layers behind the
+   page (fixed, so scrolling never repaints them). */
+@utility bg-ambient {
+  position: relative;
+  isolation: isolate;
+  background: var(--canvas);
+  background-attachment: fixed;
+  &::before,
+  &::after {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: 9999px;
+    will-change: transform;
+  }
+  &::before {
+    top: -12vmax;
+    left: -10vmax;
+    width: 46vmax;
+    height: 46vmax;
+    background: radial-gradient(circle, var(--blob-1) 0%, transparent 70%);
+    animation: blob-float 22s ease-in-out infinite alternate;
+  }
+  &::after {
+    right: -12vmax;
+    bottom: -14vmax;
+    width: 50vmax;
+    height: 50vmax;
+    background:
+      radial-gradient(circle at 60% 40%, var(--blob-2) 0%, transparent 65%),
+      radial-gradient(circle at 10% 0%, var(--blob-3) 0%, transparent 55%);
+    animation: blob-float 18s ease-in-out infinite alternate-reverse;
+  }
+}
+
+/* Decorative floating blob for heroes/sections (absolutely positioned). */
+.blob {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 9999px;
+  filter: blur(48px);
+  animation: blob-float 20s ease-in-out infinite alternate;
+}
+
+/* ---------- Motion ---------- */
+
+@keyframes blob-float {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(18px, -24px, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(-12px, 12px, 0) scale(0.97);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0.4;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pop {
+  0%,
+  70%,
+  100% {
+    transform: scale(1);
+  }
+  80% {
+    transform: scale(1.12);
+  }
+  90% {
+    transform: scale(0.98);
+  }
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes swap-a {
+  0%,
+  42% {
+    opacity: 1;
+    transform: none;
+  }
+  50%,
+  92% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes swap-b {
+  0%,
+  42% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  50%,
+  92% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes grow-y {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+.animate-page-in {
+  animation: page-in 220ms var(--ease-out) both;
+}
+.animate-fade-up {
+  animation: fade-up var(--dur-slow) var(--ease-out) both;
+}
+.animate-pop {
+  animation: pop 4s var(--ease-spring) infinite;
+}
+.animate-float {
+  animation: float-y 6s ease-in-out infinite;
+}
+.animate-swap-a {
+  animation: swap-a 4s ease-in-out infinite;
+}
+.animate-swap-b {
+  animation: swap-b 4s ease-in-out infinite;
+}
+.animate-grow-x {
+  transform-origin: left;
+  animation: grow-x 700ms var(--ease-out) both;
+}
+.animate-grow-y {
+  transform-origin: bottom;
+  animation: grow-y 700ms var(--ease-out) both;
+}
+
+/* Skeleton shimmer (loading states). */
+.skeleton {
+  border-radius: 1rem;
+  background-color: var(--input-bg);
+  background-image: linear-gradient(
+    90deg,
+    var(--input-bg) 0%,
+    var(--card-solid) 50%,
+    var(--input-bg) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+/* Hover lift + press pop for interactive cards and buttons. */
+.lift {
+  transition:
+    transform var(--dur-fast) var(--ease-spring),
+    box-shadow var(--dur-fast) ease,
+    background-color var(--dur-fast) ease,
+    border-color var(--dur-fast) ease;
+}
+.lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lift);
+}
+.lift:active {
+  transform: scale(0.98);
+}
+
+/* Scroll reveal (see components/motion/Reveal.tsx). Hidden only when JS runs
+   (`html.js`, set by ThemeScript); a <noscript> style in the root layout
+   is a second backstop. */
+.js [data-reveal]:not([data-revealed]) {
+  opacity: 0;
+  transform: translateY(16px);
+}
+[data-reveal] {
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
+  transition-delay: calc(var(--reveal-delay, 0) * 60ms);
+}
+
+/* FAQ accordion chevron. */
+details[open] > summary .faq-chevron {
+  transform: rotate(180deg);
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Dialog backdrop (TermsConsent, ReportDialog use <dialog>). */
+dialog::backdrop {
+  background: var(--overlay);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+  .lift,
+  .lift:hover,
+  .lift:active,
+  [data-reveal] {
+    transform: none !important;
+    transition-property: color, background-color, border-color, opacity !important;
+    transition-duration: 150ms !important;
+    transition-delay: 0ms !important;
+  }
+  .js [data-reveal]:not([data-revealed]) {
+    opacity: 1;
+    transform: none;
+  }
+  .animate-swap-b {
+    opacity: 0;
+  }
+  .skeleton {
+    background-image: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }

@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { TimeZoneSync } from "@/components/TimeZoneSync";
+import { ThemeScript } from "@/components/theme/ThemeScript";
+import { ThemeSync } from "@/components/theme/ThemeSync";
 import { SITE } from "@/lib/site";
 
 const geistSans = Geist({
@@ -53,7 +55,12 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: SITE.colors.purple,
+  // Browser UI colour follows the theme (ThemeScript/applyTheme override it
+  // when the user picks Light or Dark explicitly).
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f7f4ff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0f0a1f" },
+  ],
 };
 
 // Run server rendering close to the Supabase DB (Tokyo, ap-northeast-1) to cut
@@ -64,10 +71,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      // ThemeScript adds the `dark`/`js` classes before hydration.
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <head>
+        <ThemeScript />
+        {/* Without JS nothing may stay hidden behind a scroll reveal. */}
+        <noscript>
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
+      </head>
+      <body className="bg-ambient flex min-h-full flex-col text-foreground">
         <TimeZoneSync />
+        <ThemeSync />
         {children}
       </body>
     </html>
