@@ -35,7 +35,7 @@ export function SearchBar({ categories }: { categories: string[] }) {
   return (
     <div className="space-y-4">
       {/* View tabs */}
-      <div className="inline-flex rounded-lg border border-[var(--border)] bg-white p-1">
+      <div className="inline-flex rounded-lg border border-[var(--border)] bg-card p-1">
         {(["skills", "people"] as const).map((v) => (
           <button
             key={v}
@@ -84,8 +84,8 @@ export function SearchBar({ categories }: { categories: string[] }) {
               className={cn(
                 "rounded-full border px-3 py-1.5 text-sm transition-colors",
                 activeCategory === c
-                  ? "border-brand-600 bg-brand-50 text-brand-600"
-                  : "border-[var(--border)] bg-white text-slate-600 hover:bg-slate-50",
+                  ? "border-brand-600 bg-brand-50 text-brand-fg"
+                  : "border-[var(--border)] bg-card text-slate-600 hover:bg-slate-50",
               )}
             >
               {c}

@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { TimeZoneSync } from "@/components/TimeZoneSync";
 import { SITE } from "@/lib/site";
+import { THEME_COLORS, THEME_INIT_SCRIPT } from "@/lib/theme";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,7 +54,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: SITE.colors.purple,
+  // Both themes are declared; the pre-paint script and the toggle also keep
+  // the plain (no-media) tag below in sync with a manual choice.
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: THEME_COLORS.light },
+    { media: "(prefers-color-scheme: dark)", color: THEME_COLORS.dark },
+  ],
+  colorScheme: "light dark",
 };
 
 // Run server rendering close to the Supabase DB (Tokyo, ap-northeast-1) to cut
@@ -62,10 +69,17 @@ export const preferredRegion = ["hnd1"];
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
+    // suppressHydrationWarning: the inline script adds the `dark` class before
+    // React hydrates, which is expected to differ from the server markup.
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
+      <head>
+        <meta name="theme-color" content={THEME_COLORS.light} />
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="min-h-full flex flex-col">
         <TimeZoneSync />
         {children}

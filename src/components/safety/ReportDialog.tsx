@@ -64,7 +64,7 @@ export function ReportDialog({
         onClick={(e) => {
           if (e.target === dialogRef.current) close();
         }}
-        className="m-auto w-[min(32rem,calc(100vw-2rem))] rounded-xl bg-white p-0 shadow-2xl backdrop:bg-black/50"
+        className="m-auto w-[min(32rem,calc(100vw-2rem))] rounded-xl bg-card p-0 shadow-2xl backdrop:bg-black/50"
       >
         <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4">
           <h2 id={`report-title-${userId}`} className="font-semibold text-gray-900">

@@ -17,10 +17,10 @@ export default function SignupPage() {
         </div>
         <Card className="p-6 shadow-lg sm:p-8">
           <div className="mb-6 grid grid-cols-2 gap-1 rounded-full bg-neutral-200 p-1 text-sm font-medium">
-            <Link href="/login" className="rounded-full py-2 text-center text-slate-600 hover:text-black">
+            <Link href="/login" className="rounded-full py-2 text-center text-slate-600 hover:text-foreground">
               Log in
             </Link>
-            <span className="rounded-full bg-white py-2 text-center text-black shadow-sm">
+            <span className="rounded-full bg-card py-2 text-center text-foreground shadow-sm">
               Sign up
             </span>
           </div>

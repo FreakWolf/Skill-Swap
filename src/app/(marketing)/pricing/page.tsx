@@ -30,10 +30,10 @@ export default async function PricingPage() {
 
   return (
     <>
-      <section className="bg-gradient-to-br from-brand-50 via-white to-brand-orange-50">
+      <section className="bg-gradient-to-br from-brand-50 via-background to-brand-orange-50">
         <div className="mx-auto w-full max-w-screen-2xl px-4 py-20 text-center sm:px-6 lg:px-10">
           <div className="animate-fade-up mx-auto max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-wider text-brand-700">Pricing</p>
+            <p className="text-sm font-semibold uppercase tracking-wider text-brand-fg">Pricing</p>
             <h1 className="mt-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
               Free to join. Pay with your time.
             </h1>
@@ -48,8 +48,8 @@ export default async function PricingPage() {
       <section className="mx-auto w-full max-w-screen-2xl px-4 py-20 sm:px-6 lg:px-10">
         <div className="grid gap-6 lg:grid-cols-[1.1fr_2fr]">
           <Reveal>
-            <div className="h-full rounded-2xl border-2 border-brand-600 bg-white p-8">
-              <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+            <div className="h-full rounded-2xl border-2 border-brand-600 bg-card p-8">
+              <span className="inline-flex items-center gap-1 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-fg">
                 <Sparkles className="h-3.5 w-3.5" aria-hidden /> Membership
               </span>
               <p className="mt-5 text-5xl font-bold text-gray-900">₹0</p>
@@ -83,7 +83,7 @@ export default async function PricingPage() {
                   <Reveal key={pack.id} delay={150 + i * 100}>
                     <div
                       className={
-                        "relative flex h-full flex-col rounded-2xl border bg-white p-6 transition-all hover:-translate-y-1 hover:shadow-lg " +
+                        "relative flex h-full flex-col rounded-2xl border bg-card p-6 transition-all hover:-translate-y-1 hover:shadow-lg " +
                         (popular ? "border-brand-400 ring-2 ring-brand-200" : "border-[var(--border)]")
                       }
                     >
@@ -129,7 +129,7 @@ export default async function PricingPage() {
             <div className="mt-6">
               <FaqList items={creditsFaq.items} />
             </div>
-            <Link href="/faq" className="mt-6 inline-block text-sm font-medium text-brand-700 hover:underline">
+            <Link href="/faq" className="mt-6 inline-block text-sm font-medium text-brand-fg hover:underline">
               See all questions
             </Link>
           </div>

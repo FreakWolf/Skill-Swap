@@ -19,7 +19,7 @@ export function ReportTriage({ id, status, notes }: { id: string; status: string
             id={`status-${id}`}
             name="status"
             defaultValue={status}
-            className="h-10 w-full rounded-md border border-[var(--border)] bg-white px-3 text-sm capitalize focus:border-[var(--ring)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]/30"
+            className="h-10 w-full rounded-md border border-[var(--border)] bg-card px-3 text-sm capitalize focus:border-[var(--ring)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]/30"
           >
             {STATUSES.map((s) => (
               <option key={s} value={s}>{s}</option>

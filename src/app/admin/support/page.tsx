@@ -46,7 +46,7 @@ export default async function AdminSupportPage({ searchParams }: { searchParams:
                     {t.name} ·{" "}
                     <a
                       href={`mailto:${t.email}?subject=${encodeURIComponent(`Re: ${t.subject}`)}${t.admin_reply ? `&body=${encodeURIComponent(t.admin_reply)}` : ""}`}
-                      className="text-brand-700 hover:underline"
+                      className="text-brand-fg hover:underline"
                     >
                       {t.email}
                     </a>
@@ -54,7 +54,7 @@ export default async function AdminSupportPage({ searchParams }: { searchParams:
                     {t.user_id && (
                       <>
                         {" · "}
-                        <Link href={`/admin/users/${t.user_id}`} className="text-brand-700 hover:underline">member</Link>
+                        <Link href={`/admin/users/${t.user_id}`} className="text-brand-fg hover:underline">member</Link>
                       </>
                     )}
                   </p>

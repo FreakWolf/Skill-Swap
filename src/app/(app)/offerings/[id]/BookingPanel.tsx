@@ -71,8 +71,8 @@ export function BookingPanel({
               className={cn(
                 "rounded-lg border px-3 py-2 text-left text-sm transition-colors",
                 selected === s.id
-                  ? "border-brand-600 bg-brand-50 text-brand-600"
-                  : "border-[var(--border)] bg-white text-slate-700 hover:bg-slate-50",
+                  ? "border-brand-600 bg-brand-50 text-brand-fg"
+                  : "border-[var(--border)] bg-card text-slate-700 hover:bg-slate-50",
               )}
             >
               {formatSlot(s.starts_at, tz)}

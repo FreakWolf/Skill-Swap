@@ -41,6 +41,25 @@ New public routes must be added to `PUBLIC_PATHS` in
   mutating server action (`requireActiveUser`), and it cancels and refunds the
   member's upcoming bookings.
 
+## Appearance (dark mode)
+
+Light, Dark or System (default), chosen from the marketing header, the member
+sidebar or Settings → Appearance. The choice is kept in `localStorage`
+(`skillswap.theme`); an inline script in the root layout applies the `dark`
+class before first paint so there is no flash, and `color-scheme` plus the
+`theme-color` meta follow the active theme.
+
+Colours are driven by CSS variables in `src/app/globals.css`: semantic tokens
+(`--background`, `--foreground`, `--card`, `--border`, `--muted`,
+`--input-bg`, `--primary`, `--brand-fg`, `--ring`) and, under `.dark`, a remap
+of the Tailwind palette variables the components already use (gray/slate
+scales invert, light tints become dark tints, text shades lighten). Components
+do not use `dark:` classes. Purple text uses `text-brand-fg` (brand-700 in
+light, brand-300 in dark) so it passes WCAG AA on both canvases; brand
+buttons keep `bg-brand-600` with white text. The audit script used before
+each release runs axe-core (WCAG 2.1 A/AA) in both themes at 360, 390 and
+1440 px on the public pages.
+
 ## Member app shell
 
 `src/app/(app)/layout.tsx` renders the sidebar (`src/components/Sidebar.tsx`)

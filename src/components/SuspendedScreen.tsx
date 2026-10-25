@@ -9,9 +9,9 @@ import { LEGAL } from "@/lib/legal-config";
 export function SuspendedScreen({ reason, since }: { reason: string; since: string }) {
   const date = new Date(since).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-brand-50 via-white to-brand-orange-50 px-6 py-12">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-brand-50 via-background to-brand-orange-50 px-6 py-12">
       <Logo height={24} priority />
-      <div className="mt-8 w-full max-w-md rounded-2xl border border-[var(--border)] bg-white p-8 text-center shadow-sm">
+      <div className="mt-8 w-full max-w-md rounded-2xl border border-[var(--border)] bg-card p-8 text-center shadow-sm">
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-red-50 text-red-600">
           <ShieldAlert className="h-7 w-7" aria-hidden />
         </div>
@@ -26,8 +26,8 @@ export function SuspendedScreen({ reason, since }: { reason: string; since: stri
         )}
         <p className="mt-4 text-sm text-gray-600">
           If you think this is a mistake, write to{" "}
-          <a href={`mailto:${LEGAL.contactEmail}`} className="font-medium text-brand-700 hover:underline">{LEGAL.contactEmail}</a>{" "}
-          or use the <Link href="/contact" className="font-medium text-brand-700 hover:underline">contact form</Link>.
+          <a href={`mailto:${LEGAL.contactEmail}`} className="font-medium text-brand-fg hover:underline">{LEGAL.contactEmail}</a>{" "}
+          or use the <Link href="/contact" className="font-medium text-brand-fg hover:underline">contact form</Link>.
         </p>
         <form action={logOut} className="mt-6">
           <Button type="submit" variant="outline" className="w-full">Sign out</Button>

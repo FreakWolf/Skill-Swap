@@ -48,7 +48,7 @@ export default async function AdminAuditPage({ searchParams }: { searchParams: P
             render: (r) => {
               const href = targetHref(r.target_type, r.target_id);
               const label = `${r.target_type} ${r.target_id.slice(0, 8)}`;
-              return href ? <Link href={href} className="font-mono text-xs text-brand-700 hover:underline">{label}</Link> : <span className="font-mono text-xs">{label}</span>;
+              return href ? <Link href={href} className="font-mono text-xs text-brand-fg hover:underline">{label}</Link> : <span className="font-mono text-xs">{label}</span>;
             },
           },
           {

@@ -124,7 +124,7 @@ export default async function PublicProfilePage({
           {skills.teach.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               {skills.teach.map((s) => (
-                <Badge key={s.id} className="bg-brand-50 text-brand-600">
+                <Badge key={s.id} className="bg-brand-50 text-brand-fg">
                   {s.name} · {s.level}
                 </Badge>
               ))}

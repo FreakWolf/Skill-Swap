@@ -9,7 +9,7 @@ export default async function OnboardingLayout({
   await requireUser();
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-b border-[var(--border)] bg-white">
+      <header className="border-b border-[var(--border)] bg-card">
         <div className="mx-auto flex max-w-3xl items-center px-6 py-4">
           <Logo height={24} priority />
         </div>

@@ -38,7 +38,8 @@ export function Logo({
       // Serve the original file: Next's resize/re-encode (quality 75) blurs
       // the pixel-style lettering. The files are small, so this costs little.
       unoptimized
-      className={cn("select-none", className)}
+      // The purple lettering is lifted on the dark canvas via .logo-adaptive.
+      className={cn("select-none", variant !== "illustration" && "logo-adaptive", className)}
       style={{ height, width: "auto" }}
     />
   );

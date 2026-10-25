@@ -63,12 +63,12 @@ export default async function AdminReportsPage({ searchParams }: { searchParams:
                       {ctx && (
                         <>
                           {" · "}
-                          <Link href={ctx} className="text-brand-700 hover:underline">open context</Link>
+                          <Link href={ctx} className="text-brand-fg hover:underline">open context</Link>
                         </>
                       )}
                     </p>
                   </div>
-                  <Link href={`/admin/users/${r.reported?.id}`} className="text-sm font-medium text-brand-700 hover:underline">
+                  <Link href={`/admin/users/${r.reported?.id}`} className="text-sm font-medium text-brand-fg hover:underline">
                     Manage reported member
                   </Link>
                 </div>

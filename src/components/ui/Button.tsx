@@ -15,17 +15,18 @@ type Size = "sm" | "md" | "lg" | "icon";
 
 const variants: Record<Variant, string> = {
   // Near-black primary — the de-facto action button in the reference UI.
-  primary: "bg-[var(--primary)] text-white hover:bg-black/90 disabled:opacity-50",
+  primary: "bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50",
   // Blue brand button (e.g. "Offer a Skill").
   brand: "bg-brand-600 text-white hover:bg-brand-700 disabled:opacity-50",
   secondary: "bg-neutral-200 text-slate-800 hover:bg-neutral-300 disabled:opacity-50",
   outline:
-    "border border-[var(--border)] bg-white text-slate-800 hover:bg-neutral-100 disabled:opacity-50",
+    "border border-border bg-card text-slate-800 hover:bg-neutral-100 disabled:opacity-50",
   ghost: "text-slate-700 hover:bg-gray-100 disabled:opacity-50",
-  danger: "bg-[var(--destructive)] text-white hover:bg-red-700 disabled:opacity-50",
+  danger: "bg-destructive text-white hover:bg-destructive/90 disabled:opacity-50",
   // For placement on the colored gradient hero: a solid white button with blue
   // text, and a translucent white-outline button.
-  onBrandSolid: "bg-white text-brand-700 hover:bg-brand-50 disabled:opacity-50",
+  // Fixed purple on a white pill: it sits on the brand gradient in both themes.
+  onBrandSolid: "bg-white text-brand-700 hover:bg-brand-100 disabled:opacity-50",
   onBrandGhost:
     "border border-white/40 bg-white/10 text-white hover:bg-white/20 disabled:opacity-50",
 };

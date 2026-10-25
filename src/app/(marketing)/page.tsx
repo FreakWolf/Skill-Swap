@@ -84,7 +84,7 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-50 via-white to-brand-orange-50">
+      <section className="relative overflow-hidden bg-gradient-to-br from-brand-50 via-background to-brand-orange-50">
         <div aria-hidden className="pointer-events-none absolute inset-0">
           <div className="animate-blob absolute -left-24 top-10 h-72 w-72 rounded-full bg-brand-200/60 blur-3xl" />
           <div className="animate-blob delay-300 absolute -right-20 top-40 h-80 w-80 rounded-full bg-brand-orange-200/60 blur-3xl" />
@@ -93,7 +93,7 @@ export default function Home() {
 
         <div className="relative mx-auto grid w-full max-w-screen-2xl items-center gap-12 px-4 pb-20 pt-16 sm:px-6 lg:grid-cols-2 lg:px-10 lg:pb-28 lg:pt-24">
           <div className="text-center lg:text-left">
-            <span className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/80 px-3 py-1 text-sm font-medium text-brand-700">
+            <span className="animate-fade-up inline-flex items-center gap-2 rounded-full border border-brand-200 bg-card/80 px-3 py-1 text-sm font-medium text-brand-fg">
               <Sparkles className="h-4 w-4" aria-hidden />
               {SITE.tagline}
             </span>
@@ -125,11 +125,11 @@ export default function Home() {
             <div className="animate-float">
               <Logo variant="illustration" height={300} decorative priority className="mx-auto max-w-full" />
             </div>
-            <div className="absolute -left-2 top-6 hidden rounded-xl border border-[var(--border)] bg-white/90 px-4 py-3 shadow-lg backdrop-blur sm:block">
+            <div className="absolute -left-2 top-6 hidden rounded-xl border border-[var(--border)] bg-card/90 px-4 py-3 shadow-lg backdrop-blur sm:block">
               <p className="text-xs text-gray-500">Session completed</p>
               <p className="text-sm font-semibold text-gray-900">+1 credit earned</p>
             </div>
-            <div className="absolute -right-2 bottom-4 hidden rounded-xl border border-[var(--border)] bg-white/90 px-4 py-3 shadow-lg backdrop-blur sm:block">
+            <div className="absolute -right-2 bottom-4 hidden rounded-xl border border-[var(--border)] bg-card/90 px-4 py-3 shadow-lg backdrop-blur sm:block">
               <p className="text-xs text-gray-500">Booked for Saturday</p>
               <p className="text-sm font-semibold text-gray-900">Guitar basics · 1 hour</p>
             </div>
@@ -138,7 +138,7 @@ export default function Home() {
       </section>
 
       {/* Stats strip */}
-      <section className="border-y border-[var(--border)] bg-white">
+      <section className="border-y border-[var(--border)] bg-card">
         <div className="mx-auto grid w-full max-w-screen-2xl grid-cols-2 gap-6 px-4 py-10 sm:px-6 md:grid-cols-4 lg:px-10">
           {[
             { value: "3", label: "free credits to start" },
@@ -147,7 +147,7 @@ export default function Home() {
             { value: "0", label: "cash between members" },
           ].map((s, i) => (
             <Reveal key={s.label} delay={i * 80} className="text-center">
-              <p className="text-3xl font-bold text-brand-700 sm:text-4xl">{s.value}</p>
+              <p className="text-3xl font-bold text-brand-fg sm:text-4xl">{s.value}</p>
               <p className="mt-1 text-sm text-gray-600">{s.label}</p>
             </Reveal>
           ))}
@@ -163,8 +163,8 @@ export default function Home() {
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {steps.map((s, i) => (
             <Reveal key={s.title} delay={i * 120}>
-              <div className="group h-full rounded-2xl border border-[var(--border)] bg-white p-7 transition-all hover:-translate-y-1 hover:shadow-lg">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-lg font-bold text-brand-700 transition-colors group-hover:bg-brand-600 group-hover:text-white">
+              <div className="group h-full rounded-2xl border border-[var(--border)] bg-card p-7 transition-all hover:-translate-y-1 hover:shadow-lg">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-50 text-lg font-bold text-brand-fg transition-colors group-hover:bg-brand-600 group-hover:text-white">
                   {i + 1}
                 </div>
                 <h3 className="mt-5 text-lg font-semibold text-gray-900">{s.title}</h3>
@@ -184,7 +184,7 @@ export default function Home() {
           {[...skills, ...skills].map((s, i) => (
             <span
               key={`${s}-${i}`}
-              className="whitespace-nowrap rounded-full border border-[var(--border)] bg-white px-4 py-2 text-sm font-medium text-slate-700"
+              className="whitespace-nowrap rounded-full border border-[var(--border)] bg-card px-4 py-2 text-sm font-medium text-slate-700"
             >
               {s}
             </span>
@@ -201,7 +201,7 @@ export default function Home() {
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((f, i) => (
             <Reveal key={f.title} delay={(i % 3) * 100}>
-              <div className="h-full rounded-2xl border border-[var(--border)] bg-white p-6 transition-shadow hover:shadow-md">
+              <div className="h-full rounded-2xl border border-[var(--border)] bg-card p-6 transition-shadow hover:shadow-md">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-orange-50 text-brand-orange-700">
                   <f.icon className="h-5 w-5" aria-hidden />
                 </div>
@@ -214,7 +214,7 @@ export default function Home() {
       </section>
 
       {/* Example swaps */}
-      <section className="bg-gradient-to-b from-white to-brand-50/60 py-20">
+      <section className="bg-gradient-to-b from-background to-brand-50/60 py-20">
         <div className="mx-auto w-full max-w-screen-2xl px-4 sm:px-6 lg:px-10">
           <Reveal className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Trade time, not money</h2>
@@ -223,11 +223,11 @@ export default function Home() {
           <div className="mt-12 grid gap-6 md:grid-cols-3">
             {swaps.map((sw, i) => (
               <Reveal key={sw.teach} delay={i * 120}>
-                <div className="h-full rounded-2xl border border-[var(--border)] bg-white p-6">
+                <div className="h-full rounded-2xl border border-[var(--border)] bg-card p-6">
                   <p className="text-xs font-medium uppercase tracking-wider text-gray-500">Example swap</p>
                   <div className="mt-4 flex items-center gap-3">
                     <div className="flex-1 rounded-xl bg-brand-50 p-4">
-                      <p className="text-xs text-brand-700">Teach</p>
+                      <p className="text-xs text-brand-fg">Teach</p>
                       <p className="font-semibold text-gray-900">{sw.teach}</p>
                       <p className="text-sm text-gray-600">{sw.teachSessions} sessions · +{sw.teachSessions} credits</p>
                     </div>

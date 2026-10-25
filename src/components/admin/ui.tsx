@@ -41,7 +41,7 @@ export function StatTile({
   icon?: React.ComponentType<{ className?: string }>;
 }) {
   const tones = {
-    brand: "bg-brand-100 text-brand-700",
+    brand: "bg-brand-100 text-brand-fg",
     orange: "bg-brand-orange-100 text-brand-orange-700",
     green: "bg-green-100 text-green-700",
     amber: "bg-amber-100 text-amber-700",
@@ -68,7 +68,7 @@ export function StatTile({
 
 const statusTones: Record<string, string> = {
   // bookings
-  confirmed: "bg-brand-50 text-brand-700",
+  confirmed: "bg-brand-50 text-brand-fg",
   completed: "bg-green-50 text-green-700",
   cancelled: "bg-gray-100 text-gray-600",
   pending: "bg-amber-50 text-amber-700",
@@ -77,7 +77,7 @@ const statusTones: Record<string, string> = {
   reviewing: "bg-amber-50 text-amber-700",
   resolved: "bg-green-50 text-green-700",
   dismissed: "bg-gray-100 text-gray-600",
-  answered: "bg-brand-50 text-brand-700",
+  answered: "bg-brand-50 text-brand-fg",
   closed: "bg-gray-100 text-gray-600",
   // purchases
   created: "bg-amber-50 text-amber-700",
@@ -87,7 +87,7 @@ const statusTones: Record<string, string> = {
   active: "bg-green-50 text-green-700",
   paused: "bg-gray-100 text-gray-600",
   featured: "bg-brand-orange-50 text-brand-orange-700",
-  admin: "bg-brand-50 text-brand-700",
+  admin: "bg-brand-50 text-brand-fg",
   suspended: "bg-red-50 text-red-700",
 };
 
@@ -125,7 +125,7 @@ export function SearchForm({
           defaultValue={defaultValue}
           placeholder={placeholder}
           aria-label={placeholder}
-          className="h-9 w-full rounded-md border border-[var(--border)] bg-white pl-9 pr-3 text-sm focus:border-[var(--ring)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]/30"
+          className="h-9 w-full rounded-md border border-[var(--border)] bg-card pl-9 pr-3 text-sm focus:border-[var(--ring)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]/30"
         />
       </div>
       <Button type="submit" size="sm" variant="outline">Search</Button>

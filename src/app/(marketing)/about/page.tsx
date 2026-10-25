@@ -43,10 +43,10 @@ const ledger = [
 export default function AboutPage() {
   return (
     <>
-      <section className="bg-gradient-to-br from-brand-50 via-white to-brand-orange-50">
+      <section className="bg-gradient-to-br from-brand-50 via-background to-brand-orange-50">
         <div className="mx-auto w-full max-w-screen-2xl px-4 py-20 sm:px-6 lg:px-10">
           <div className="animate-fade-up mx-auto max-w-3xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-wider text-brand-700">About SkillSwap</p>
+            <p className="text-sm font-semibold uppercase tracking-wider text-brand-fg">About SkillSwap</p>
             <h1 className="mt-4 text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
               A marketplace where the price of learning is teaching
             </h1>
@@ -63,8 +63,8 @@ export default function AboutPage() {
         <div className="grid gap-6 md:grid-cols-2">
           {values.map((v, i) => (
             <Reveal key={v.title} delay={i * 100}>
-              <div className="flex h-full gap-5 rounded-2xl border border-[var(--border)] bg-white p-6">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+              <div className="flex h-full gap-5 rounded-2xl border border-[var(--border)] bg-card p-6">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-fg">
                   <v.icon className="h-5 w-5" aria-hidden />
                 </div>
                 <div>
@@ -88,13 +88,13 @@ export default function AboutPage() {
               so a credit can never be spent twice or disappear.
             </p>
             <ul className="mt-6 space-y-3 text-gray-700">
-              <li className="flex gap-3"><span className="font-semibold text-brand-700">Book</span> The cost is held from your balance immediately.</li>
-              <li className="flex gap-3"><span className="font-semibold text-brand-700">Complete</span> The held credits move to the teacher.</li>
-              <li className="flex gap-3"><span className="font-semibold text-brand-700">Cancel</span> Before the start time, the hold is refunded in full.</li>
+              <li className="flex gap-3"><span className="font-semibold text-brand-fg">Book</span> The cost is held from your balance immediately.</li>
+              <li className="flex gap-3"><span className="font-semibold text-brand-fg">Complete</span> The held credits move to the teacher.</li>
+              <li className="flex gap-3"><span className="font-semibold text-brand-fg">Cancel</span> Before the start time, the hold is refunded in full.</li>
             </ul>
           </Reveal>
           <Reveal delay={150}>
-            <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-white">
+            <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-card">
               <div className="border-b border-[var(--border)] px-5 py-3 text-sm font-semibold text-gray-900">Example ledger</div>
               <ul className="divide-y divide-[var(--border)]">
                 {ledger.map((row) => (

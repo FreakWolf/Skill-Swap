@@ -23,7 +23,7 @@ export function LoginForm() {
           <Label htmlFor="password">Password</Label>
           <Link
             href="/forgot-password"
-            className="-my-1 mb-0.5 inline-block py-1 text-sm font-medium text-brand-600 hover:underline"
+            className="-my-1 mb-0.5 inline-block py-1 text-sm font-medium text-brand-fg hover:underline"
           >
             Forgot password?
           </Link>
@@ -42,7 +42,7 @@ export function LoginForm() {
       </Button>
 
       <div className="relative py-2 text-center text-xs text-slate-500">
-        <span className="bg-white px-2">or continue with</span>
+        <span className="bg-card px-2">or continue with</span>
         <span className="absolute inset-x-0 top-1/2 -z-10 h-px bg-[var(--border)]" />
       </div>
       <div className="grid grid-cols-2 gap-3">
@@ -52,7 +52,7 @@ export function LoginForm() {
 
       <p className="text-center text-sm text-slate-600">
         New to SkillSwap?{" "}
-        <Link href="/signup" className="font-medium text-brand-600 hover:underline">
+        <Link href="/signup" className="font-medium text-brand-fg hover:underline">
           Create an account
         </Link>
       </p>

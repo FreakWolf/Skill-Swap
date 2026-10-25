@@ -74,7 +74,7 @@ export function OfferForm({ skillNames }: { skillNames: string[] }) {
             id="level"
             name="level"
             defaultValue="beginner"
-            className="h-10 w-full rounded-lg border border-[var(--border)] bg-white px-3 text-sm capitalize"
+            className="h-10 w-full rounded-lg border border-[var(--border)] bg-card px-3 text-sm capitalize"
           >
             {SKILL_LEVELS.map((l) => (
               <option key={l} value={l}>
@@ -99,7 +99,7 @@ export function OfferForm({ skillNames }: { skillNames: string[] }) {
           id="mode"
           name="mode"
           defaultValue="virtual"
-          className="h-10 w-full rounded-lg border border-[var(--border)] bg-white px-3 text-sm"
+          className="h-10 w-full rounded-lg border border-[var(--border)] bg-card px-3 text-sm"
         >
           <option value="virtual">Virtual (video call)</option>
           <option value="in_person">In person</option>

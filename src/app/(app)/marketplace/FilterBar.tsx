@@ -15,7 +15,7 @@ const SORTS = [
 ];
 
 const selectClass =
-  "h-9 rounded-md border border-[var(--border)] bg-white px-2.5 text-sm capitalize text-slate-700 focus:border-[var(--ring)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]/30";
+  "h-9 rounded-md border border-[var(--border)] bg-card px-2.5 text-sm capitalize text-slate-700 focus:border-[var(--ring)] focus:outline-none focus:ring-2 focus:ring-[var(--ring)]/30";
 
 // Level / format / max credits / sort, all kept in the URL so results are
 // shareable and the back button works.
@@ -44,7 +44,7 @@ export function FilterBar() {
   }
 
   return (
-    <div className={cn("flex flex-wrap items-center gap-2 rounded-xl border border-[var(--border)] bg-white px-3 py-2", pending && "opacity-70")}>
+    <div className={cn("flex flex-wrap items-center gap-2 rounded-xl border border-[var(--border)] bg-card px-3 py-2", pending && "opacity-70")}>
       <span className="flex items-center gap-1.5 text-sm font-medium text-slate-600">
         <SlidersHorizontal className="h-4 w-4" aria-hidden /> Filters
       </span>

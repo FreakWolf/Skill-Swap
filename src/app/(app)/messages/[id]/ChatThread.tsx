@@ -181,17 +181,17 @@ export function ChatThread({
 
       {/* Composer (replaced by a notice when either side has blocked the other) */}
       {blockedNotice ? (
-        <p className="border-t border-[var(--border)] bg-white py-4 text-center text-sm text-gray-500">
+        <p className="border-t border-[var(--border)] bg-card py-4 text-center text-sm text-gray-500">
           {blockedNotice}
         </p>
       ) : (
       <>
-      <div className="flex items-end gap-2 border-t border-[var(--border)] bg-white py-3">
+      <div className="flex items-end gap-2 border-t border-[var(--border)] bg-card py-3">
         <textarea
           ref={inputRef}
           rows={1}
           placeholder="Type a message…"
-          className="max-h-32 flex-1 resize-none rounded-2xl border border-transparent bg-neutral-200 px-4 py-2.5 text-sm focus:bg-white focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30"
+          className="max-h-32 flex-1 resize-none rounded-2xl border border-transparent bg-neutral-200 px-4 py-2.5 text-sm focus:bg-card focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30"
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();

@@ -62,7 +62,7 @@ export default async function DashboardPage() {
 
   const stats = [
     { label: "Credits", value: balance, icon: Coins, tile: "bg-amber-100 text-amber-700", num: "text-amber-700", href: "/credits" },
-    { label: "Sessions taught", value: taught, icon: GraduationCap, tile: "bg-brand-100 text-brand-600", num: "text-brand-600", href: "/sessions" },
+    { label: "Sessions taught", value: taught, icon: GraduationCap, tile: "bg-brand-100 text-brand-fg", num: "text-brand-fg", href: "/sessions" },
     { label: "Sessions learned", value: learned, icon: Sparkles, tile: "bg-brand-orange-100 text-brand-orange-700", num: "text-brand-orange-700", href: "/sessions" },
     { label: "Upcoming", value: upcoming.length, icon: CalendarIcon, tile: "bg-green-100 text-green-600", num: "text-green-600", href: "/calendar" },
     { label: "Saved", value: savedIds.size, icon: Bookmark, tile: "bg-gray-100 text-gray-700", num: "text-gray-700", href: "/saved" },
@@ -128,7 +128,7 @@ export default async function DashboardPage() {
             <h2 className="flex items-center gap-2 text-lg font-semibold text-gray-900">
               <Sparkles className="h-5 w-5 text-brand-orange-500" aria-hidden /> Featured this week
             </h2>
-            <Link href="/marketplace" className="-my-1 inline-block py-1 text-sm font-medium text-brand-600 hover:underline">
+            <Link href="/marketplace" className="-my-1 inline-block py-1 text-sm font-medium text-brand-fg hover:underline">
               See marketplace
             </Link>
           </div>
@@ -145,7 +145,7 @@ export default async function DashboardPage() {
         <section className="lg:col-span-2">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">Recommended for you</h2>
-            <Link href="/marketplace" className="-my-1 inline-block py-1 text-sm font-medium text-brand-600 hover:underline">
+            <Link href="/marketplace" className="-my-1 inline-block py-1 text-sm font-medium text-brand-fg hover:underline">
               Explore all
             </Link>
           </div>
@@ -168,7 +168,7 @@ export default async function DashboardPage() {
           <section>
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">Upcoming</h2>
-              <Link href="/sessions" className="-my-1 inline-block py-1 text-sm font-medium text-brand-600 hover:underline">
+              <Link href="/sessions" className="-my-1 inline-block py-1 text-sm font-medium text-brand-fg hover:underline">
                 View all
               </Link>
             </div>
@@ -191,7 +191,7 @@ export default async function DashboardPage() {
             ) : (
               <Card className="p-6 text-center text-sm text-gray-500">
                 No upcoming sessions.{" "}
-                <Link href="/marketplace" className="font-medium text-brand-600 hover:underline">
+                <Link href="/marketplace" className="font-medium text-brand-fg hover:underline">
                   Find a teacher
                 </Link>
                 .
@@ -203,7 +203,7 @@ export default async function DashboardPage() {
           <section>
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">Your offerings</h2>
-              <Link href="/availability" className="-my-1 inline-block py-1 text-sm font-medium text-brand-600 hover:underline">
+              <Link href="/availability" className="-my-1 inline-block py-1 text-sm font-medium text-brand-fg hover:underline">
                 Manage
               </Link>
             </div>
@@ -226,7 +226,7 @@ export default async function DashboardPage() {
                         <Link href={`/offerings/${o.id}`} className="min-w-0 truncate font-medium text-gray-900 hover:underline">
                           {o.title}
                         </Link>
-                        <Link href={`/offerings/${o.id}/edit`} className="shrink-0 text-brand-600 hover:underline">
+                        <Link href={`/offerings/${o.id}/edit`} className="shrink-0 text-brand-fg hover:underline">
                           Edit
                         </Link>
                       </li>
