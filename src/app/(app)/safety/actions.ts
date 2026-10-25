@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { requireActiveUser } from "@/lib/auth";
 
 export type SafetyState = { error?: string; ok?: boolean } | undefined;
 
@@ -16,11 +17,10 @@ function friendly(msg: string) {
 }
 
 async function insertBlock(otherId: string): Promise<string | null> {
+  const active = await requireActiveUser();
+  if (!active.ok) return active.error;
+  const { user } = active.session;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return "Not signed in";
   if (user.id === otherId) return "You can't block yourself";
 
   const { error } = await supabase
@@ -47,11 +47,10 @@ export async function blockUser(otherId: string): Promise<SafetyState> {
 
 export async function unblockUser(otherId: string): Promise<SafetyState> {
   if (!uuid.safeParse(otherId).success) return { error: "Invalid user" };
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error };
+  const { user } = active.session;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in" };
 
   const { error } = await supabase
     .from("blocks")
@@ -91,11 +90,10 @@ export async function reportUser(
   const { reportedUserId, reason, details, contextType, contextId, alsoBlock } =
     parsed.data;
 
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error };
+  const { user } = active.session;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in" };
   if (user.id === reportedUserId) return { error: "You can't report yourself" };
 
   const { error } = await supabase.from("reports").insert({

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { cn } from "@/lib/cn";
 import type { ButtonHTMLAttributes } from "react";
 
@@ -36,26 +37,41 @@ const sizes: Record<Size, string> = {
   icon: "h-9 w-9",
 };
 
+const base =
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 disabled:cursor-not-allowed";
+
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
   size?: Size;
+  /** Render as a link styled like a button (no nested interactive elements). */
+  href?: string;
+}
+
+export function buttonClasses(variant: Variant = "primary", size: Size = "md", className?: string) {
+  return cn(base, variants[variant], sizes[size], className);
 }
 
 export function Button({
   variant = "primary",
   size = "md",
   className,
+  href,
   ...props
 }: Props) {
-  return (
-    <button
-      className={cn(
-        "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 disabled:cursor-not-allowed",
-        variants[variant],
-        sizes[size],
-        className,
-      )}
-      {...props}
-    />
-  );
+  const classes = buttonClasses(variant, size, className);
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className={classes}
+        aria-label={props["aria-label"]}
+        aria-disabled={props.disabled || undefined}
+        tabIndex={props.disabled ? -1 : undefined}
+        onClick={props.disabled ? (e) => e.preventDefault() : undefined}
+      >
+        {props.children}
+      </Link>
+    );
+  }
+  return <button className={classes} {...props} />;
 }

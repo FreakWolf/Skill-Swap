@@ -12,7 +12,10 @@ import {
 import { getTimeZone } from "@/lib/time";
 import { getHiddenUserIds } from "@/lib/safety";
 import { createClient } from "@/lib/supabase/server";
+import { getSavedOfferingIds } from "@/lib/favorites";
+import { SaveButton } from "@/components/SaveButton";
 import { BookingPanel } from "./BookingPanel";
+import { OwnerControls } from "./OwnerControls";
 
 export default async function OfferingDetailPage({
   params,
@@ -29,14 +32,17 @@ export default async function OfferingDetailPage({
   // Offerings from someone the viewer blocked (or was blocked by) aren't viewable.
   if ((await getHiddenUserIds()).has(offering.teacher_id)) notFound();
 
-  const [balance, reviews, rating, tz] = await Promise.all([
+  const isOwn = offering.teacher_id === user.id;
+  // Paused offerings are only visible to their owner.
+  if (!offering.is_active && !isOwn) notFound();
+
+  const [balance, reviews, rating, tz, savedIds] = await Promise.all([
     getBalance(user.id),
     getReviewsFor(offering.teacher_id),
     getRatingSummary(offering.teacher_id),
     getTimeZone(),
+    getSavedOfferingIds(user.id),
   ]);
-
-  const isOwn = offering.teacher_id === user.id;
 
   return (
     <div className="space-y-6">
@@ -54,10 +60,17 @@ export default async function OfferingDetailPage({
             {offering.mode === "virtual" ? "Virtual" : "In person"}
           </Badge>
           <Badge>{offering.duration_min} min</Badge>
+          {offering.is_featured && (
+            <Badge className="bg-brand-orange-50 text-brand-orange-700">Featured</Badge>
+          )}
+          {!offering.is_active && <Badge>Paused</Badge>}
         </div>
-        <h1 className="mt-3 text-2xl font-bold text-slate-900">
-          {offering.title}
-        </h1>
+        <div className="mt-3 flex flex-wrap items-start justify-between gap-3">
+          <h1 className="text-2xl font-bold text-slate-900">
+            {offering.title}
+          </h1>
+          {!isOwn && <SaveButton offeringId={offering.id} saved={savedIds.has(offering.id)} size="md" />}
+        </div>
       </div>
 
     <div className="grid gap-6 lg:grid-cols-3">
@@ -142,13 +155,17 @@ export default async function OfferingDetailPage({
               {offering.credit_cost === 1 ? "credit" : "credits"} / session
             </span>
           </div>
-          <BookingPanel
-            slots={slots}
-            cost={offering.credit_cost}
-            balance={balance}
-            isOwnOffering={isOwn}
-            tz={tz}
-          />
+          {isOwn ? (
+            <OwnerControls id={offering.id} isActive={offering.is_active} openSlots={slots.length} />
+          ) : (
+            <BookingPanel
+              slots={slots}
+              cost={offering.credit_cost}
+              balance={balance}
+              isOwnOffering={false}
+              tz={tz}
+            />
+          )}
         </Card>
       </div>
     </div>

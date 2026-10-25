@@ -7,12 +7,24 @@ import { getHiddenUserIds } from "@/lib/safety";
 // The select string that joins an offering to its skill + teacher profile.
 const OFFERING_SELECT = `
   id, teacher_id, skill_id, title, description, level, duration_min,
-  credit_cost, mode, is_active, created_at, updated_at,
+  credit_cost, mode, is_active, is_featured, created_at, updated_at,
   skill:skills!offerings_skill_id_fkey ( id, name, category, is_custom, created_at ),
   teacher:profiles!offerings_teacher_id_fkey ( id, full_name, avatar_url, location )
 `;
 
 type RawOffering = Record<string, unknown>;
+
+// Offering reads must not silently degrade to "no results": a schema error
+// (for example a column missing because a migration has not run) would make
+// the marketplace, dashboard and offering pages look empty. Log and throw so
+// the error page shows and the deploy is noticed.
+function must<T>(res: { data: T | null; error: { message: string; code?: string } | null }, what: string): T {
+  if (res.error) {
+    console.error(`[data] ${what}: ${res.error.code ?? ""} ${res.error.message}`);
+    throw new Error(`Could not load ${what}`);
+  }
+  return (res.data ?? ([] as unknown as T)) as T;
+}
 
 // Supabase returns joined relations as either an object or a single-element
 // array depending on the relationship; normalize to our flat shape.
@@ -53,13 +65,13 @@ export async function getOfferingsByTeacher(
   teacherId: string,
 ): Promise<OfferingWithDetails[]> {
   const supabase = await createClient();
-  const { data } = await supabase
+  const res = await supabase
     .from("offerings")
     .select(OFFERING_SELECT)
     .eq("teacher_id", teacherId)
     .eq("is_active", true)
     .order("created_at", { ascending: false });
-  return (data ?? []).map(normalize);
+  return must(res, "offerings").map(normalize);
 }
 
 // Skill ids the user wants to learn — used to recommend matching offerings.
@@ -93,29 +105,69 @@ export async function getRecommendedOfferings(
     query = query.in("skill_id", learnIds);
   }
 
-  const [{ data }, hidden] = await Promise.all([query, getHiddenUserIds()]);
-  return (data ?? []).map(normalize).filter((o) => !hidden.has(o.teacher_id));
+  const [res, hidden] = await Promise.all([query, getHiddenUserIds()]);
+  return must(res, "recommended offerings").map(normalize).filter((o) => !hidden.has(o.teacher_id));
 }
 
-// Browse/search offerings for the marketplace.
-export async function searchOfferings(opts: {
+export type OfferingSort = "newest" | "cost_asc" | "cost_desc" | "shortest" | "longest";
+
+export interface OfferingSearch {
   userId: string;
   q?: string;
   category?: string;
+  level?: string;
+  mode?: string;
+  maxCost?: number;
+  sort?: OfferingSort;
   limit?: number;
-}): Promise<OfferingWithDetails[]> {
+}
+
+export const OFFERING_SORTS: { value: OfferingSort; label: string }[] = [
+  { value: "newest", label: "Newest" },
+  { value: "cost_asc", label: "Credits: low to high" },
+  { value: "cost_desc", label: "Credits: high to low" },
+  { value: "shortest", label: "Shortest session" },
+  { value: "longest", label: "Longest session" },
+];
+
+// Browse/search offerings for the marketplace. Filters on the offering's own
+// columns run in the query; text search and category match the joined skill
+// and teacher, so they run over the fetched page. Featured offerings sort first.
+export async function searchOfferings(opts: OfferingSearch): Promise<OfferingWithDetails[]> {
   const supabase = await createClient();
-  const { data } = await supabase
+  let query = supabase
     .from("offerings")
     .select(OFFERING_SELECT)
     .eq("is_active", true)
-    .order("created_at", { ascending: false })
-    .limit(opts.limit ?? 40);
-  // Never show offerings from people the viewer blocked or was blocked by.
-  const hidden = await getHiddenUserIds();
-  let rows = (data ?? []).map(normalize).filter((o) => !hidden.has(o.teacher_id));
+    .order("is_featured", { ascending: false });
 
-  // Filter client-side over the joined fields (simple + fine at MVP scale).
+  if (opts.level && opts.level !== "all") query = query.eq("level", opts.level);
+  if (opts.mode && opts.mode !== "all") query = query.eq("mode", opts.mode);
+  if (opts.maxCost !== undefined && Number.isFinite(opts.maxCost)) {
+    query = query.lte("credit_cost", opts.maxCost);
+  }
+
+  switch (opts.sort) {
+    case "cost_asc":
+      query = query.order("credit_cost", { ascending: true }).order("created_at", { ascending: false });
+      break;
+    case "cost_desc":
+      query = query.order("credit_cost", { ascending: false }).order("created_at", { ascending: false });
+      break;
+    case "shortest":
+      query = query.order("duration_min", { ascending: true }).order("created_at", { ascending: false });
+      break;
+    case "longest":
+      query = query.order("duration_min", { ascending: false }).order("created_at", { ascending: false });
+      break;
+    default:
+      query = query.order("created_at", { ascending: false });
+  }
+
+  const [res, hidden] = await Promise.all([query.limit(opts.limit ?? 60), getHiddenUserIds()]);
+  // Never show offerings from people the viewer blocked or was blocked by.
+  let rows = must(res, "marketplace offerings").map(normalize).filter((o) => !hidden.has(o.teacher_id));
+
   if (opts.q) {
     const q = opts.q.toLowerCase();
     rows = rows.filter(
@@ -129,6 +181,34 @@ export async function searchOfferings(opts: {
     rows = rows.filter((o) => o.skill?.category === opts.category);
   }
   return rows;
+}
+
+// Offerings an admin has featured (shown on the dashboard).
+export async function getFeaturedOfferings(userId: string, limit = 6): Promise<OfferingWithDetails[]> {
+  const supabase = await createClient();
+  const [res, hidden] = await Promise.all([
+    supabase
+      .from("offerings")
+      .select(OFFERING_SELECT)
+      .eq("is_active", true)
+      .eq("is_featured", true)
+      .neq("teacher_id", userId)
+      .order("updated_at", { ascending: false })
+      .limit(limit),
+    getHiddenUserIds(),
+  ]);
+  return must(res, "featured offerings").map(normalize).filter((o) => !hidden.has(o.teacher_id));
+}
+
+// Offerings by id (any status the viewer may see), used for saved lists.
+export async function getOfferingsByIds(ids: string[]): Promise<OfferingWithDetails[]> {
+  if (ids.length === 0) return [];
+  const supabase = await createClient();
+  const [res, hidden] = await Promise.all([
+    supabase.from("offerings").select(OFFERING_SELECT).in("id", ids),
+    getHiddenUserIds(),
+  ]);
+  return must(res, "saved offerings").map(normalize).filter((o) => !hidden.has(o.teacher_id));
 }
 
 export async function getCategories(): Promise<string[]> {
@@ -268,11 +348,16 @@ export async function hasReviewed(bookingId: string, reviewerId: string) {
 // A single offering with its open (unbooked, future) slots.
 export async function getOfferingWithSlots(offeringId: string) {
   const supabase = await createClient();
-  const { data: raw } = await supabase
+  const res = await supabase
     .from("offerings")
     .select(OFFERING_SELECT)
     .eq("id", offeringId)
     .maybeSingle();
+  if (res.error) {
+    console.error(`[data] offering ${offeringId}: ${res.error.message}`);
+    throw new Error("Could not load offering");
+  }
+  const raw = res.data;
   if (!raw) return null;
 
   const offering = normalize(raw as RawOffering);
@@ -396,6 +481,7 @@ export interface OfferingSlots {
   skillName: string;
   duration_min: number;
   credit_cost: number;
+  is_active: boolean;
   slots: {
     id: string;
     starts_at: string;
@@ -409,17 +495,20 @@ export async function getMyOfferingsWithSlots(
 ): Promise<OfferingSlots[]> {
   const supabase = await createClient();
 
-  const { data: offerings } = await supabase
-    .from("offerings")
-    .select(
-      `id, title, duration_min, credit_cost,
-       skill:skills!offerings_skill_id_fkey ( name )`,
-    )
-    .eq("teacher_id", userId)
-    .eq("is_active", true)
-    .order("created_at", { ascending: false });
+  const offerings = must(
+    await supabase
+      .from("offerings")
+      .select(
+        `id, title, duration_min, credit_cost, is_active,
+         skill:skills!offerings_skill_id_fkey ( name )`,
+      )
+      .eq("teacher_id", userId)
+      .order("is_active", { ascending: false })
+      .order("created_at", { ascending: false }),
+    "your offerings",
+  );
 
-  if (!offerings || offerings.length === 0) return [];
+  if (offerings.length === 0) return [];
 
   const offeringIds = offerings.map((o) => o.id as string);
   const { data: slots } = await supabase
@@ -449,6 +538,7 @@ export async function getMyOfferingsWithSlots(
       skillName: (skill?.name as string) ?? "",
       duration_min: o.duration_min as number,
       credit_cost: o.credit_cost as number,
+      is_active: o.is_active as boolean,
       slots: slotsByOffering.get(o.id as string) ?? [],
     };
   });
@@ -514,4 +604,24 @@ export async function getCalendarItems(
   }
 
   return items.sort((a, b) => a.starts_at.localeCompare(b.starts_at));
+}
+
+// Counts of the user's own offerings for the dashboard card.
+export async function getMyOfferingSummary(userId: string) {
+  const supabase = await createClient();
+  const rows = must(
+    await supabase
+      .from("offerings")
+      .select("id, title, is_active, is_featured")
+      .eq("teacher_id", userId)
+      .order("created_at", { ascending: false }),
+    "your offerings",
+  );
+  return {
+    total: rows.length,
+    active: rows.filter((o) => o.is_active).length,
+    paused: rows.filter((o) => !o.is_active).length,
+    featured: rows.filter((o) => o.is_featured).length,
+    latest: rows.slice(0, 3).map((o) => ({ id: o.id as string, title: o.title as string, is_active: o.is_active as boolean })),
+  };
 }

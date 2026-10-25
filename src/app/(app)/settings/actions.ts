@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { requireActiveUser } from "@/lib/auth";
 
 const schema = z.object({
   fullName: z.string().min(1, "Please enter your name").max(80),
@@ -23,11 +24,10 @@ export async function updateProfile(
   }
   const { fullName, bio, location, languages } = parsed.data;
 
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error };
+  const { user } = active.session;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in" };
 
   const langArray = (languages ?? "")
     .split(",")

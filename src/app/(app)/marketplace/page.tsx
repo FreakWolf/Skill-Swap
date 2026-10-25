@@ -3,24 +3,44 @@ import { Card } from "@/components/ui/Card";
 import { OfferingCard } from "@/components/OfferingCard";
 import { TeacherCard } from "@/components/TeacherCard";
 import { requireUser } from "@/lib/auth";
-import { searchOfferings, getCategories, searchTeachers } from "@/lib/data";
+import { searchOfferings, getCategories, searchTeachers, type OfferingSort } from "@/lib/data";
+import { getSavedOfferingIds } from "@/lib/favorites";
 import { SearchBar } from "./SearchBar";
+import { FilterBar } from "./FilterBar";
 
 export default async function MarketplacePage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; category?: string; view?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    category?: string;
+    view?: string;
+    level?: string;
+    mode?: string;
+    max?: string;
+    sort?: string;
+  }>;
 }) {
   const { user } = await requireUser();
-  const { q, category, view } = await searchParams;
+  const { q, category, view, level, mode, max, sort } = await searchParams;
   const isPeople = view === "people";
+  const maxCost = max !== undefined && max !== "" ? Number(max) : undefined;
 
-  const [categories, offerings, teachers] = await Promise.all([
+  const [categories, offerings, teachers, savedIds] = await Promise.all([
     getCategories(),
     isPeople
       ? Promise.resolve([])
-      : searchOfferings({ userId: user.id, q, category }),
+      : searchOfferings({
+          userId: user.id,
+          q,
+          category,
+          level,
+          mode,
+          maxCost,
+          sort: (sort as OfferingSort | undefined) ?? "newest",
+        }),
     isPeople ? searchTeachers({ userId: user.id, q }) : Promise.resolve([]),
+    getSavedOfferingIds(user.id),
   ]);
 
   return (
@@ -35,6 +55,7 @@ export default async function MarketplacePage({
       </div>
 
       <SearchBar categories={categories} />
+      {!isPeople && <FilterBar />}
 
       {isPeople ? (
         <>
@@ -43,7 +64,7 @@ export default async function MarketplacePage({
             {q ? ` for “${q}”` : ""}
           </p>
           {teachers.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {teachers.map((t) => (
                 <TeacherCard key={t.id} teacher={t} />
               ))}
@@ -65,17 +86,16 @@ export default async function MarketplacePage({
             {q ? ` for “${q}”` : ""}
           </p>
           {offerings.length > 0 ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {offerings.map((o) => (
-                <OfferingCard key={o.id} offering={o} />
+                <OfferingCard key={o.id} offering={o} saved={savedIds.has(o.id)} />
               ))}
             </div>
           ) : (
             <Card className="p-10 text-center">
               <p className="text-gray-600">No offerings match your search yet.</p>
               <p className="mt-1 text-sm text-gray-500">
-                Nobody has published this skill yet — but you can still find
-                people who teach it.
+                Try removing a filter, or find people who teach it.
               </p>
               <div className="mt-4 flex justify-center gap-3">
                 <Link

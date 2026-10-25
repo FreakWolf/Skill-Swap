@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { requireActiveUser } from "@/lib/auth";
 import type { SkillDirection, SkillLevel } from "@/lib/types";
 
 const profileSchema = z.object({
@@ -24,11 +25,10 @@ export async function saveProfile(
   }
   const { fullName, bio, location, languages } = parsed.data;
 
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error };
+  const { user } = active.session;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in" };
 
   const langArray = (languages ?? "")
     .split(",")
@@ -77,11 +77,10 @@ export async function saveSkills(
     return { error: "Pick at least one skill to teach or learn" };
   }
 
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error };
+  const { user } = active.session;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in" };
 
   // Resolve each skill name to a skill id, creating custom skills as needed.
   for (const sel of selections) {

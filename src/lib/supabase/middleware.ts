@@ -13,6 +13,11 @@ const PUBLIC_PATHS = [
   "/reset-password",
   "/terms",
   "/privacy",
+  // Marketing pages.
+  "/about",
+  "/pricing",
+  "/faq",
+  "/contact",
   // Crawler / link-preview / install files must be reachable signed-out.
   "/robots.txt",
   "/sitemap.xml",

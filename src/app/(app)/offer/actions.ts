@@ -3,15 +3,10 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { requireActiveUser } from "@/lib/auth";
+import { offeringFieldsSchema } from "@/lib/schemas/offering";
 
-const offerSchema = z.object({
-  skillName: z.string().min(1, "Choose or enter a skill").max(60),
-  title: z.string().min(3, "Give your offering a clear title").max(120),
-  description: z.string().max(1000).optional(),
-  level: z.enum(["beginner", "intermediate", "expert"]),
-  duration: z.coerce.number().int().min(15).max(480),
-  cost: z.coerce.number().int().min(0).max(100),
-  mode: z.enum(["virtual", "in_person"]),
+const offerSchema = offeringFieldsSchema.extend({
   // Slots arrive as a JSON array of ISO datetime strings.
   slots: z.string().optional(),
 });
@@ -31,11 +26,10 @@ export async function createOffering(
   const { skillName, title, description, level, duration, cost, mode, slots } =
     parsed.data;
 
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error };
+  const { user } = active.session;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in" };
 
   // Resolve or create the skill.
   let skillId: string;

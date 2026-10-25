@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { requireActiveUser } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { CREDIT_CURRENCY, getPack } from "@/lib/credit-packs";
 import {
@@ -30,11 +31,10 @@ export type CreateOrderResult =
 // Step 1: create a Razorpay order for a pack. The price comes from the server's
 // pack list, never from the browser.
 export async function createCreditOrder(packId: string): Promise<CreateOrderResult> {
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error === "Not signed in" ? "Please log in again." : active.error };
+  const { user } = active.session;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Please log in again." };
 
   const pack = getPack(String(packId));
   if (!pack) return { error: "That pack isn't available." };

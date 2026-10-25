@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { requireActiveUser } from "@/lib/auth";
 
 export type AvailabilityState = { error?: string } | undefined;
 
@@ -34,11 +35,10 @@ export async function addSlot(
     return { error: "Pick a time in the future" };
   }
 
+  const active = await requireActiveUser();
+  if (!active.ok) return { error: active.error };
+  const { user } = active.session;
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { error: "Not signed in" };
 
   // Look up the offering (must belong to the user) to get its duration.
   const { data: offering } = await supabase
@@ -70,6 +70,8 @@ export async function addSlot(
 export async function removeSlot(formData: FormData) {
   const slotId = String(formData.get("slotId") ?? "");
   if (!slotId) return;
+  const active = await requireActiveUser();
+  if (!active.ok) return;
 
   const supabase = await createClient();
   await supabase

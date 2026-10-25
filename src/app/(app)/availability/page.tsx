@@ -18,8 +18,13 @@ function slotLabel(iso: string, tz: string) {
   });
 }
 
-export default async function AvailabilityPage() {
+export default async function AvailabilityPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ deleted?: string }>;
+}) {
   const { user } = await requireUser();
+  const { deleted } = await searchParams;
   const [offerings, tz] = await Promise.all([
     getMyOfferingsWithSlots(user.id),
     getTimeZone(),
@@ -34,10 +39,14 @@ export default async function AvailabilityPage() {
             Open time slots learners can book for the skills you teach.
           </p>
         </div>
-        <Link href="/calendar">
-          <Button variant="outline">View calendar</Button>
-        </Link>
+        <Button href="/calendar" variant="outline">View calendar</Button>
       </div>
+
+      {deleted && (
+        <p role="status" className="rounded-lg bg-teal-50 px-4 py-3 text-sm text-teal-700">
+          Offering deleted.
+        </p>
+      )}
 
       {offerings.length === 0 ? (
         <Card className="flex flex-col items-center p-12 text-center">
@@ -48,9 +57,7 @@ export default async function AvailabilityPage() {
           <p className="mt-1 text-sm text-gray-500">
             Publish a skill first, then open time slots for it.
           </p>
-          <Link href="/offer" className="mt-4">
-            <Button variant="brand">Offer a skill</Button>
-          </Link>
+          <Button href="/offer" variant="brand" className="mt-4">Offer a skill</Button>
         </Card>
       ) : (
         <div className="space-y-4">
@@ -58,15 +65,28 @@ export default async function AvailabilityPage() {
             <Card key={o.id} className="p-6">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <h2 className="font-semibold text-gray-900">{o.title}</h2>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h2 className="font-semibold text-gray-900">
+                      <Link href={`/offerings/${o.id}`} className="hover:underline">{o.title}</Link>
+                    </h2>
+                    {!o.is_active && <Badge>Paused</Badge>}
+                  </div>
                   <p className="text-sm text-gray-500">
-                    {o.skillName} · {o.duration_min} min · {o.credit_cost} cr
+                    {o.skillName} · {o.duration_min} min · {o.credit_cost} cr ·{" "}
+                    <Link href={`/offerings/${o.id}/edit`} className="font-medium text-brand-600 hover:underline">Edit</Link>
                   </p>
                 </div>
-                <AddSlotForm offeringId={o.id} />
+                {o.is_active && <AddSlotForm offeringId={o.id} />}
               </div>
 
               <div className="mt-4 border-t border-[var(--border)] pt-4">
+                {!o.is_active && (
+                  <p className="mb-3 text-sm text-gray-500">
+                    This offering is paused, so these slots are hidden and can&apos;t be booked.{" "}
+                    <Link href={`/offerings/${o.id}/edit`} className="font-medium text-brand-600 hover:underline">Resume it</Link>{" "}
+                    to open them again.
+                  </p>
+                )}
                 {o.slots.length === 0 ? (
                   <p className="text-sm text-gray-500">
                     No open slots. Add times above so people can book.

@@ -98,9 +98,7 @@ export default async function CalendarPage({
             Your sessions and open time slots at a glance.
           </p>
         </div>
-        <Link href="/availability">
-          <Button variant="outline">Manage availability</Button>
-        </Link>
+        <Button href="/availability" variant="outline">Manage availability</Button>
       </div>
 
       <Card className="p-4 sm:p-6">

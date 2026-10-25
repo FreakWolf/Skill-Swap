@@ -25,6 +25,9 @@ export interface Profile {
   languages: string[];
   birthdate: string | null;
   onboarded: boolean;
+  is_admin: boolean;
+  suspended_at: string | null;
+  suspended_reason: string;
   created_at: string;
   updated_at: string;
 }
@@ -57,6 +60,7 @@ export interface Offering {
   credit_cost: number;
   mode: SessionMode;
   is_active: boolean;
+  is_featured: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -149,4 +153,85 @@ export interface TeacherSummary {
   teachSkills: string[];
   rating: { avg: number; count: number };
   offeringCount: number;
+}
+
+// --- Admin & moderation ------------------------------------------------------
+
+export type ReportStatus = "open" | "reviewing" | "resolved" | "dismissed";
+export type ReportReason =
+  | "harassment"
+  | "spam_scam"
+  | "inappropriate"
+  | "no_show"
+  | "fake_profile"
+  | "safety"
+  | "other";
+
+export interface Report {
+  id: string;
+  reporter_id: string;
+  reported_user_id: string;
+  reason: ReportReason;
+  details: string;
+  context_type: "profile" | "message" | "session" | "offering";
+  context_id: string | null;
+  status: ReportStatus;
+  admin_notes: string;
+  resolved_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export type SupportTicketStatus = "open" | "answered" | "closed";
+
+export interface SupportTicket {
+  id: string;
+  user_id: string | null;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  status: SupportTicketStatus;
+  admin_reply: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Announcement {
+  id: string;
+  title: string;
+  body: string;
+  is_active: boolean;
+  starts_at: string;
+  ends_at: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AdminAuditEntry {
+  id: string;
+  admin_id: string | null;
+  action: string;
+  target_type: string;
+  target_id: string;
+  details: Record<string, unknown>;
+  created_at: string;
+}
+
+export type PurchaseStatus = "created" | "paid" | "failed";
+
+export interface CreditPurchase {
+  id: string;
+  user_id: string;
+  pack_id: string;
+  credits: number;
+  amount_paise: number;
+  currency: string;
+  provider: string;
+  provider_order_id: string;
+  provider_payment_id: string | null;
+  status: PurchaseStatus;
+  created_at: string;
+  paid_at: string | null;
 }

@@ -29,8 +29,8 @@ export default async function ChatPage({
   return (
     // Fill the app main area; the thread scrolls internally.
     // Fits the visible screen exactly: 100dvh minus the mobile header (4rem)
-    // and the page padding (4rem); desktop has no header.
-    <div className="flex h-[calc(100dvh-8rem)] flex-col lg:h-[calc(100dvh-4rem)]">
+    // and the page padding (3rem); desktop has no header.
+    <div className="flex h-[calc(100dvh-7rem)] flex-col lg:h-[calc(100dvh-3rem)]">
       {/* Header */}
       <div className="flex items-center gap-3 border-b border-[var(--border)] pb-3">
         <Link
