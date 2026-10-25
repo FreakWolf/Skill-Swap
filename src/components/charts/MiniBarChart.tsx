@@ -1,6 +1,7 @@
 import type { MonthlyFlow } from "@/lib/analytics";
 
-// Grouped monthly bar chart of credits earned (blue) vs spent (amber).
+// Grouped monthly bar chart of credits earned (purple) vs spent (orange).
+// Bars grow in on load (static under reduced motion).
 // Pure CSS bars — no charting library.
 export function MiniBarChart({ data }: { data: MonthlyFlow[] }) {
   const max = Math.max(1, ...data.map((d) => Math.max(d.earned, d.spent)));
@@ -12,30 +13,30 @@ export function MiniBarChart({ data }: { data: MonthlyFlow[] }) {
           <div key={d.label} className="flex flex-1 flex-col items-center gap-1">
             <div className="flex h-full w-full items-end justify-center gap-1">
               <div
-                className="w-1/3 rounded-t bg-brand-500 transition-all"
+                className="animate-grow-y w-1/3 rounded-t-lg bg-chart-1"
                 style={{ height: `${(d.earned / max) * 100}%` }}
                 title={`Earned ${d.earned}`}
                 role="img"
                 aria-label={`${d.label}: earned ${d.earned}`}
               />
               <div
-                className="w-1/3 rounded-t bg-brand-orange-500 transition-all"
+                className="animate-grow-y w-1/3 rounded-t-lg bg-chart-2 [animation-delay:80ms]"
                 style={{ height: `${(d.spent / max) * 100}%` }}
                 title={`Spent ${d.spent}`}
                 role="img"
                 aria-label={`${d.label}: spent ${d.spent}`}
               />
             </div>
-            <span className="text-xs text-gray-500">{d.label}</span>
+            <span className="text-xs text-muted">{d.label}</span>
           </div>
         ))}
       </div>
-      <div className="mt-4 flex justify-center gap-4 text-xs text-gray-500">
+      <div className="mt-4 flex justify-center gap-4 text-xs text-muted">
         <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm bg-brand-500" /> Earned
+          <span className="h-2.5 w-2.5 rounded-full bg-chart-1" /> Earned
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-sm bg-brand-orange-500" /> Spent
+          <span className="h-2.5 w-2.5 rounded-full bg-chart-2" /> Spent
         </span>
       </div>
     </div>

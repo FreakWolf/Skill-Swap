@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { sendMessage, markConversationRead } from "../actions";
+import { Send } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 import type { Message } from "@/lib/types";
@@ -139,9 +140,9 @@ export function ChatThread({
   return (
     <div className="flex flex-1 flex-col">
       {/* Messages */}
-      <div className="flex-1 space-y-2 overflow-y-auto py-4">
+      <div className="flex-1 space-y-2 overflow-y-auto px-1 py-4">
         {messages.length === 0 ? (
-          <p className="mt-8 text-center text-sm text-gray-500">
+          <p className="mx-auto mt-8 w-fit rounded-full bg-brand-soft px-4 py-2 text-center text-sm font-medium text-brand-soft-fg">
             No messages yet. Say hello 👋
           </p>
         ) : (
@@ -154,10 +155,10 @@ export function ChatThread({
               >
                 <div
                   className={cn(
-                    "max-w-[75%] rounded-2xl px-4 py-2 text-sm",
+                    "animate-fade-up max-w-[75%] rounded-3xl px-4 py-2.5 text-sm shadow-soft",
                     mine
-                      ? "rounded-br-sm bg-brand-600 text-white"
-                      : "rounded-bl-sm bg-gray-100 text-gray-900",
+                      ? "bg-gradient-primary rounded-br-md text-white"
+                      : "rounded-bl-md border border-border bg-card-solid text-foreground",
                     m.pending && "opacity-70",
                   )}
                 >
@@ -166,7 +167,7 @@ export function ChatThread({
                     className={cn(
                       "mt-1 text-right text-[10px]",
                       // Readable on each bubble colour (WCAG AA).
-                      mine ? "text-brand-50" : "text-gray-600",
+                      mine ? "text-white" : "text-muted",
                     )}
                   >
                     {m.pending ? "Sending…" : time(m.created_at, tz)}
@@ -181,17 +182,18 @@ export function ChatThread({
 
       {/* Composer (replaced by a notice when either side has blocked the other) */}
       {blockedNotice ? (
-        <p className="border-t border-[var(--border)] bg-white py-4 text-center text-sm text-gray-500">
+        <p className="glass-strong rounded-3xl border py-4 text-center text-sm text-muted">
           {blockedNotice}
         </p>
       ) : (
       <>
-      <div className="flex items-end gap-2 border-t border-[var(--border)] bg-white py-3">
+      <div className="glass-strong flex items-end gap-2 rounded-3xl border p-2 shadow-soft">
         <textarea
           ref={inputRef}
           rows={1}
           placeholder="Type a message…"
-          className="max-h-32 flex-1 resize-none rounded-2xl border border-transparent bg-neutral-200 px-4 py-2.5 text-sm focus:bg-white focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30"
+          aria-label="Message"
+          className="max-h-32 flex-1 resize-none rounded-2xl border border-border-strong bg-input px-4 py-2.5 text-sm text-foreground placeholder:text-subtle focus:border-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
@@ -203,12 +205,13 @@ export function ChatThread({
           type="button"
           onClick={handleSend}
           disabled={sending}
-          className="rounded-full"
+          size="lg"
         >
+          <Send className="h-4 w-4" aria-hidden />
           Send
         </Button>
       </div>
-      {error && <p className="pb-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="px-2 pt-2 text-sm text-danger-fg">{error}</p>}
       </>
       )}
     </div>

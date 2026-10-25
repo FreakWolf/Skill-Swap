@@ -27,7 +27,7 @@ export function ReviewForm({
   if (state?.ok) {
     router.refresh();
     return (
-      <p className="rounded-lg bg-teal-50 px-3 py-2 text-sm text-teal-700">
+      <p className="animate-fade-up rounded-2xl border border-success-fg/25 bg-success-soft px-4 py-3 text-sm text-success-fg">
         Thanks for your review!
       </p>
     );
@@ -40,7 +40,7 @@ export function ReviewForm({
       <input type="hidden" name="rating" value={rating} />
 
       <div>
-        <p className="mb-2 text-sm font-medium text-slate-700">
+        <p className="mb-2 text-sm font-semibold text-foreground">
           How was your session with {revieweeName}?
         </p>
         <div className="flex gap-1">
@@ -52,16 +52,19 @@ export function ReviewForm({
               onMouseEnter={() => setHover(n)}
               onMouseLeave={() => setHover(0)}
               aria-label={`${n} star${n > 1 ? "s" : ""}`}
-              className="p-0.5"
+              aria-pressed={rating === n}
+              className="rounded-full p-0.5 transition-transform duration-150 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring motion-reduce:hover:scale-100"
             >
               <svg
                 width="28"
                 height="28"
                 viewBox="0 0 24 24"
-                fill={n <= (hover || rating) ? "#f59e0b" : "none"}
-                stroke={n <= (hover || rating) ? "#f59e0b" : "#cbd5e1"}
                 strokeWidth="1.5"
-                className={cn("transition-colors")}
+                aria-hidden
+                className={cn(
+                  "transition-colors",
+                  n <= (hover || rating) ? "fill-star stroke-star" : "fill-none stroke-border-strong",
+                )}
               >
                 <path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7L12 2z" />
               </svg>
@@ -76,7 +79,7 @@ export function ReviewForm({
       />
 
       {state?.error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p className="rounded-2xl border border-danger-fg/25 bg-danger-soft px-4 py-3 text-sm text-danger-fg">
           {state.error}
         </p>
       )}

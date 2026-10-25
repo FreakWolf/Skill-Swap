@@ -119,7 +119,7 @@ export function OfferForm({ skillNames }: { skillNames: string[] }) {
             onChange={(e) => setSlotInput(e.target.value)}
             className="min-w-0"
           />
-          <Button type="button" variant="secondary" onClick={addSlot} className="h-11 shrink-0">
+          <Button type="button" variant="secondary" onClick={addSlot} className="h-11! shrink-0">
 
             Add slot
           </Button>

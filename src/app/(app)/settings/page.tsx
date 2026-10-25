@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { Button, ButtonLink } from "@/components/ui/Button";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { requireUser } from "@/lib/auth";
 import { logOut } from "@/app/(auth)/actions";
 import { AvatarUpload } from "@/components/AvatarUpload";
@@ -15,11 +15,11 @@ export default async function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
+      <h1 className="text-3xl font-bold tracking-tight text-foreground">Settings</h1>
 
       <Card className="p-6">
-        <h2 className="mb-4 font-semibold text-slate-900">Profile</h2>
-        <div className="mb-6 border-b border-[var(--border)] pb-6">
+        <h2 className="mb-4 font-semibold tracking-tight text-foreground">Profile</h2>
+        <div className="mb-6 border-b border-border pb-6">
           <AvatarUpload
             userId={user.id}
             name={profile?.full_name ?? ""}
@@ -35,38 +35,46 @@ export default async function SettingsPage() {
       </Card>
 
       <Card className="p-6">
-        <h2 className="mb-1 font-semibold text-slate-900">Skills</h2>
-        <p className="mb-3 text-sm text-slate-500">
+        <h2 className="mb-1 font-semibold tracking-tight text-foreground">Appearance</h2>
+        <p className="mb-4 text-sm text-muted">
+          Choose light or dark, or follow your device setting.
+        </p>
+        <ThemeToggle size="md" />
+      </Card>
+
+      <Card className="p-6">
+        <h2 className="mb-1 font-semibold tracking-tight text-foreground">Skills</h2>
+        <p className="mb-3 text-sm text-muted">
           Update what you teach and want to learn.
         </p>
-        <Link href="/onboarding/skills">
-          <Button variant="outline">Manage skills</Button>
-        </Link>
+        <ButtonLink href="/onboarding/skills" variant="outline">
+          Manage skills
+        </ButtonLink>
       </Card>
 
       <Card className="p-6">
-        <h2 className="mb-1 font-semibold text-slate-900">Availability</h2>
-        <p className="mb-3 text-sm text-slate-500">
+        <h2 className="mb-1 font-semibold tracking-tight text-foreground">Availability</h2>
+        <p className="mb-3 text-sm text-muted">
           Open bookable time slots for the skills you teach.
         </p>
-        <Link href="/availability">
-          <Button variant="outline">Manage availability</Button>
-        </Link>
+        <ButtonLink href="/availability" variant="outline">
+          Manage availability
+        </ButtonLink>
       </Card>
 
       <Card className="p-6">
-        <h2 className="mb-1 font-semibold text-slate-900">Blocked users</h2>
-        <p className="mb-3 text-sm text-slate-500">
+        <h2 className="mb-1 font-semibold tracking-tight text-foreground">Blocked users</h2>
+        <p className="mb-3 text-sm text-muted">
           People you&apos;ve blocked can&apos;t message or book with you.
         </p>
         {blocked.length === 0 ? (
-          <p className="text-sm text-slate-500">You haven&apos;t blocked anyone.</p>
+          <p className="text-sm text-muted">You haven&apos;t blocked anyone.</p>
         ) : (
-          <ul className="divide-y divide-[var(--border)]">
+          <ul className="divide-y divide-border">
             {blocked.map((b) => (
               <li key={b.id} className="flex items-center gap-3 py-3">
                 <Avatar name={b.full_name} url={b.avatar_url} size={36} />
-                <span className="flex-1 truncate text-sm font-medium text-slate-800">
+                <span className="flex-1 truncate text-sm font-medium text-foreground">
                   {b.full_name}
                 </span>
                 <BlockButton userId={b.id} userName={b.full_name} blocked />
@@ -76,10 +84,10 @@ export default async function SettingsPage() {
         )}
       </Card>
 
-      <Card className="flex items-center justify-between p-6">
+      <Card className="flex flex-wrap items-center justify-between gap-4 p-6">
         <div>
-          <h2 className="font-semibold text-slate-900">Sign out</h2>
-          <p className="text-sm text-slate-500">End your session on this device.</p>
+          <h2 className="font-semibold tracking-tight text-foreground">Sign out</h2>
+          <p className="text-sm text-muted">End your session on this device.</p>
         </div>
         <form action={logOut}>
           <Button type="submit" variant="danger">

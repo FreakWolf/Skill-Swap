@@ -1,7 +1,8 @@
-import Link from "next/link";
 import { CalendarPlus } from "lucide-react";
 import { Card, Badge } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { ButtonLink } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Reveal } from "@/components/motion/Reveal";
 import { requireUser } from "@/lib/auth";
 import { getMyOfferingsWithSlots } from "@/lib/data";
 import { getTimeZone, formatInTz } from "@/lib/time";
@@ -29,46 +30,42 @@ export default async function AvailabilityPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Availability</h1>
-          <p className="mt-1 text-gray-600">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Availability</h1>
+          <p className="mt-1 text-muted">
             Open time slots learners can book for the skills you teach.
           </p>
         </div>
-        <Link href="/calendar">
-          <Button variant="outline">View calendar</Button>
-        </Link>
+        <ButtonLink href="/calendar" variant="outline">
+          View calendar
+        </ButtonLink>
       </div>
 
       {offerings.length === 0 ? (
-        <Card className="flex flex-col items-center p-12 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-500">
-            <CalendarPlus className="h-7 w-7" />
-          </div>
-          <p className="mt-4 font-medium text-gray-900">No offerings yet</p>
-          <p className="mt-1 text-sm text-gray-500">
-            Publish a skill first, then open time slots for it.
-          </p>
-          <Link href="/offer" className="mt-4">
-            <Button variant="brand">Offer a skill</Button>
-          </Link>
-        </Card>
+        <EmptyState
+          icon={CalendarPlus}
+          title="No offerings yet"
+          action={<ButtonLink href="/offer">Offer a skill</ButtonLink>}
+        >
+          Publish a skill first, then open time slots for it.
+        </EmptyState>
       ) : (
         <div className="space-y-4">
-          {offerings.map((o) => (
-            <Card key={o.id} className="p-6">
+          {offerings.map((o, i) => (
+            <Reveal key={o.id} delay={i}>
+            <Card className="p-5 sm:p-6">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <h2 className="font-semibold text-gray-900">{o.title}</h2>
-                  <p className="text-sm text-gray-500">
+                  <h2 className="font-semibold tracking-tight text-foreground">{o.title}</h2>
+                  <p className="text-sm text-muted">
                     {o.skillName} · {o.duration_min} min · {o.credit_cost} cr
                   </p>
                 </div>
                 <AddSlotForm offeringId={o.id} />
               </div>
 
-              <div className="mt-4 border-t border-[var(--border)] pt-4">
+              <div className="mt-4 border-t border-border pt-4">
                 {o.slots.length === 0 ? (
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-muted">
                     No open slots. Add times above so people can book.
                   </p>
                 ) : (
@@ -76,19 +73,19 @@ export default async function AvailabilityPage() {
                     {o.slots.map((s) => (
                       <li
                         key={s.id}
-                        className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-white px-3 py-1.5 text-sm"
+                        className="flex items-center gap-2 rounded-full border border-border bg-card-solid px-3.5 py-1.5 text-sm shadow-soft"
                       >
-                        <span className="text-gray-700">
+                        <span className="font-medium text-foreground">
                           {slotLabel(s.starts_at, tz)}
                         </span>
                         {s.is_booked ? (
-                          <Badge className="bg-teal-50 text-teal-700">Booked</Badge>
+                          <Badge tone="success">Booked</Badge>
                         ) : (
                           <form action={removeSlot}>
                             <input type="hidden" name="slotId" value={s.id} />
                             <button
                               type="submit"
-                              className="-my-1 -mr-1.5 flex h-7 w-7 items-center justify-center rounded text-gray-500 hover:bg-red-50 hover:text-red-600"
+                              className="-my-1 -mr-1.5 flex h-7 w-7 items-center justify-center rounded-full text-muted hover:bg-danger-soft hover:text-danger-fg focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                               aria-label="Remove slot"
                             >
                               ✕
@@ -101,6 +98,7 @@ export default async function AvailabilityPage() {
                 )}
               </div>
             </Card>
+            </Reveal>
           ))}
         </div>
       )}

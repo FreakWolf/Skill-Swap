@@ -4,7 +4,8 @@ import { Card, Badge } from "@/components/ui/Card";
 import { Avatar } from "@/components/Avatar";
 import { requireUser } from "@/lib/auth";
 import { getBookingDetail, hasReviewed } from "@/lib/data";
-import { Video } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Video } from "lucide-react";
+import { Alert } from "@/components/ui/Alert";
 import { MessageButton } from "@/components/MessageButton";
 import { ReportDialog } from "@/components/safety/ReportDialog";
 import { getTimeZone, formatInTz } from "@/lib/time";
@@ -77,41 +78,47 @@ export default async function SessionDetailPage({
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <Link href="/sessions" className="inline-block py-1 text-sm text-slate-500 hover:underline">
-        ← All sessions
+      <Link
+        href="/sessions"
+        className="inline-flex items-center gap-1.5 rounded-full py-1 text-sm font-medium text-muted hover:text-foreground"
+      >
+        <ArrowLeft className="h-4 w-4" aria-hidden /> All sessions
       </Link>
 
       {booked && (
-        <div className="rounded-lg bg-teal-50 px-4 py-3 text-sm text-teal-700">
-          Booked! Your credits are held and will transfer to the teacher once
-          you confirm the session happened.
-        </div>
+        <Alert tone="success" className="animate-fade-up flex items-start gap-2">
+          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+          <span>
+            Booked! Your credits are held and will transfer to the teacher once
+            you confirm the session happened.
+          </span>
+        </Alert>
       )}
 
       <Card className="p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <Badge className="capitalize">{booking.status}</Badge>
-            <h1 className="mt-2 text-2xl font-bold text-slate-900">
+            <Badge tone={booking.status === "completed" ? "success" : booking.status === "confirmed" ? "brand" : "neutral"} className="capitalize">{booking.status}</Badge>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground">
               {booking.title}
             </h1>
             {booking.skillName && (
-              <p className="text-slate-500">{booking.skillName}</p>
+              <p className="text-muted">{booking.skillName}</p>
             )}
           </div>
-          <span className="shrink-0 text-sm font-semibold text-amber-700">
+          <span className="shrink-0 rounded-full bg-accent-soft px-3 py-1 text-sm font-bold text-accent-fg">
             {iAmLearner ? "-" : "+"}
             {booking.credit_cost} cr
           </span>
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-[var(--border)] pt-4">
+        <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-border pt-4">
           <Avatar name={other?.full_name ?? ""} url={other?.avatar_url} size={44} />
           <div className="min-w-0 flex-1">
-            <p className="truncate font-medium text-slate-900">
+            <p className="truncate font-semibold text-foreground">
               {other?.full_name || "SkillSwap member"}
             </p>
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted">
               {iAmLearner ? "Your teacher" : "Your learner"}
             </p>
           </div>
@@ -131,36 +138,36 @@ export default async function SessionDetailPage({
         </div>
 
         <dl className="mt-6 grid gap-3 text-sm sm:grid-cols-2">
-          <div>
-            <dt className="text-slate-500">When</dt>
-            <dd className="font-medium text-slate-800">{when(booking.starts_at, tz)}</dd>
+          <div className="rounded-2xl bg-input p-3">
+            <dt className="text-muted">When</dt>
+            <dd className="font-medium text-foreground">{when(booking.starts_at, tz)}</dd>
           </div>
-          <div>
-            <dt className="text-slate-500">Role</dt>
-            <dd className="font-medium text-slate-800">
+          <div className="rounded-2xl bg-input p-3">
+            <dt className="text-muted">Role</dt>
+            <dd className="font-medium text-foreground">
               {iAmLearner ? "Learning" : "Teaching"}
             </dd>
           </div>
         </dl>
 
         {booking.notes && (
-          <div className="mt-4 rounded-lg bg-slate-50 p-3 text-sm text-slate-600">
-            <span className="font-medium text-slate-700">Learner note: </span>
+          <div className="mt-4 rounded-2xl bg-input p-3 text-sm text-muted">
+            <span className="font-semibold text-foreground">Learner note: </span>
             {booking.notes}
           </div>
         )}
 
         {/* Interim: SkillSwap doesn't create meeting links yet, so tell people how to meet. */}
         {booking.status === "confirmed" && (
-          <div className="mt-4 flex gap-3 rounded-lg border border-brand-200 bg-brand-50 p-3 text-sm text-slate-700">
-            <Video className="mt-0.5 h-4 w-4 shrink-0 text-brand-600" aria-hidden />
+          <div className="mt-4 flex gap-3 rounded-2xl border border-link/30 bg-brand-soft p-4 text-sm text-foreground">
+            <Video className="mt-0.5 h-4 w-4 shrink-0 text-link" aria-hidden />
             <p>
-              <span className="font-medium text-slate-900">How to meet: </span>
+              <span className="font-semibold">How to meet: </span>
               {booking.mode === "in_person"
                 ? "agree on a safe, public place and time with "
                 : "share a Zoom or Google Meet link with "}
               {other?.full_name || "your partner"} in{" "}
-              <Link href="/messages" className="font-medium text-brand-600 hover:underline">
+              <Link href="/messages" className="font-semibold text-link underline-offset-2 hover:underline">
                 Messages
               </Link>{" "}
               before the session starts.
@@ -172,7 +179,7 @@ export default async function SessionDetailPage({
       {/* Session controls */}
       {booking.status === "confirmed" && (
         <Card className="p-6">
-          <h2 className="mb-3 font-semibold text-slate-900">Session controls</h2>
+          <h2 className="mb-3 font-semibold tracking-tight text-foreground">Session controls</h2>
           <SessionActions
             bookingId={booking.id}
             canComplete={canComplete}
@@ -186,9 +193,9 @@ export default async function SessionDetailPage({
       {/* Rating after completion */}
       {booking.status === "completed" && (
         <Card className="p-6">
-          <h2 className="mb-3 font-semibold text-slate-900">Rate this session</h2>
+          <h2 className="mb-3 font-semibold tracking-tight text-foreground">Rate this session</h2>
           {alreadyReviewed ? (
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-muted">
               You&apos;ve already reviewed this session. Thanks!
             </p>
           ) : (
@@ -202,7 +209,7 @@ export default async function SessionDetailPage({
       )}
 
       {booking.status === "cancelled" && (
-        <Card className="p-6 text-sm text-slate-500">
+        <Card className="p-6 text-sm text-muted">
           This session was cancelled and any held credits were refunded.
         </Card>
       )}

@@ -112,13 +112,13 @@ export function BuyCredits({
   return (
     <div className="space-y-4">
       {success !== null && (
-        <p role="status" className="flex items-center gap-2 rounded-lg bg-teal-50 px-4 py-3 text-sm text-teal-800">
+        <p role="status" className="animate-fade-up flex items-center gap-2 rounded-2xl border border-success-fg/25 bg-success-soft px-4 py-3 text-sm text-success-fg">
           <CheckCircle2 className="h-5 w-5 shrink-0" aria-hidden />
           {success} credit{success === 1 ? "" : "s"} added to your balance. Happy learning!
         </p>
       )}
       {error && (
-        <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
+        <p role="alert" className="rounded-2xl border border-danger-fg/25 bg-danger-soft px-4 py-3 text-sm text-danger-fg">
           {error}
         </p>
       )}
@@ -133,32 +133,36 @@ export function BuyCredits({
             <div key={pack.id} ref={selected ? selectedRef : undefined}>
             <Card
               className={cn(
-                "relative flex h-full flex-col p-5",
-                highlight && "border-brand-400 ring-1 ring-brand-400",
-                selected && "ring-2 ring-brand-600",
+                "relative flex h-full flex-col p-5 pt-6",
+                highlight && "ring-2 ring-link",
               )}
             >
               {(selected || pack.tag) && (
-                <span className="absolute -top-2.5 left-5 rounded-full bg-brand-600 px-2.5 py-0.5 text-xs font-medium text-white">
+                <span
+                  className={cn(
+                    "absolute -top-3 left-5 rounded-full px-3 py-1 text-xs font-bold",
+                    !selected && pack.tag === "Best value" ? "bg-gradient-accent text-ink" : "bg-gradient-primary text-white",
+                  )}
+                >
                   {selected ? "Your pick" : pack.tag}
                 </span>
               )}
-              <div className="flex items-center gap-2 text-amber-700">
-                <Coins className="h-5 w-5" aria-hidden />
-                <span className="text-2xl font-bold text-gray-900">{pack.credits}</span>
-                <span className="text-sm text-gray-600">credit{pack.credits === 1 ? "" : "s"}</span>
+              <div className="flex items-center gap-2 text-accent-fg">
+                <Coins className="h-6 w-6" aria-hidden />
+                <span className="text-4xl font-extrabold tracking-tight text-foreground">{pack.credits}</span>
+                <span className="text-sm text-muted">credit{pack.credits === 1 ? "" : "s"}</span>
               </div>
-              <p className="mt-3 text-xl font-semibold text-gray-900">{formatPrice(pack.pricePaise)}</p>
-              <p className="text-xs text-gray-500">
+              <p className="mt-3 text-2xl font-bold text-foreground">{formatPrice(pack.pricePaise)}</p>
+              <p className="text-xs text-muted">
                 {formatPrice(Math.round(pack.pricePaise / pack.credits))} per credit
-                {save > 0 && <span className="font-medium text-teal-700"> · Save {save}%</span>}
+                {save > 0 && <span className="font-semibold text-success-fg"> · Save {save}%</span>}
               </p>
               {bonus > 0 && (
-                <p className="mt-1 text-xs font-medium text-teal-700">Includes {bonus} bonus credits</p>
+                <p className="mt-2 inline-flex w-fit rounded-full bg-success-soft px-2.5 py-0.5 text-xs font-semibold text-success-fg">Includes {bonus} bonus credits</p>
               )}
               <Button
                 type="button"
-                variant={highlight ? "brand" : "primary"}
+                variant={highlight ? "brand" : "secondary"}
                 className="mt-4 w-full"
                 disabled={!enabled || busy !== null}
                 onClick={() => buy(pack)}

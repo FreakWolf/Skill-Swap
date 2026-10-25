@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { ButtonLink } from "@/components/ui/Button";
 import { requireUser } from "@/lib/auth";
 import { getCalendarItems, type CalendarItem } from "@/lib/data";
 import { getTimeZone, formatInTz, partsInTz } from "@/lib/time";
@@ -31,7 +31,7 @@ function ym(year: number, month: number) {
 const dotColor: Record<CalendarItem["kind"], string> = {
   learning: "bg-brand-orange-500",
   teaching: "bg-brand-500",
-  open: "bg-teal-500",
+  open: "bg-info-fg",
 };
 
 export default async function CalendarPage({
@@ -93,14 +93,14 @@ export default async function CalendarPage({
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Calendar</h1>
-          <p className="mt-1 text-gray-600">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Calendar</h1>
+          <p className="mt-1 text-muted">
             Your sessions and open time slots at a glance.
           </p>
         </div>
-        <Link href="/availability">
-          <Button variant="outline">Manage availability</Button>
-        </Link>
+        <ButtonLink href="/availability" variant="outline">
+          Manage availability
+        </ButtonLink>
       </div>
 
       <Card className="p-4 sm:p-6">
@@ -108,23 +108,23 @@ export default async function CalendarPage({
         <div className="mb-4 flex items-center justify-between">
           <Link
             href={`/calendar?month=${prev}`}
-            className="flex h-9 w-9 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-brand-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-label="Previous month"
           >
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-5 w-5" aria-hidden />
           </Link>
-          <h2 className="text-lg font-semibold text-gray-900">{monthLabel}</h2>
+          <h2 className="text-xl font-semibold tracking-tight text-foreground">{monthLabel}</h2>
           <Link
             href={`/calendar?month=${next}`}
-            className="flex h-9 w-9 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-foreground transition-colors hover:bg-brand-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             aria-label="Next month"
           >
-            <ChevronRight className="h-5 w-5" />
+            <ChevronRight className="h-5 w-5" aria-hidden />
           </Link>
         </div>
 
         {/* Weekday header */}
-        <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-500">
+        <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold uppercase tracking-wide text-muted">
           {WEEKDAYS.map((d) => (
             <div key={d} className="py-1">
               {d}
@@ -142,16 +142,16 @@ export default async function CalendarPage({
               <div
                 key={day}
                 className={cn(
-                  "min-h-12 rounded-lg border p-1 text-left sm:min-h-20 sm:p-1.5",
+                  "min-h-12 rounded-xl border p-1 text-left transition-colors sm:min-h-20 sm:p-1.5",
                   isToday
-                    ? "border-brand-400 bg-brand-50/40"
-                    : "border-[var(--border)]",
+                    ? "border-link bg-brand-soft ring-1 ring-link"
+                    : "border-border bg-card-solid/60 hover:bg-card-solid",
                 )}
               >
                 <span
                   className={cn(
-                    "text-xs font-medium",
-                    isToday ? "text-brand-600" : "text-gray-500",
+                    "text-xs font-semibold",
+                    isToday ? "text-brand-soft-fg" : "text-muted",
                   )}
                 >
                   {day}
@@ -170,7 +170,7 @@ export default async function CalendarPage({
                       <Link
                         key={it.id}
                         href={it.href}
-                        className="flex items-center gap-1 rounded px-1 py-0.5 text-[11px] text-gray-700 hover:bg-gray-100"
+                        className="flex items-center gap-1 rounded-md px-1 py-0.5 text-[11px] text-foreground hover:bg-brand-soft"
                       >
                         <span className={cn("h-2 w-2 shrink-0 rounded-full", dotColor[it.kind])} />
                         <span className="truncate">
@@ -184,7 +184,7 @@ export default async function CalendarPage({
                     ) : null,
                   )}
                   {dayItems.length > 3 && (
-                    <span className="px-1 text-[10px] text-gray-500">
+                    <span className="px-1 text-[10px] text-muted">
                       +{dayItems.length - 3} more
                     </span>
                   )}
@@ -195,7 +195,7 @@ export default async function CalendarPage({
         </div>
 
         {/* Legend */}
-        <div className="mt-4 flex flex-wrap gap-4 border-t border-[var(--border)] pt-4 text-xs text-gray-500">
+        <div className="mt-4 flex flex-wrap gap-4 border-t border-border pt-4 text-xs text-muted">
           <span className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-brand-500" /> Teaching
           </span>
@@ -203,35 +203,35 @@ export default async function CalendarPage({
             <span className="h-2.5 w-2.5 rounded-full bg-brand-orange-500" /> Learning
           </span>
           <span className="flex items-center gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-teal-500" /> Open slot
+            <span className="h-2.5 w-2.5 rounded-full bg-info-fg" /> Open slot
           </span>
         </div>
       </Card>
 
       {/* Readable list of the month's items (essential on phones, handy everywhere). */}
       <Card className="p-4 sm:p-6">
-        <h2 className="mb-3 font-semibold text-gray-900">This month</h2>
+        <h2 className="mb-3 font-semibold tracking-tight text-foreground">This month</h2>
         {monthItems.length === 0 ? (
-          <p className="text-sm text-gray-500">Nothing scheduled in {monthLabel}.</p>
+          <p className="text-sm text-muted">Nothing scheduled in {monthLabel}.</p>
         ) : (
-          <ul className="divide-y divide-[var(--border)]">
+          <ul className="divide-y divide-border">
             {monthItems.map((it) => (
               <li key={it.id}>
                 <Link
                   href={it.href ?? "/calendar"}
-                  className="flex min-h-12 items-center gap-3 py-2.5 hover:bg-gray-50"
+                  className="-mx-2 flex min-h-12 items-center gap-3 rounded-xl px-2 py-2.5 transition-colors hover:bg-brand-soft"
                 >
                   <span className={cn("h-2.5 w-2.5 shrink-0 rounded-full", dotColor[it.kind])} aria-hidden />
                   <span className="w-24 shrink-0 text-sm leading-tight">
-                    <span className="block text-gray-900">
+                    <span className="block text-foreground">
                       {formatInTz(it.starts_at, tz, { weekday: "short", month: "short", day: "numeric" })}
                     </span>
-                    <span className="block text-xs text-gray-500">
+                    <span className="block text-xs text-muted">
                       {formatInTz(it.starts_at, tz, { hour: "numeric", minute: "2-digit" })}
                     </span>
                   </span>
-                  <span className="line-clamp-2 min-w-0 flex-1 text-sm font-medium text-gray-900">{it.title}</span>
-                  <span className="shrink-0 text-xs text-gray-500">{KIND_LABEL[it.kind]}</span>
+                  <span className="line-clamp-2 min-w-0 flex-1 text-sm font-medium text-foreground">{it.title}</span>
+                  <span className="shrink-0 rounded-full bg-input px-2 py-0.5 text-xs font-medium text-muted">{KIND_LABEL[it.kind]}</span>
                 </Link>
               </li>
             ))}

@@ -8,12 +8,12 @@ export function BarList({ items }: { items: SkillCount[] }) {
       {items.map((it) => (
         <li key={it.name}>
           <div className="mb-1 flex items-center justify-between text-sm">
-            <span className="text-gray-700">{it.name}</span>
-            <span className="font-medium text-gray-500">{it.count}</span>
+            <span className="text-foreground">{it.name}</span>
+            <span className="font-semibold text-muted">{it.count}</span>
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
+          <div className="h-2.5 w-full overflow-hidden rounded-full bg-input">
             <div
-              className="h-full rounded-full bg-brand-500"
+              className="bg-gradient-primary animate-grow-x h-full rounded-full"
               style={{ width: `${(it.count / max) * 100}%` }}
             />
           </div>

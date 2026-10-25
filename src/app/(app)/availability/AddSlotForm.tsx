@@ -27,14 +27,14 @@ export function AddSlotForm({ offeringId }: { offeringId: string }) {
         onChange={(e) => setLocal(e.target.value)}
         required
         aria-label="Slot start time"
-        className="h-9 w-auto"
+        className="h-10! w-auto! max-w-full"
       />
-      <Button type="submit" size="sm" variant="outline" disabled={pending || !local}>
-        <Plus className="h-4 w-4" />
+      <Button type="submit" variant="secondary" disabled={pending || !local}>
+        <Plus className="h-4 w-4" aria-hidden />
         {pending ? "Adding…" : "Add slot"}
       </Button>
       {state?.error && (
-        <span className="text-sm text-red-600">{state.error}</span>
+        <span className="text-sm text-danger-fg">{state.error}</span>
       )}
     </form>
   );

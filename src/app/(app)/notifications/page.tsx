@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Bell, Calendar, MessageSquare, Coins, Info } from "lucide-react";
 import { Card } from "@/components/ui/Card";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { requireUser } from "@/lib/auth";
 import { getNotifications } from "@/lib/messaging";
@@ -12,13 +14,13 @@ import {
 function iconFor(kind: string) {
   switch (kind) {
     case "booking":
-      return { Icon: Calendar, tile: "bg-brand-100 text-brand-600" };
+      return { Icon: Calendar, tile: "bg-brand-soft text-brand-soft-fg" };
     case "message":
-      return { Icon: MessageSquare, tile: "bg-brand-orange-100 text-brand-orange-700" };
+      return { Icon: MessageSquare, tile: "bg-accent-soft text-accent-fg" };
     case "credit":
-      return { Icon: Coins, tile: "bg-amber-100 text-amber-700" };
+      return { Icon: Coins, tile: "bg-warning-soft text-warning-fg" };
     default:
-      return { Icon: Info, tile: "bg-gray-100 text-gray-500" };
+      return { Icon: Info, tile: "bg-input text-muted" };
   }
 }
 
@@ -45,13 +47,17 @@ function NotificationBody({
   return (
     <>
       <div className="flex items-center gap-2">
-        <p className="font-medium text-gray-900">{n.title}</p>
-        {!n.read && <span className="h-2 w-2 shrink-0 rounded-full bg-brand-600" />}
-        <span className="ml-auto shrink-0 text-xs text-gray-500">
+        <p className="font-semibold text-foreground">{n.title}</p>
+        {!n.read && (
+          <span className="bg-gradient-primary h-2.5 w-2.5 shrink-0 rounded-full">
+            <span className="sr-only">Unread</span>
+          </span>
+        )}
+        <span className="ml-auto shrink-0 text-xs text-muted">
           {relativeTime(n.created_at)}
         </span>
       </div>
-      {n.body && <p className="mt-0.5 text-sm text-gray-600">{n.body}</p>}
+      {n.body && <p className="mt-0.5 text-sm text-muted">{n.body}</p>}
     </>
   );
 }
@@ -65,8 +71,8 @@ export default async function NotificationsPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Notifications</h1>
-          <p className="mt-1 text-gray-600">
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Notifications</h1>
+          <p className="mt-1 text-muted">
             Bookings, messages, and updates from your activity.
           </p>
         </div>
@@ -81,7 +87,7 @@ export default async function NotificationsPage() {
 
       {notifications.length > 0 ? (
         <div className="space-y-2">
-          {notifications.map((n) => {
+          {notifications.map((n, i) => {
             const { Icon, tile } = iconFor(n.kind);
             const target =
               n.kind === "message"
@@ -90,19 +96,20 @@ export default async function NotificationsPage() {
                   ? "/sessions"
                   : null;
             return (
+              <Reveal key={n.id} delay={i}>
               <Card
-                key={n.id}
+                variant="solid"
+                interactive
                 className={
-                  "flex items-start gap-3 p-4 transition-shadow hover:shadow-md " +
-                  (n.read ? "" : "border-brand-200 bg-brand-50/40")
+                  "flex items-start gap-3 p-4 " + (n.read ? "" : "ring-2 ring-link/40")
                 }
               >
-                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${tile}`}>
-                  <Icon className="h-5 w-5" />
+                <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${tile}`}>
+                  <Icon className="h-5 w-5" aria-hidden />
                 </div>
                 {/* Body links to the relevant screen when applicable. */}
                 {target ? (
-                  <Link href={target} className="min-w-0 flex-1">
+                  <Link href={target} className="min-w-0 flex-1 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                     <NotificationBody n={n} />
                   </Link>
                 ) : (
@@ -116,26 +123,21 @@ export default async function NotificationsPage() {
                     <input type="hidden" name="id" value={n.id} />
                     <button
                       type="submit"
-                      className="-my-1.5 shrink-0 rounded px-2 py-1.5 text-xs font-medium text-brand-600 hover:bg-brand-50 hover:underline"
+                      className="-my-1.5 shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold text-link hover:bg-brand-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     >
                       Mark read
                     </button>
                   </form>
                 )}
               </Card>
+              </Reveal>
             );
           })}
         </div>
       ) : (
-        <Card className="flex flex-col items-center p-12 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-500">
-            <Bell className="h-7 w-7" />
-          </div>
-          <p className="mt-4 font-medium text-gray-900">You&apos;re all caught up</p>
-          <p className="mt-1 text-sm text-gray-500">
-            Notifications about bookings and messages will show up here.
-          </p>
-        </Card>
+        <EmptyState icon={Bell} title="You're all caught up">
+          Notifications about bookings and messages will show up here.
+        </EmptyState>
       )}
     </div>
   );

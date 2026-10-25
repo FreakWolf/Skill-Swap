@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { MessageSquare } from "lucide-react";
-import { Card } from "@/components/ui/Card";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { ButtonLink } from "@/components/ui/Button";
+import { Reveal } from "@/components/motion/Reveal";
 import { Avatar } from "@/components/Avatar";
 import { requireUser } from "@/lib/auth";
 import { getConversations } from "@/lib/messaging";
@@ -28,62 +30,61 @@ export default async function MessagesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">Messages</h1>
-        <p className="mt-1 text-gray-600">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">Messages</h1>
+        <p className="mt-1 text-muted">
           Chat with teachers and learners before and after your sessions.
         </p>
       </div>
 
       {conversations.length > 0 ? (
         <div className="space-y-2">
-          {conversations.map((c) => (
-            <Link key={c.id} href={`/messages/${c.id}`}>
-              <Card className="flex items-center gap-3 p-4 transition-shadow hover:shadow-md">
+          {conversations.map((c, i) => (
+            <Reveal key={c.id} delay={i}>
+            <Link
+              href={`/messages/${c.id}`}
+              className="lift flex items-center gap-3 rounded-3xl border border-border bg-card-solid p-4 shadow-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
                 <Avatar name={c.other.full_name} url={c.other.avatar_url} size={44} />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <p className="truncate font-medium text-gray-900">
+                    <p className="truncate font-semibold text-foreground">
                       {c.other.full_name}
                     </p>
-                    <span className="ml-auto shrink-0 text-xs text-gray-500">
+                    <span className="ml-auto shrink-0 text-xs text-muted">
                       {relativeTime(c.lastMessageAt)}
                     </span>
                   </div>
                   <p
                     className={
                       c.unread > 0
-                        ? "truncate text-sm font-medium text-gray-900"
-                        : "truncate text-sm text-gray-500"
+                        ? "truncate text-sm font-semibold text-foreground"
+                        : "truncate text-sm text-muted"
                     }
                   >
                     {c.lastMessage || "No messages yet"}
                   </p>
                 </div>
                 {c.unread > 0 && (
-                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-brand-600 px-1.5 text-xs font-semibold text-white">
+                  <span className="bg-gradient-primary flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 text-xs font-bold text-white">
                     {c.unread}
                   </span>
                 )}
-              </Card>
             </Link>
+            </Reveal>
           ))}
         </div>
       ) : (
-        <Card className="flex flex-col items-center p-12 text-center">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-500">
-            <MessageSquare className="h-7 w-7" />
-          </div>
-          <p className="mt-4 font-medium text-gray-900">No conversations yet</p>
-          <p className="mt-1 text-sm text-gray-500">
-            Message a teacher from their profile or an offering to get started.
-          </p>
-          <Link
-            href="/marketplace"
-            className="mt-4 text-sm font-medium text-brand-600 hover:underline"
-          >
-            Explore skills
-          </Link>
-        </Card>
+        <EmptyState
+          icon={MessageSquare}
+          title="No conversations yet"
+          action={
+            <ButtonLink href="/marketplace" variant="secondary">
+              Explore skills
+            </ButtonLink>
+          }
+        >
+          Message a teacher from their profile or an offering to get started.
+        </EmptyState>
       )}
     </div>
   );

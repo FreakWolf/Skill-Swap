@@ -32,21 +32,21 @@ export default async function ChatPage({
     // and the page padding (4rem); desktop has no header.
     <div className="flex h-[calc(100dvh-8rem)] flex-col lg:h-[calc(100dvh-4rem)]">
       {/* Header */}
-      <div className="flex items-center gap-3 border-b border-[var(--border)] pb-3">
+      <div className="glass-strong flex items-center gap-3 rounded-3xl border p-2 pr-3 shadow-soft">
         <Link
           href="/messages"
-          className="flex h-9 w-9 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-foreground hover:bg-brand-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label="Back to messages"
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeft className="h-5 w-5" aria-hidden />
         </Link>
-        <Link href={`/u/${thread.other.id}`} className="flex min-w-0 items-center gap-3">
+        <Link href={`/u/${thread.other.id}`} className="flex min-w-0 items-center gap-3 rounded-full pr-2 hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring">
           <Avatar
             name={thread.other.full_name}
             url={thread.other.avatar_url}
             size={40}
           />
-          <span className="truncate font-semibold text-gray-900">
+          <span className="truncate font-semibold text-foreground">
             {thread.other.full_name}
           </span>
         </Link>

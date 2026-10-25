@@ -95,17 +95,17 @@ export function AvatarUpload({
             disabled={busy}
             onClick={() => inputRef.current?.click()}
           >
-            <Camera className="h-4 w-4" />
+            <Camera className="h-4 w-4" aria-hidden />
             {busy ? "Uploading…" : url ? "Change photo" : "Upload photo"}
           </Button>
           {url && !busy && (
-            <Button type="button" variant="ghost" size="sm" onClick={handleRemove}>
+            <Button type="button" variant="dangerGhost" size="sm" onClick={handleRemove}>
               Remove
             </Button>
           )}
         </div>
-        <p className="text-xs text-slate-500">JPG, PNG, or WebP, up to 2 MB.</p>
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        <p className="text-xs text-muted">JPG, PNG, or WebP, up to 2 MB.</p>
+        {error && <p className="text-sm text-danger-fg">{error}</p>}
       </div>
       <input
         ref={inputRef}
